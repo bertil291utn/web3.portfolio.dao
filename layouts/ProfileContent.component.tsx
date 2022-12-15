@@ -25,7 +25,7 @@ import {
   ERC20TokenContractAdd,
   NFTEditionContractAdd,
   StakingContractAdd,
-} from 'src/config/contracts';
+} from '@config/contracts';
 import LoadingComponent from '@components/common/Loading.component';
 import { localStorageKeys } from '@keys/localStorage';
 import ToastComponent from '@components/common/Toast.component';
@@ -34,16 +34,16 @@ import NFTProfileCard from '@components/common/NFTProfileCard.component';
 
 const ProfileContent = () => {
   const router = useRouter();
-  const [isWalletConnected, setIsWalletConnected] = useState();
-  const [tokenCards, setTokenCards] = useState();
-  const [showToast, setShowToast] = useState();
-  const [toastVariant, setToastVariant] = useState();
-  const [activeApprovingHash, setActiveApprovingHash] = useState();
-  const [activeStakingHash, setActiveStakingHash] = useState();
-  const [activeUnStakingHash, setActiveUnStakingHash] = useState();
+  const [isWalletConnected, setIsWalletConnected] = useState<boolean>();
+  const [tokenCards, setTokenCards] = useState<any>();
+  const [showToast, setShowToast] = useState<any>();
+  const [toastVariant, setToastVariant] = useState<string>();
+  const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>();
+  const [activeStakingHash, setActiveStakingHash] = useState<boolean>();
+  const [activeUnStakingHash, setActiveUnStakingHash] = useState<boolean>();
   const { userCustomTokenBalance, userStakedAmount, tokenSymbol } =
     useWalletContext();
-  const [tokenAmount, setTokenAmount] = useState();
+  const [tokenAmount, setTokenAmount] = useState<string>();
   const { address, isConnected } = useAccount();
   const { data: signer } = useSigner();
   const provider = useProvider();
@@ -54,12 +54,12 @@ const ProfileContent = () => {
     [localStorageKeys.unStakingTxHash]: setActiveUnStakingHash,
   };
 
-  const listenEvents = ({ provider, address }) => {
+  const listenEvents = ({ provider, address }: any) => {
     const stakingContract = getStakingFactory({ provider });
     const tokenContract = getTokenFactory({ provider });
     //LISTENERS
     //TODO: listen transfer event not just in token component, but also all over the app _app file
-    tokenContract.on('Approval', async (owner, spender) => {
+    tokenContract.on('Approval', async (owner: string, spender: string) => {
       if (
         owner?.toLowerCase() == address?.toLowerCase() &&
         spender?.toLowerCase() == StakingContractAdd?.toLowerCase()
@@ -71,7 +71,7 @@ const ProfileContent = () => {
       }
     });
 
-    stakingContract.on('Staked', async (user) => {
+    stakingContract.on('Staked', async (user: string) => {
       if (user?.toLowerCase() == address?.toLowerCase()) {
         await finishTx({
           txHashKeyName: localStorageKeys.stakingTxHash,
@@ -81,7 +81,7 @@ const ProfileContent = () => {
       }
     });
 
-    stakingContract.on('Unstake', async (user) => {
+    stakingContract.on('Unstake', async (user: string) => {
       if (user?.toLowerCase() == address?.toLowerCase()) {
         await finishTx({
           txHashKeyName: localStorageKeys.unStakingTxHash,
@@ -94,18 +94,18 @@ const ProfileContent = () => {
   //TODO: add link to display tokens on metamask
   //https://ethereum.stackexchange.com/questions/99343/how-to-automatically-add-a-custom-token-to-metamask-with-ethers-js
 
-  const _getNFTs = async (ownerAddress) => {
+  const _getNFTs = async (ownerAddress: string) => {
     const NFTTokenContract = getNFTEditionFactory({ provider });
     let resp = await getAllNFTs(ownerAddress);
     resp = resp.ownedNfts.filter(
-      (elem) =>
+      (elem: any) =>
         elem.contract.address.toLowerCase() ===
         NFTEditionContractAdd.toLowerCase()
     );
     if (resp.length) {
-      const tokenIdsArr = resp.map((elem) => elem.tokenId);
+      const tokenIdsArr = resp.map((elem: any) => elem.tokenId);
       const _tokenCards = await Promise.all(
-        tokenIdsArr.map(async (tokenId) => {
+        tokenIdsArr.map(async (tokenId: string) => {
           const tokenURI = await NFTTokenContract.uri(+tokenId);
           if (!tokenURI) return null;
           const res = await fetch(tokenURI);
@@ -113,7 +113,7 @@ const ProfileContent = () => {
           return { ...tokenURIResp, tokenId };
         })
       );
-      setTokenCards(_tokenCards.filter((elem) => elem));
+      setTokenCards(_tokenCards.filter((elem: any) => elem));
     }
   };
 
@@ -134,17 +134,17 @@ const ProfileContent = () => {
       userStakedAmount?.toString() <= 0
         ? minStakingAmount
         : userStakedAmount &&
-          ethers.utils.formatEther(userStakedAmount?.toString());
+        ethers.utils.formatEther(userStakedAmount?.toString());
     setTokenAmount(_tokenInputVal);
   }, [userStakedAmount]);
 
   useEffect(() => {
     setIsWalletConnected(isConnected);
-    _getNFTs(address);
+    _getNFTs(address ?? '');
     listenEvents({ provider, address });
   }, [address]);
 
-  const isFormValid = ({ stakingAmount }) => {
+  const isFormValid = ({ stakingAmount }: any) => {
     if (!stakingAmount) return false;
     if (stakingAmount <= 0) return false;
     //TODO: check stakingAmount is not greater than default staking amount
@@ -152,20 +152,20 @@ const ProfileContent = () => {
     return true;
   };
 
-  const removeLocalStorageItem = (txHashKeyName) => {
+  const removeLocalStorageItem = (txHashKeyName: string) => {
     window.localStorage.removeItem(txHashKeyName);
   };
 
-  const handleError = ({ error, txHashKeyName }) => {
+  const handleError = ({ error, txHashKeyName }: any) => {
     removeLocalStorageItem(txHashKeyName);
     setShowToast(error.reason?.replace('execution reverted:', ''));
     setToastVariant('error');
-    setCurrentTxState[txHashKeyName]();
+    setCurrentTxState[txHashKeyName](false);
   };
 
-  const finishTx = async ({ txHashKeyName, path, reload = false }) => {
+  const finishTx = async ({ txHashKeyName, path, reload = false }: any) => {
     removeLocalStorageItem(txHashKeyName);
-    setCurrentTxState[txHashKeyName]();
+    setCurrentTxState[txHashKeyName](false);
     router.push(`/${path}`);
     await new Promise((r) => setTimeout(r, 2000));
     reload && window.location.reload();
@@ -204,7 +204,7 @@ const ProfileContent = () => {
 
     try {
       tx = await stakingContract.stake(
-        ethers.utils.parseEther(tokenAmount.toString()),
+        ethers.utils.parseEther(tokenAmount?.toString() ?? ''),
         ERC20TokenContractAdd
       );
       setActiveStakingHash(tx.hash);
@@ -223,7 +223,7 @@ const ProfileContent = () => {
     let tx;
     try {
       tx = await stakingContract.unstake(
-        ethers.utils.parseEther(tokenAmount.toString()),
+        ethers.utils.parseEther(tokenAmount?.toString() ?? ''),
         ERC20TokenContractAdd
       );
       window.localStorage.setItem(localStorageKeys.unStakingTxHash, tx.hash);
@@ -237,13 +237,13 @@ const ProfileContent = () => {
     }
   };
 
-  const unStakingAction = (e) => {
+  const unStakingAction = (e: any) => {
     e.preventDefault();
     const _isFormValid = isFormValid({ stakingAmount: tokenAmount });
     _isFormValid && unStakeAction();
   };
 
-  const stakingAction = (e) => {
+  const stakingAction = (e: any) => {
     e.preventDefault();
     const _isFormValid = isFormValid({ stakingAmount: tokenAmount });
     _isFormValid && stakeAction();
@@ -290,7 +290,7 @@ const ProfileContent = () => {
             subtitle={ProfileSections.NFTInfoSubtitle}
           >
             <div className={styles['cards']}>
-              {tokenCards.map((elem) => (
+              {tokenCards.map((elem: any) => (
                 <NFTProfileCard
                   key={`card-${elem.tokenId}`}
                   tokenId={elem.tokenId}
@@ -326,7 +326,7 @@ const ProfileContent = () => {
                       type='number'
                       name='tokenAmount'
                       value={tokenAmount || ''}
-                      onChange={(e) => setTokenAmount(e.target.value)}
+                      onChange={(e: any) => setTokenAmount(e.target.value)}
                       min={'1'}
                       max={
                         userStakedAmount?.toString() > 0
