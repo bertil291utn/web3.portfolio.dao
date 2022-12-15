@@ -4,10 +4,9 @@ import {
   ERC20TokenContractAdd,
   NFTEditionClaimableContractAdd,
   NFTEditionContractAdd,
-  NFTUniqueContractAdd,
   RateContractAdd,
   StakingContractAdd,
-} from 'src/config/contracts';
+} from '@config/contracts';
 import { getDefaultWallets } from '@rainbow-me/rainbowkit';
 import {
   chain,
@@ -22,15 +21,14 @@ import { publicProvider } from 'wagmi/providers/public';
 import ClaimableABI from '@web3/ABI/Claimable.json';
 import StakingABI from '@web3/ABI/StakingToken.json';
 import RateABI from '@web3/ABI/Rate.json';
-import ERC721ABI from '@web3/ABI/ERC721.json';
 import ERC1155ABI from '@web3/ABI/ERC1155.json';
 import ERC1155ClaimableABI from '@web3/ABI/ERC1155Claimable.json';
 
-export const getContractFactory = ({ address, ABI, signer }) => {
+export const getContractFactory = ({ address, ABI, signer }:any) => {
   return new ethers.Contract(address, ABI, signer);
 };
 
-export const getTokenFactory = ({ provider, signer }) => {
+export const getTokenFactory = ({ provider, signer }:any) => {
   return getContractFactory({
     address: ERC20TokenContractAdd,
     ABI: erc20ABI,
@@ -38,7 +36,7 @@ export const getTokenFactory = ({ provider, signer }) => {
   });
 };
 
-export const getClaimableFactory = ({ provider, signer }) => {
+export const getClaimableFactory = ({ provider, signer }:any) => {
   return getContractFactory({
     address: ClaimableContractAdd,
     ABI: ClaimableABI,
@@ -46,7 +44,7 @@ export const getClaimableFactory = ({ provider, signer }) => {
   });
 };
 
-export const getStakingFactory = ({ provider, signer }) => {
+export const getStakingFactory = ({ provider, signer }:any) => {
   return getContractFactory({
     address: StakingContractAdd,
     ABI: StakingABI,
@@ -54,7 +52,7 @@ export const getStakingFactory = ({ provider, signer }) => {
   });
 };
 
-export const getRatingFactory = ({ provider, signer }) => {
+export const getRatingFactory = ({ provider, signer }:any) => {
   return getContractFactory({
     address: RateContractAdd,
     ABI: RateABI,
@@ -62,7 +60,7 @@ export const getRatingFactory = ({ provider, signer }) => {
   });
 };
 
-export const getNFTEditionFactory = ({ provider, signer }) => {
+export const getNFTEditionFactory = ({ provider, signer }:any) => {
   return getContractFactory({
     address: NFTEditionContractAdd,
     ABI: ERC1155ABI,
@@ -70,7 +68,7 @@ export const getNFTEditionFactory = ({ provider, signer }) => {
   });
 };
 
-export const getNFTEditionClaimableFactory = ({ provider, signer }) => {
+export const getNFTEditionClaimableFactory = ({ provider, signer }:any) => {
   return getContractFactory({
     address: NFTEditionClaimableContractAdd,
     ABI: ERC1155ClaimableABI,
