@@ -1,8 +1,8 @@
 import { createContext, useContext, useState } from 'react';
 
-const TokenContext = createContext();
+const TokenContext = createContext<any>(null);
 
-export default function TokenProvider({ children }) {
+export default function TokenProvider({ children }: any) {
   const [NFTData, setNFTData] = useState();
 
   return (

@@ -1,6 +1,6 @@
 export const tokenPageLabel = {
   title: 'Claim your 100 free tokens',
-  description: (tokenSymbol) =>
+  description: (tokenSymbol:string) =>
     `With <b>$${tokenSymbol}</b> tokens, you'll able to rank, view repos, buy NFTs and get in touch with Bertil 😂. Furthermore with these tokens you're going to participate in our DAO. <i>(Goerli test network)</i>`,
   buttonLabel: 'gimme my tokens',
 };
@@ -17,7 +17,7 @@ export const getEth = {
 
 export const NFTPage = {
   title: 'Buy or grab a free NFT',
-  description: (tokenSymbol) =>
+  description: (tokenSymbol:string) =>
     `Grab a free one or buy with $${tokenSymbol} coins. You'll able to rank, view repos and get in touch with Bertil 😂. Furthermore with these tokens you're going to participate in our DAO.`,
   transferringNFT: 'Transferring NFT ...',
 };

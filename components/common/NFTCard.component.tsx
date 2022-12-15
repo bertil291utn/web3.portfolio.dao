@@ -12,7 +12,7 @@ const NFTCard = ({
   onClick,
   quantityLeft,
   totalSupply,
-}) => {
+}: any) => {
   return (
     <div className={`${className || ''} ${styles['container']}`}>
       {isFree && <span className={styles['chip']}>{cardLabel.free}</span>}

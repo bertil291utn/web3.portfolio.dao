@@ -1,0 +1,51 @@
+@import 'src/css/variables.scss';
+
+.claimingTokens {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 45vh;
+  @media screen and (max-width: 768px) {
+    height: 35vh;
+  }
+}
+
+.content {
+  width: 80%;
+  @media screen and (max-width: 768px) {
+    width: unset;
+  }
+  margin: 0 auto;
+  text-align: center;
+  .title {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .description {
+    margin: 3rem 0;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+
+  .button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    &__content {
+      margin-top: 3rem;
+      width: 60%;
+    }
+  }
+
+  b {
+    color: $primary;
+  }
+}
+
+.get-eth {
+  margin: 1.5rem 0;
+}
