@@ -1,0 +1,16 @@
+@import 'src/css/variables.scss';
+
+.footer {
+  padding: 2rem 0;
+  text-align: center;
+  border-top: 1px solid $card-bg-color;
+}
+
+.switch-button {
+  background-color: unset;
+  border: 1px solid $card-bg-color;
+  cursor: pointer;
+  border-radius: 3px;
+  float: left;
+  padding: 0.25rem 0.5rem;
+}

@@ -1,0 +1,59 @@
+@import 'src/css/variables.scss';
+
+ul {
+  &.navbar {
+    margin-top: 5rem;
+    list-style: none;
+    display: flex;
+    gap: 40px;
+    justify-content: flex-end;
+    font-weight: 700;
+    font-size: 18px;
+    a {
+      color: unset;
+      text-decoration: none;
+    }
+    & > * {
+      cursor: pointer;
+    }
+  }
+  .navbar__content {
+    display: block;
+    @media screen and (max-width: 600px) {
+      display: none;
+    }
+  }
+
+  .navbar__icon {
+    display: none;
+    svg {
+      font-size: 1.5rem;
+    }
+    @media screen and (max-width: 600px) {
+      display: block;
+      height: 1.5rem;
+      width: 1.5rem;
+    }
+  }
+}
+
+li {
+  &.list {
+    padding-bottom: 0.5rem;
+  }
+
+  &.active {
+    position: relative;
+    &::before {
+      transform: translateX(-50%);
+      border-radius: 100%;
+      position: absolute;
+      background: $primary;
+      bottom: -10px;
+      height: 8px;
+      content: '';
+      width: 8px;
+      left: 50%;
+    }
+  }
+}

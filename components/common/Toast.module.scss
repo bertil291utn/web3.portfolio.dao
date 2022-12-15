@@ -1,0 +1,36 @@
+@import 'src/css/variables';
+.toast {
+  position: fixed;
+  top: 1rem;
+  right: 3%;
+  width: fit-content;
+  @media screen and (max-width: 768px) {
+    width: 90%;
+  }
+  margin: 0 auto;
+  padding: 0.65rem;
+  border-radius: 0.5rem;
+  &__show {
+    display: block;
+  }
+  &__hide {
+    display: none;
+  }
+  .close {
+    float: right;
+    top: 0;
+  }
+  &__error {
+    background-color: $error;
+  }
+  &__warning {
+    background-color: $warning;
+  }
+  &__success {
+    background-color: $success;
+  }
+  &__content {
+    padding: 1.25rem 1rem;
+    font-weight: bold;
+  }
+}

@@ -1,0 +1,45 @@
+@import 'src/css/variables.scss';
+
+.container {
+  position: relative;
+  .chip {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 25px;
+    background-color: $light-bg;
+    color: $dark-bg;
+  }
+  span {
+    display: block;
+  }
+  img {
+    width: 100%;
+    height: 275px;
+    border-radius: 10px 10px 0 0;
+  }
+  footer {
+    margin-top: -5px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: rgb(0 0 0 / 8%) 0px 4px 15px;
+    .container {
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+    }
+  }
+  .diamond-rare {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+  }
+
+  .token-id {
+    font-size: 0.8rem;
+  }
+}

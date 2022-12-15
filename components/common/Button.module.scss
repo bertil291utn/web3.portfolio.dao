@@ -1,0 +1,57 @@
+@import 'src/css/variables.scss';
+
+.button {
+  font-family: 'Mulish', sans-serif;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  span {
+    font-size: 1rem;
+    font-weight: bold;
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+  cursor: pointer;
+  padding: 0.8rem 1.5rem;
+  border: unset;
+  border-radius: 0.5rem;
+  &.primary {
+    background-color: $primary;
+    color: $card-bg-color;
+    box-shadow: 5px 4px 8px 0px $card-bg-color;
+  }
+  &.tertiary {
+    background-color: unset;
+  }
+}
+
+.fab-button {
+  font-family: 'Mulish', sans-serif;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0.5rem;
+  background-color: $primary;
+  box-shadow: 5px 4px 8px 0px $card-bg-color;
+  border: none;
+  .left-icon {
+    font-size: 1.5rem;
+  }
+  color: $card-bg-color;
+
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  bottom: 0;
+  right: 0;
+  margin: 35px 25px;
+  @media screen and (max-width: 768px) {
+    margin: 10px 10px;
+  }
+}
+
+.left-icon {
+  font-size: 1.25rem;
+}
