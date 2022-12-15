@@ -16,7 +16,7 @@ export const ProfileSections = {
   walletInfoTitle: 'Wallet info',
   walletInfoSubtitle: 'Connection button and available tokens',
   stakingSectionTitle: 'Staking',
-  stakingSectionSubtitle: (tokenSymbol) =>
+  stakingSectionSubtitle: (tokenSymbol:string) =>
     `Stake $${tokenSymbol} tokens to rate, view and be part of our DAO. Min 1 max 100`,
 };
 

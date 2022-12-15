@@ -1,7 +1,7 @@
 import { IoDiamond } from 'react-icons/io5';
 import styles from './NFTProfileCard.module.scss';
 
-const NFTProfileCard = ({ tokenId, srcImage, name, superRare, className }) => {
+const NFTProfileCard = ({ tokenId, srcImage, name, superRare, className }: any) => {
   return (
     <div className={`${className || ''} ${styles['container']}`}>
       {superRare && (

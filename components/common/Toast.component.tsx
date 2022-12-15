@@ -1,12 +1,11 @@
 import styles from './Toast.module.scss';
 
-const ToastComponent = ({ variant, children, show, setShow }) => {
+const ToastComponent = ({ variant, children, show, setShow }: any) => {
   const handleClose = () => setShow(false);
   return (
     <div
-      className={`${styles['toast']} ${styles[`toast__${variant}`]} ${
-        show ? styles['toast__show'] : styles['toast__hide']
-      }`}
+      className={`${styles['toast']} ${styles[`toast__${variant}`]} ${show ? styles['toast__show'] : styles['toast__hide']
+        }`}
     >
       <span className={`${styles['close']} hand`} onClick={handleClose}>
         X

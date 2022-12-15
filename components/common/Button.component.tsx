@@ -8,7 +8,7 @@ const ButtonComponent = ({
   title,
   className,
   type,
-}) => {
+}:any) => {
   const LeftIcon = leftIcon;
   if (buttonType !== 'fab-button') {
     return (

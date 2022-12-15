@@ -1,6 +1,6 @@
 import styles from './SectionPanel.module.scss';
 
-const SectionPanel = ({ title, subtitle, children, className, id }) => {
+const SectionPanel = ({ title, subtitle, children, className, id }: any) => {
   return (
     <div className={`${className || ''} ${styles['container']}`} id={id}>
       <span className={styles['title']}>{title}</span>

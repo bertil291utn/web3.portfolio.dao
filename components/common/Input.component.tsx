@@ -8,7 +8,7 @@ const InputComponent = ({
   min,
   max,
   className,
-}) => {
+}: any) => {
   return (
     <input
       className={`${className || ''} ${styles['input']}`}

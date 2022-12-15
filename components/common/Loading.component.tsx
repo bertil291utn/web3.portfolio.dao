@@ -1,11 +1,10 @@
 import styles from './Loading.module.scss';
 
-const LoadingComponent = ({ fullHeight, title, description }) => {
+const LoadingComponent = ({ fullHeight, title, description }: any) => {
   return (
     <div
-      className={`${styles['container']} ${
-        fullHeight ? styles['full-height'] : ''
-      }`}
+      className={`${styles['container']} ${fullHeight ? styles['full-height'] : ''
+        }`}
     >
       <p className={styles['title']}>{title}</p>
       <span className={styles['subtitle']}>{description}</span>
