@@ -1,0 +1,18 @@
+$primary: #fcded1;
+$gray: #828282;
+$card-bg-color: #131826;
+
+// dark mode
+$dark-bg: #252e48;
+$dark-color-text: #f6f9f9;
+
+//light mode
+$light-bg: $dark-color-text;
+$light-color-text: $card-bg-color;
+
+$max-width: 900px;
+
+//variant colors
+$success: #37a169;
+$warning: #dd6a1f;
+$error: #e53e3e;

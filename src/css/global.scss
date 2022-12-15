@@ -1,0 +1,39 @@
+@import 'src/css/variables.scss';
+
+// @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@200;300;400;500;600;700;800;900;1000&display=optional');
+
+@font-face {
+  font-family: 'Just Sunday';
+  src: url('/fonts/Just-Sunday.ttf');
+  font-weight: 500;
+  font-style: normal;
+}
+
+:root {
+  max-width: $max-width;
+  margin: 0 auto;
+  font-family: 'Mulish', sans-serif;
+  background-color: $light-bg;
+  @media screen and (max-width: 768px) {
+    padding: 0 10px;
+  }
+}
+
+.content {
+  margin: 5rem 0;
+}
+
+.hand {
+  cursor: pointer;
+}
+
+[data-theme='dark'] {
+  background: $dark-bg;
+  color: $dark-color-text;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: $gray;
+}

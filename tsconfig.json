@@ -29,41 +29,7 @@
   ],
   "baseUrl": ".",
   "paths": {
-    "@components/*": [
-      "components/*"
-    ],
-    "@layouts/*": [
-      "layouts/*"
-    ],
-    "@pages/*": [
-      "pages/*"
-    ],
-    "@placeholders/*": [
-      "placeholders/*"
-    ],
-    "@data/*": [
-      "data/*"
-    ],
-    "@hooks/*": [
-      "hooks/*"
-    ],
-    "@keys/*": [
-      "keys/*"
-    ],
-    "@utils/*": [
-      "utils/*"
-    ],
-    "@context/*": [
-      "context/*"
-    ],
-    "@config/*": [
-      "config/*"
-    ],
-    "@web3/*": [
-      "web3/*"
-    ],
-    "@constants/*": [
-      "constants/*"
-    ],
+    "@": ["src"],
+     "@*": ["src/*"],
   }
 }
