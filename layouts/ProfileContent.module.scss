@@ -1,0 +1,61 @@
+@import 'src/css/variables.scss';
+
+.content {
+  > div {
+    padding: 2rem 0;
+  }
+
+  .cards {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+    @media screen and (min-width: 425px) {
+      grid-template-columns: 1fr 1fr;
+    }
+    @media screen and (min-width: 768px) {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  span {
+    display: block;
+    margin: 0.5rem 0;
+  }
+  .connect-btn {
+    & > div {
+      @media screen and (max-width: 768px) {
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+  .profile {
+    margin: 2rem 0;
+  }
+
+  .form {
+    display: flex;
+    width: 25%;
+    @media screen and (max-width: 768px) {
+      width: unset;
+    }
+
+    .input {
+      font-size: 1rem;
+      border-radius: 0.5rem 0 0 0.5rem;
+    }
+    .button {
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
+  }
+}
+
+.claim-btn {
+  margin-top: 3rem;
+}
+
+.staking {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
