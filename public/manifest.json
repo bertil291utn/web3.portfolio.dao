@@ -1,0 +1,16 @@
+{
+  "name": "Bertil portfolio",
+  "short_name": "BT portfolio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fcded1",
+  "theme_color": "#fcded1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo-72x72.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    }
+  ]
+}
