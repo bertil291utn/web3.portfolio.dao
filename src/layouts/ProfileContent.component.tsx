@@ -104,16 +104,14 @@ const ProfileContent = () => {
         NFTEditionContractAdd?.toLowerCase()
     );
     if (resp.length) {
-      const tokenIdsArr = resp.map((elem: any) => elem.tokenId);
-      console.log("🚀 ~ file: ProfileContent.component.tsx:109 ~ const_getNFTs= ~ tokenIdsArr", tokenIdsArr)
+      const respData = resp.map((elem: any) => ({ tokenId: elem.tokenId, quantity: elem.balance }));
       const _tokenCards = await Promise.all(
-        tokenIdsArr.map(async (tokenId: string) => {
+        respData.map(async ({ tokenId, quantity }: any) => {
           const tokenURI = await NFTTokenContract.uri(+tokenId);
-          console.log("🚀 ~ file: ProfileContent.component.tsx:112 ~ tokenIdsArr.map ~ tokenURI", tokenURI)
           if (!tokenURI) return null;
           const res = await fetch(tokenURI);
           const tokenURIResp = await res.json();
-          return { ...tokenURIResp, tokenId };
+          return { ...tokenURIResp, tokenId, quantity };
         })
       );
       setTokenCards(_tokenCards.filter((elem: any) => elem));
@@ -299,6 +297,7 @@ const ProfileContent = () => {
                   tokenId={elem.tokenId}
                   srcImage={elem.image}
                   name={elem.name}
+                  quantity={elem.quantity}
                   superRare={elem.attributes[0].value > 70}
                 />
               ))}
