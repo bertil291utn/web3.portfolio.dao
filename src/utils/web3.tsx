@@ -4,7 +4,6 @@ import {
   ERC20TokenContractAdd,
   NFTEditionClaimableContractAdd,
   NFTEditionContractAdd,
-  RateContractAdd,
   StakingContractAdd,
 } from '@config/contracts';
 import { getDefaultWallets } from '@rainbow-me/rainbowkit';
