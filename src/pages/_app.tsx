@@ -8,8 +8,8 @@ import { navbarElements } from '@placeholders/navbar.placeholders';
 import { ThemeProvider } from 'next-themes';
 import { chainProv, client } from '@utils/web3';
 import WalletProvider from '@context/WalletProvider';
-import '../css/global.scss';
 import type { AppProps } from 'next/app'
+import '../css/global.scss';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

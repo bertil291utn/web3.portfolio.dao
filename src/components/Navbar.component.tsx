@@ -21,9 +21,7 @@ const NavbarComponent = ({ navbarElements }: any) => {
             >
               <Link href={path}>
                 <a
-                  target={
-                    label == navbarElements.blog.label ? '_blank' : undefined
-                  }
+                  target={undefined}
                 >
                   <span className={`${styles['navbar__content']}`}>
                     {label}
