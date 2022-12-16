@@ -105,9 +105,11 @@ const ProfileContent = () => {
     );
     if (resp.length) {
       const tokenIdsArr = resp.map((elem: any) => elem.tokenId);
+      console.log("🚀 ~ file: ProfileContent.component.tsx:109 ~ const_getNFTs= ~ tokenIdsArr", tokenIdsArr)
       const _tokenCards = await Promise.all(
         tokenIdsArr.map(async (tokenId: string) => {
           const tokenURI = await NFTTokenContract.uri(+tokenId);
+          console.log("🚀 ~ file: ProfileContent.component.tsx:112 ~ tokenIdsArr.map ~ tokenURI", tokenURI)
           if (!tokenURI) return null;
           const res = await fetch(tokenURI);
           const tokenURIResp = await res.json();
@@ -273,7 +275,7 @@ const ProfileContent = () => {
                 <div className={styles['claim-btn']}>
                   <ButtonComponent
                     onClick={() =>
-                      router.push(`/${navbarElements.tokens.label}`)
+                      router.push(`${navbarElements.tokens.path}`)
                     }
                     buttonType='primary'
                     btnLabel={ProfileLabel.claimTokens}

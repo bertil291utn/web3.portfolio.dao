@@ -23,6 +23,7 @@ import ToastComponent from '@components/common/Toast.component';
 import { localStorageKeys } from '@keys/localStorage';
 import { useRouter } from 'next/router';
 import { navbarElements } from '@placeholders/navbar.placeholders';
+import { IdContent } from '@placeholders/profile.placeholder';
 
 const NFTContent = () => {
   const router = useRouter();
@@ -50,7 +51,7 @@ const NFTContent = () => {
       ) {
         await finishTx({
           txHashKeyName: localStorageKeys.approveClaimingNFTTokenTxHash,
-          path: navbarElements.tokens.label,
+          path: navbarElements.tokens.path,
         });
       }
     });
@@ -62,7 +63,7 @@ const NFTContent = () => {
       ) {
         await finishTx({
           txHashKeyName: localStorageKeys.claimingNFTTokenTxHash,
-          path: navbarElements.tokens.label,
+          path: `${navbarElements.profile.path}#${IdContent.nfts}`,
           reload: true,
         });
       }
@@ -87,7 +88,7 @@ const NFTContent = () => {
   const finishTx = async ({ txHashKeyName, path, reload = false }: any) => {
     removeLocalStorageItem(txHashKeyName);
     setCurrentTxState[txHashKeyName](null);
-    router.push(`/${path}`);
+    router.push(`${path}`);
     await new Promise((r) => setTimeout(r, 2000));
     reload && window.location.reload();
   };

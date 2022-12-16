@@ -151,7 +151,7 @@ const PortfolioCard = ({
   };
 
   const claimAcceptBtnAction = () => {
-    router.push(`/${navbarElements.tokens.label}`);
+    router.push(`${navbarElements.tokens.path}`);
   };
 
   const stakeAcceptBtnAction = () => {

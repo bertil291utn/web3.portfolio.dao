@@ -41,11 +41,15 @@ contract MultipleEdition is ERC1155, ERC1155Supply, Ownable {
         _uri = newuri;
     }
 
-    function uri(
-        uint256 _tokenId
-    ) public view override returns (string memory) {
+    function uri(uint256 _tokenId)
+        public
+        view
+        override
+        returns (string memory)
+    {
         bytes memory uriBytes = bytes(_uri);
-        if (!exists(_tokenId) || uriBytes.length == 0) return "";
+        if (uriBytes.length == 0)
+            return "";
         return
             string(abi.encodePacked(_uri, Strings.toString(_tokenId), ".json"));
     }
