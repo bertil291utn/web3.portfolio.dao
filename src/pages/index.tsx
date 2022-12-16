@@ -12,7 +12,7 @@ export default function Home({ nfts }: any) {
 }
 
 export async function getStaticProps() {
-  const res = await fetch(nftDataURL);
+  const res = await fetch(nftDataURL ?? '');
   const nfts = await res.json();
 
   return {

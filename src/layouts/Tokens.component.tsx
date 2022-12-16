@@ -165,7 +165,7 @@ const TokensComponent = ({ NFTData }: any) => {
                       onClick={getTokensAction}
                     />
                   )}
-                  {ethUserBalance <= 0.005 && (
+                  {ethUserBalance <= 0.005 && isConnected && (
                     <ButtonComponent
                       className={styles['get-eth']}
                       buttonType='tertiary'

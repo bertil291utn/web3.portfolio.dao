@@ -6,6 +6,7 @@ const config = {
 };
 const alchemy = new Alchemy(config);
 
-export const getAllNFTs = (ownerAddress:any) => {
+export const getAllNFTs = (ownerAddress: string) => {
+  if (!ownerAddress) return;
   return alchemy.nft.getNftsForOwner(ownerAddress);
 };

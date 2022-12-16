@@ -96,11 +96,12 @@ const ProfileContent = () => {
 
   const _getNFTs = async (ownerAddress: string) => {
     const NFTTokenContract = getNFTEditionFactory({ provider });
-    let resp = await getAllNFTs(ownerAddress);
+    let resp: any = await getAllNFTs(ownerAddress);
+    if (!resp) return;
     resp = resp.ownedNfts.filter(
       (elem: any) =>
         elem.contract.address.toLowerCase() ===
-        NFTEditionContractAdd.toLowerCase()
+        NFTEditionContractAdd?.toLowerCase()
     );
     if (resp.length) {
       const tokenIdsArr = resp.map((elem: any) => elem.tokenId);
