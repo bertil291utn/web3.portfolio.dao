@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useWalletContext } from '@context/WalletProvider';
 import styles from './Navbar.module.scss';
 
-// todo-wip: add blog with a scrapper or json file from medium hashnode and any other
 
 const NavbarComponent = ({ navbarElements }: any) => {
   const router = useRouter();
