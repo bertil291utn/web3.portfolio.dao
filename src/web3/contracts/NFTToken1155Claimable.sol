@@ -24,7 +24,7 @@ contract MultipleEditionClaimable is ReentrancyGuard, Ownable {
     }
 
     function withdraw() public onlyOwner nonReentrant {
-        (bool success, ) = address(msg.sender).call{
+        (bool success, ) = address(owner()).call{
             value: address(this).balance
         }("");
         require(success, "withdraw failed to send");

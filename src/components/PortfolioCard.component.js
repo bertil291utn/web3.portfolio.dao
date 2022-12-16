@@ -14,7 +14,6 @@ import {
 } from '@placeholders/portfolio.placeholder';
 import { IdContent } from '@placeholders/profile.placeholder';
 import { useAccount, useProvider, useSigner } from 'wagmi';
-import { getRatingFactory } from '@utils/web3';
 import ToastComponent from '@components/common/Toast.component';
 import LoadingComponent from '@components/common/Loading.component';
 import { isTokenCheckPassed } from '@utils/common';
@@ -45,21 +44,7 @@ const PortfolioCard = ({
   const router = useRouter();
   const { address } = useAccount();
 
-  const listenEvents = ({ provider, address }) => {
-    const ratingContract = getRatingFactory({ provider });
-    //TODO: listen transfer event not just in rating component, but also all over the app _app file
-    ratingContract.on('RatedProject', async (from, rated) => {
-      if (from?.toLowerCase() == address?.toLowerCase()) {
-        await finishTx({
-          txHashKeyName: rated
-            ? localStorageKeys.ratingTxHash
-            : localStorageKeys.unRatingTxHash,
-          path: '',
-          reload: true,
-        });
-      }
-    });
-  };
+    
 
   const removeLocalStorageItem = (txHashKeyName) => {
     window.localStorage.removeItem(txHashKeyName);
@@ -117,38 +102,6 @@ const PortfolioCard = ({
     isRated && setActiveUnRatingHash();
   };
 
-  const rateProject = async () => {
-    if (!window.localStorage.getItem(localStorageKeys.isWeb3User)) {
-      setClaimTokensModal(true);
-      return;
-    }
-    const rateContract = getRatingFactory({ signer });
-    let tx;
-    const _isTokenCheckPassed = isTokenCheckPassed({
-      setClaimTokensModal,
-      setStakeTokensModal,
-      userCustomTokenBalance,
-      isStakeHolder,
-    });
-    if (_isTokenCheckPassed) {
-      try {
-        tx = await rateContract.rateProject(projectId, !isRated);
-        !isRated && setActiveRatingHash(tx.hash);
-        isRated && setActiveUnRatingHash(tx.hash);
-        !isRated &&
-          window.localStorage.setItem(localStorageKeys.ratingTxHash, tx.hash);
-        isRated &&
-          window.localStorage.setItem(localStorageKeys.unRatingTxHash, tx.hash);
-
-        await tx.wait();
-      } catch (error) {
-        handleError({
-          error,
-          txHashKeyName: localStorageKeys.ratingTxHash,
-        });
-      }
-    }
-  };
 
   const claimAcceptBtnAction = () => {
     router.push(`${navbarElements.tokens.path}`);

@@ -52,13 +52,6 @@ export const getStakingFactory = ({ provider, signer }:any) => {
   });
 };
 
-export const getRatingFactory = ({ provider, signer }:any) => {
-  return getContractFactory({
-    address: RateContractAdd,
-    ABI: RateABI,
-    signer: signer || provider,
-  });
-};
 
 export const getNFTEditionFactory = ({ provider, signer }:any) => {
   return getContractFactory({
