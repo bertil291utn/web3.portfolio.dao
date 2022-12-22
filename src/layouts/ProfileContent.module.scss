@@ -1,34 +1,31 @@
 @import 'src/css/variables.scss';
 
 .content {
-  > div {
+  >div {
     padding: 2rem 0;
   }
 
   .cards {
     display: grid;
     gap: 2rem;
-    grid-template-columns: 1fr;
-    @media screen and (min-width: 425px) {
-      grid-template-columns: 1fr 1fr;
-    }
-    @media screen and (min-width: 768px) {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
   }
 
   span {
     display: block;
     margin: 0.5rem 0;
   }
+
   .connect-btn {
-    & > div {
+    &>div {
       @media screen and (max-width: 768px) {
         justify-content: center;
         align-items: center;
       }
     }
   }
+
   .profile {
     margin: 2rem 0;
   }
@@ -36,6 +33,7 @@
   .form {
     display: flex;
     width: 25%;
+
     @media screen and (max-width: 768px) {
       width: unset;
     }
@@ -44,6 +42,7 @@
       font-size: 1rem;
       border-radius: 0.5rem 0 0 0.5rem;
     }
+
     .button {
       border-radius: 0 0.5rem 0.5rem 0;
     }
