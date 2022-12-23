@@ -1,16 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./ERC1155SupplyUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract MultipleEdition is ERC1155, ERC1155Supply, Ownable {
+contract NFTToken1155UUPS is
+    Initializable,
+    ERC1155Upgradeable,
+    ERC1155SupplyUpgradeable,
+    OwnableUpgradeable,
+    UUPSUpgradeable
+{
     string private _uri;
     mapping(uint256 => uint256) private tokenPrice;
 
-    constructor() ERC1155("") {}
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize() public initializer {
+        __ERC1155_init("");
+        __Ownable_init();
+        __UUPSUpgradeable_init();
+    }
 
     //GETTERS
 
@@ -48,8 +64,7 @@ contract MultipleEdition is ERC1155, ERC1155Supply, Ownable {
         returns (string memory)
     {
         bytes memory uriBytes = bytes(_uri);
-        if (uriBytes.length == 0)
-            return "";
+        if (uriBytes.length == 0) return "";
         return
             string(abi.encodePacked(_uri, Strings.toString(_tokenId), ".json"));
     }
@@ -62,7 +77,13 @@ contract MultipleEdition is ERC1155, ERC1155Supply, Ownable {
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
-    ) internal virtual override(ERC1155, ERC1155Supply) {
+    ) internal virtual override(ERC1155Upgradeable, ERC1155SupplyUpgradeable) {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
+
+    function _authorizeUpgrade(address newImplementation)
+        internal
+        override
+        onlyOwner
+    {}
 }
