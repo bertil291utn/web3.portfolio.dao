@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 import { ModalText } from '@placeholders/modal.placeholders';
 import styles from './Modal.module.scss';
 import useOutsideElement from '@hooks/useOutsideElement';
-import { localStorageKeys } from '@keys/localStorage';
 import ButtonComponent from '@components/common/Button.component';
 
 const ModalComponent = ({
