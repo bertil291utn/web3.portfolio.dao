@@ -29,7 +29,8 @@ import { ethers } from 'ethers';
 import LoadingComponent from '@components/common/Loading.component';
 import NFTContent from '@layouts/NFTContent.component';
 import { useTokenContext } from '@context/TokenProvider';
-import { getIPAddress } from '@utils/common';
+import { getIPTable } from '@utils/firebaseFunctions';
+
 
 const TokensComponent = ({ NFTData }: any) => {
   const { setNFTData } = useTokenContext();
@@ -104,17 +105,18 @@ const TokensComponent = ({ NFTData }: any) => {
       }
     });
   };
-  const _getIPAddress = async () => {
-    const resp = await getIPAddress();
-    if (!resp?.ip) return;
 
+  const checking = async () => {
+
+
+    const usersCollection = await getIPTable(address ?? '');
+    console.log("🚀 ~ file: Tokens.component.tsx:115 ~ checking ~ usersCollection", usersCollection?.data())
   }
 
   useEffect(() => {
     setActiveTknClaimHash(
       !!window.localStorage.getItem(localStorageKeys.claimingTxHash)
     );
-    _getIPAddress()
   }, []);
 
   const setCloseCurrentTx = () => {
