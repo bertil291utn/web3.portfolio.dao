@@ -29,13 +29,13 @@ import { ethers } from 'ethers';
 import LoadingComponent from '@components/common/Loading.component';
 import NFTContent from '@layouts/NFTContent.component';
 import { useTokenContext } from '@context/TokenProvider';
-import { getIPTable } from '@utils/firebaseFunctions';
+import { addNewDevice } from '@utils/firebaseFunctions';
 
 
 const TokensComponent = ({ NFTData }: any) => {
   const { setNFTData } = useTokenContext();
   const [activeTknClaimHash, setActiveTknClaimHash] = useState<boolean>();
-  const [activeNFTHash, setActiveNFTHash] = useState();
+  const [activeNFTHash] = useState();
   const [showToast, setShowToast] = useState();
   const [toastVariant, setToastVariant] = useState<string>();
   const [ethUserBalance, setEthUserBalance] = useState<number>(0);
@@ -98,20 +98,18 @@ const TokensComponent = ({ NFTData }: any) => {
         from?.toLowerCase() == ClaimableContractAdd?.toLowerCase() &&
         to?.toLowerCase() == address?.toLowerCase()
       ) {
-        //TODO-WIP: replace this set localstorage
-        // set ip address on firebase cloud firestore
-        window.localStorage.setItem(localStorageKeys.isWeb3User, 'true');
-        await finishTx();
+        try {
+          await addNewDevice(address, { isWeb3User: true })
+          await finishTx();
+
+        } catch (error: any) {
+          setShowToast(error.message);
+          setToastVariant('error');
+        }
       }
     });
   };
 
-  const checking = async () => {
-
-
-    const usersCollection = await getIPTable(address ?? '');
-    console.log("🚀 ~ file: Tokens.component.tsx:115 ~ checking ~ usersCollection", usersCollection?.data())
-  }
 
   useEffect(() => {
     setActiveTknClaimHash(
