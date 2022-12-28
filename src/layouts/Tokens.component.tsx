@@ -29,8 +29,8 @@ import { ethers } from 'ethers';
 import LoadingComponent from '@components/common/Loading.component';
 import NFTContent from '@layouts/NFTContent.component';
 import { useTokenContext } from '@context/TokenProvider';
+import { getIPAddress } from '@utils/common';
 
-//TODO: I might have to build in a different project for claiming and nft tokens
 const TokensComponent = ({ NFTData }: any) => {
   const { setNFTData } = useTokenContext();
   const [activeTknClaimHash, setActiveTknClaimHash] = useState<boolean>();
@@ -97,16 +97,24 @@ const TokensComponent = ({ NFTData }: any) => {
         from?.toLowerCase() == ClaimableContractAdd?.toLowerCase() &&
         to?.toLowerCase() == address?.toLowerCase()
       ) {
+        //TODO-WIP: replace this set localstorage
+        // set ip address on firebase cloud firestore
         window.localStorage.setItem(localStorageKeys.isWeb3User, 'true');
         await finishTx();
       }
     });
   };
+  const _getIPAddress = async () => {
+    const resp = await getIPAddress();
+    console.log("🚀 ~ file: Tokens.component.tsx:108 ~ const_getIPAddress=async ~ resp", resp.ip)
+
+  }
 
   useEffect(() => {
     setActiveTknClaimHash(
       !!window.localStorage.getItem(localStorageKeys.claimingTxHash)
     );
+    _getIPAddress()
   }, []);
 
   const setCloseCurrentTx = () => {
