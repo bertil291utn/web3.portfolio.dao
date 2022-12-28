@@ -1,3 +1,3 @@
 export const collections = {
-  ips: 'ipfs'
+  wallets: 'wallets'
 }

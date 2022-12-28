@@ -6,7 +6,7 @@ const db = firebase.firestore();
 
 export const getIPTable = (walletAddress: string) => {
   if (!walletAddress) return;
-  return db.collection(collections.ips).doc(walletAddress).get();
+  return db.collection(collections.wallets).doc(walletAddress).get();
 }
 
 export const addNewDevice = (walletAddresID: string, body: IPs) => {
@@ -16,7 +16,7 @@ export const addNewDevice = (walletAddresID: string, body: IPs) => {
   if (!body) {
     throw new Error("Can't be empty body data")
   }
-  return db.collection(collections.ips).doc(walletAddresID).set(body);
+  return db.collection(collections.wallets).doc(walletAddresID).set(body);
 }
 
 interface IPs {
