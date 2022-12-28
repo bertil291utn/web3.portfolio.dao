@@ -106,7 +106,7 @@ const TokensComponent = ({ NFTData }: any) => {
   };
   const _getIPAddress = async () => {
     const resp = await getIPAddress();
-    console.log("🚀 ~ file: Tokens.component.tsx:108 ~ const_getIPAddress=async ~ resp", resp.ip)
+    if (!resp?.ip) return;
 
   }
 
