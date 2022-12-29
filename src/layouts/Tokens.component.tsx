@@ -51,6 +51,7 @@ const TokensComponent = ({ NFTData }: any) => {
     setEthUserBalance(+_balance);
   };
   const setNFTsMetadata = async (nfts: any) => {
+    if (!nfts?.length) return;
     const NFTEditionContract = getNFTEditionFactory({ provider });
     const resp = await Promise.all(
       nfts.map(async (elem: any) => {

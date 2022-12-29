@@ -14,6 +14,10 @@ export const addNewDevice = (walletAddresID: string, body: IPs) => {
   return db.collection(collections.wallets).doc(walletAddresID).set(body);
 }
 
+export const getNFTs = async() => {
+  return db.collection(collections.nfts).get();
+}
+
 interface IPs {
   isWeb3User: boolean;
 }

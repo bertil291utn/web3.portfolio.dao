@@ -1,3 +1,4 @@
 export const collections = {
-  wallets: 'wallets'
+  wallets: 'wallets',
+  nfts: 'nfts'
 }
