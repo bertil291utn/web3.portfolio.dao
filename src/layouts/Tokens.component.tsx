@@ -32,8 +32,7 @@ import { useTokenContext } from '@context/TokenProvider';
 import { addNewDevice } from '@utils/firebaseFunctions';
 
 
-const TokensComponent = ({ NFTData }: any) => {
-  const { setNFTData } = useTokenContext();
+const TokensComponent = () => {
   const [activeTknClaimHash, setActiveTknClaimHash] = useState<boolean>();
   const [activeNFTHash] = useState();
   const [showToast, setShowToast] = useState();
@@ -50,38 +49,9 @@ const TokensComponent = ({ NFTData }: any) => {
     const _balance = ethers.utils.formatEther(userBalance?.toString());
     setEthUserBalance(+_balance);
   };
-  const setNFTsMetadata = async (nfts: any) => {
-    if (!nfts?.length) return;
-    const NFTEditionContract = getNFTEditionFactory({ provider });
-    const resp = await Promise.all(
-      nfts.map(async (elem: any) => {
-        const ownerBalance = await NFTEditionContract.balanceOf(
-          OwnerAddress,
-          elem.id
-        );
-        const totalSupply = (
-          await NFTEditionContract.totalSupply(elem.id)
-        ).toString();
-        const quantityLeft = ownerBalance.toString();
-        const allMinted = ownerBalance.toString() == 0;
-        let price = await NFTEditionContract.getTokenPrice(elem.id);
-        price = ethers.utils.formatEther(price).toString();
-        return {
-          ...elem,
-          allMinted,
-          quantityLeft,
-          totalSupply,
-          price,
-          free: price <= 0,
-        };
-      })
-    );
-    setNFTData(resp);
-  };
-
+  
   useEffect(() => {
     address && getBalance({ provider, address });
-    setNFTsMetadata(NFTData);
     isFinishedTransferTx({ provider, address });
   }, [address]);
 
