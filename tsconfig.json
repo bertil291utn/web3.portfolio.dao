@@ -57,6 +57,9 @@
       "@config/*": [
         "src/config/*"
       ],
+      "@interfaces/*": [
+        "src/interfaces/*"
+      ],
     }
   },
   "include": [

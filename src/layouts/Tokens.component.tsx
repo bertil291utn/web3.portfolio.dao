@@ -11,12 +11,10 @@ import { useAccount, useBalance, useSigner } from 'wagmi';
 import {
   ClaimableContractAdd,
   ERC20TokenContractAdd,
-  OwnerAddress,
 } from 'src/config/contracts';
 import ToastComponent from '@components/common/Toast.component';
 import {
   getClaimableFactory,
-  getNFTEditionFactory,
   getTokenFactory,
 } from '@utils/web3';
 import { localStorageKeys } from '@keys/localStorage';
@@ -28,7 +26,6 @@ import styles from './Token.module.scss';
 import { ethers } from 'ethers';
 import LoadingComponent from '@components/common/Loading.component';
 import NFTContent from '@layouts/NFTContent.component';
-import { useTokenContext } from '@context/TokenProvider';
 import { addNewDevice } from '@utils/firebaseFunctions';
 
 
@@ -40,7 +37,7 @@ const TokensComponent = () => {
   const [ethUserBalance, setEthUserBalance] = useState<number>(0);
   const [isConnected, setIsConnected] = useState<boolean>();
   const { data: signer } = useSigner();
-  const { userCustomTokenBalance, tokenSymbol } = useWalletContext();
+  const ctx = useWalletContext();
   const provider = useProvider();
   const { address, isConnected: _isConnected } = useAccount();
 
@@ -49,7 +46,7 @@ const TokensComponent = () => {
     const _balance = ethers.utils.formatEther(userBalance?.toString());
     setEthUserBalance(+_balance);
   };
-  
+
   useEffect(() => {
     address && getBalance({ provider, address });
     isFinishedTransferTx({ provider, address });
@@ -122,13 +119,13 @@ const TokensComponent = () => {
       <div className={styles['content']}>
         {!activeTknClaimHash && !activeNFTHash ? (
           <>
-            {(!isConnected || userCustomTokenBalance?.toString() <= 0) && (
+            {(!isConnected || ctx && ctx.userCustomTokenBalance <= 0) && (
               <>
                 <span className={styles['title']}>{tokenPageLabel.title}</span>
                 <p
                   className={styles['description']}
                   dangerouslySetInnerHTML={{
-                    __html: tokenPageLabel.description(tokenSymbol),
+                    __html: tokenPageLabel.description(ctx && ctx.tokenSymbol),
                   }}
                 />
                 <div className={styles['button']}>
@@ -166,7 +163,7 @@ const TokensComponent = () => {
         )}
       </div>
       {isConnected &&
-        userCustomTokenBalance?.toString() > 0 &&
+        ctx && ctx.userCustomTokenBalance > 0 &&
         !activeTknClaimHash &&
         !activeNFTHash && (
           <>
