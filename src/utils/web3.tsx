@@ -12,7 +12,6 @@ import {
   configureChains,
   createClient,
   erc20ABI,
-  erc721ABI,
 } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { infuraProvider } from 'wagmi/providers/infura';
@@ -21,50 +20,57 @@ import ClaimableABI from '@web3/ABI/Claimable.json';
 import StakingABI from '@web3/ABI/StakingToken.json';
 import ERC1155ABI from '@web3/ABI/ERC1155.json';
 import ERC1155ClaimableABI from '@web3/ABI/ERC1155Claimable.json';
+import {Provider} from '@interfaces/providers'
 
-export const getContractFactory = ({ address, ABI, signer }:any) => {
-  return new ethers.Contract(address, ABI, signer);
+
+interface ContractFactory extends Provider {
+  address: string
+  ABI: ethers.ContractInterface
+}
+
+export const getContractFactory = ({ address, ABI, signerProvider }: ContractFactory) => {
+  return new ethers.Contract(address, ABI, signerProvider);
 };
 
-export const getTokenFactory = ({ provider, signer }:any) => {
+export const getTokenFactory = ({ signerProvider }: Provider) => {
   return getContractFactory({
-    address: ERC20TokenContractAdd,
+    address: ERC20TokenContractAdd || '',
     ABI: erc20ABI,
-    signer: signer || provider,
+    signerProvider,
   });
 };
 
-export const getClaimableFactory = ({ provider, signer }:any) => {
+export const getClaimableFactory = ({ signerProvider }: Provider) => {
   return getContractFactory({
-    address: ClaimableContractAdd,
+    address: ClaimableContractAdd || '',
     ABI: ClaimableABI,
-    signer: signer || provider,
+    signerProvider,
   });
 };
 
-export const getStakingFactory = ({ provider, signer }:any) => {
+export const getStakingFactory = ({ signerProvider }: Provider) => {
   return getContractFactory({
-    address: StakingContractAdd,
+    address: StakingContractAdd || '',
     ABI: StakingABI,
-    signer: signer || provider,
+    signerProvider
   });
 };
 //
 
 
-export const getNFTEditionFactory = ({ provider, signer }:any) => {
+export const getNFTEditionFactory = ({ signerProvider }: Provider) => {
   return getContractFactory({
-    address: NFTEditionContractAdd,
+    address: NFTEditionContractAdd || '',
     ABI: ERC1155ABI,
-    signer: signer || provider,
+    signerProvider
   });
 };
 
-export const getNFTEditionClaimableFactory = ({ provider, signer }:any) => {
+export const getNFTEditionClaimableFactory = ({ signerProvider }: Provider) => {
   return getContractFactory({
-    address: NFTEditionClaimableContractAdd,
+    address: NFTEditionClaimableContractAdd || '',
     ABI: ERC1155ClaimableABI,
-    signer: signer || provider,
+    signerProvider
   });
 };
 

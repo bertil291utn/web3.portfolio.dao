@@ -7,7 +7,7 @@ import {
 } from '@placeholders/tokens.placeholder';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useEffect, useState } from 'react';
-import { useAccount, useBalance, useSigner } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 import {
   ClaimableContractAdd,
   ERC20TokenContractAdd,
@@ -27,6 +27,7 @@ import { ethers } from 'ethers';
 import LoadingComponent from '@components/common/Loading.component';
 import NFTContent from '@layouts/NFTContent.component';
 import { addNewDevice } from '@utils/firebaseFunctions';
+import { Contract } from '@interfaces/providers'
 
 
 const TokensComponent = () => {
@@ -36,30 +37,30 @@ const TokensComponent = () => {
   const [toastVariant, setToastVariant] = useState<string>();
   const [ethUserBalance, setEthUserBalance] = useState<number>(0);
   const [isConnected, setIsConnected] = useState<boolean>();
-  const { data: signer } = useSigner();
+  const signer = useSigner();
   const ctx = useWalletContext();
   const provider = useProvider();
-  const { address, isConnected: _isConnected } = useAccount();
+  const acct = useAccount();
 
-  const getBalance = async ({ provider, address }: any) => {
-    const userBalance = await provider.getBalance(address);
+  const getBalance = async ({ signerProvider, address }: Contract) => {
+    const userBalance = await signerProvider.getBalance(address);
     const _balance = ethers.utils.formatEther(userBalance?.toString());
     setEthUserBalance(+_balance);
   };
 
   useEffect(() => {
-    address && getBalance({ provider, address });
-    isFinishedTransferTx({ provider, address });
-  }, [address]);
+    acct.address && getBalance({ signerProvider: provider, address: acct.address });
+    acct.address && isFinishedTransferTx({ signerProvider: provider, address: acct.address });
+  }, [acct.address]);
 
   useEffect(() => {
-    setIsConnected(_isConnected);
-  }, [_isConnected]);
+    setIsConnected(acct.isConnected);
+  }, [acct.isConnected]);
 
   const router = useRouter();
 
-  const isFinishedTransferTx = async ({ provider, address }: any) => {
-    const tokenContract = getTokenFactory({ provider });
+  const isFinishedTransferTx = async ({ signerProvider, address }: Contract) => {
+    const tokenContract = getTokenFactory({ signerProvider });
     //TODO: listen transfer event not just in token component, but also all over the app _app file
     tokenContract.on('Transfer', async (from: string, to: string) => {
       if (
@@ -101,8 +102,9 @@ const TokensComponent = () => {
   };
 
   const getTokensAction = async () => {
+    if (!signer.data) return;
     try {
-      const claimableContract = getClaimableFactory({ signer });
+      const claimableContract = getClaimableFactory({ signerProvider: signer.data });
       let tx = await claimableContract.claim(ERC20TokenContractAdd);
       window.localStorage.setItem(localStorageKeys.claimingTxHash, tx.hash);
       setActiveTknClaimHash(tx.hash);

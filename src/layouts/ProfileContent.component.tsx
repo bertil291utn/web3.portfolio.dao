@@ -31,6 +31,7 @@ import { localStorageKeys } from '@keys/localStorage';
 import ToastComponent from '@components/common/Toast.component';
 import { getAllNFTs } from '@utils/NFT';
 import NFTProfileCard from '@components/common/NFTProfileCard.component';
+import { Contract } from '@interfaces/providers';
 
 const ProfileContent = () => {
   const router = useRouter();
@@ -41,11 +42,10 @@ const ProfileContent = () => {
   const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>();
   const [activeStakingHash, setActiveStakingHash] = useState<boolean>();
   const [activeUnStakingHash, setActiveUnStakingHash] = useState<boolean>();
-  const { userCustomTokenBalance, userStakedAmount, tokenSymbol } =
-    useWalletContext();
+  const ctx = useWalletContext();
   const [tokenAmount, setTokenAmount] = useState<string>();
-  const { address, isConnected } = useAccount();
-  const { data: signer } = useSigner();
+  const acct = useAccount();
+  const signer = useSigner();
   const provider = useProvider();
 
   const setCurrentTxState = {
@@ -54,9 +54,9 @@ const ProfileContent = () => {
     [localStorageKeys.unStakingTxHash]: setActiveUnStakingHash,
   };
 
-  const listenEvents = ({ provider, address }: any) => {
-    const stakingContract = getStakingFactory({ provider });
-    const tokenContract = getTokenFactory({ provider });
+  const listenEvents = ({ signerProvider, address }: Contract) => {
+    const stakingContract = getStakingFactory({ signerProvider });
+    const tokenContract = getTokenFactory({ signerProvider });
     //LISTENERS
     //TODO: listen transfer event not just in token component, but also all over the app _app file
     tokenContract.on('Approval', async (owner: string, spender: string) => {
@@ -95,7 +95,8 @@ const ProfileContent = () => {
   //https://ethereum.stackexchange.com/questions/99343/how-to-automatically-add-a-custom-token-to-metamask-with-ethers-js
 
   const _getNFTs = async (ownerAddress: string) => {
-    const NFTTokenContract = getNFTEditionFactory({ provider });
+    if (!signer.data) return;
+    const NFTTokenContract = getNFTEditionFactory({ signerProvider: signer.data });
     let resp: any = await getAllNFTs(ownerAddress);
     if (!resp) return;
     resp = resp.ownedNfts.filter(
@@ -131,19 +132,20 @@ const ProfileContent = () => {
   }, []);
 
   useEffect(() => {
+    if (!ctx?.userStakedAmount) return;
     const _tokenInputVal =
-      userStakedAmount?.toString() <= 0
-        ? minStakingAmount
-        : userStakedAmount &&
-        ethers.utils.formatEther(userStakedAmount?.toString());
+      ctx?.userStakedAmount <= 0
+        ? (minStakingAmount).toString()
+        : ctx.userStakedAmount &&
+        ethers.utils.formatEther(ctx.userStakedAmount?.toString()) || '';
     setTokenAmount(_tokenInputVal);
-  }, [userStakedAmount]);
+  }, [ctx?.userStakedAmount]);
 
   useEffect(() => {
-    setIsWalletConnected(isConnected);
-    _getNFTs(address ?? '');
-    listenEvents({ provider, address });
-  }, [address]);
+    setIsWalletConnected(acct.isConnected);
+    _getNFTs(acct.address ?? '');
+    listenEvents({ signerProvider: provider, address: acct.address || '' });
+  }, [acct.address]);
 
   const isFormValid = ({ stakingAmount }: any) => {
     if (!stakingAmount) return false;
@@ -173,10 +175,11 @@ const ProfileContent = () => {
   };
 
   const stakeAction = async () => {
-    const stakingContract = getStakingFactory({ signer });
-    const tokenContract = getTokenFactory({ signer });
+    if (!signer.data) return;
+    const stakingContract = getStakingFactory({ signerProvider: signer.data });
+    const tokenContract = getTokenFactory({ signerProvider: signer.data });
     const allowanceAmount = await tokenContract.allowance(
-      address,
+      acct.address,
       StakingContractAdd
     );
 
@@ -220,7 +223,8 @@ const ProfileContent = () => {
   };
 
   const unStakeAction = async () => {
-    const stakingContract = getStakingFactory({ signer });
+    if (!signer.data) return
+    const stakingContract = getStakingFactory({ signerProvider: signer.data });
     let tx;
     try {
       tx = await stakingContract.unstake(
@@ -266,10 +270,10 @@ const ProfileContent = () => {
               <span className={`subtitle`}>{ProfileLabel.availableTokens}</span>
               <span>
                 {`${ethers.utils.formatEther(
-                  userCustomTokenBalance || 0
-                )} $${tokenSymbol}`}
+                  ctx?.userCustomTokenBalance || 0
+                )} $${ctx?.tokenSymbol}`}
               </span>
-              {userCustomTokenBalance?.toString() == 0 && (
+              {ctx?.userCustomTokenBalance == 0 && (
                 <div className={styles['claim-btn']}>
                   <ButtonComponent
                     onClick={() =>
@@ -305,11 +309,11 @@ const ProfileContent = () => {
           </SectionPanel>
         )}
 
-        {userCustomTokenBalance?.toString() > 0 && (
+        {ctx?.userCustomTokenBalance !== undefined && ctx?.userCustomTokenBalance > 0 && (
           <SectionPanel
             id={IdContent.staking}
             title={ProfileSections.stakingSectionTitle}
-            subtitle={ProfileSections.stakingSectionSubtitle(tokenSymbol)}
+            subtitle={ProfileSections.stakingSectionSubtitle(ctx?.tokenSymbol)}
           >
             {!activeApprovingHash &&
               !activeStakingHash &&
@@ -317,7 +321,7 @@ const ProfileContent = () => {
                 <div className={styles['staking']}>
                   <form
                     onSubmit={
-                      userStakedAmount?.toString() > 0
+                      ctx?.userStakedAmount > 0
                         ? unStakingAction
                         : stakingAction
                     }
@@ -331,8 +335,8 @@ const ProfileContent = () => {
                       onChange={(e: any) => setTokenAmount(e.target.value)}
                       min={'1'}
                       max={
-                        userStakedAmount?.toString() > 0
-                          ? ethers.utils.formatEther(userStakedAmount || 0)
+                        ctx?.userStakedAmount > 0
+                          ? ethers.utils.formatEther(ctx?.userStakedAmount || 0)
                           : '100'
                       }
                     />
@@ -341,19 +345,19 @@ const ProfileContent = () => {
                       type={'submit'}
                       buttonType={'primary'}
                       btnLabel={
-                        userStakedAmount?.toString() > 0 ? 'Unstake' : 'Stake'
+                        ctx?.userStakedAmount > 0 ? 'Unstake' : 'Stake'
                       }
                     />
                   </form>
-                  {userStakedAmount?.toString() > 0 && (
+                  {ctx?.userStakedAmount > 0 && (
                     <div>
                       <span className={`subtitle`}>
                         {ProfileLabel.stakedTokens}
                       </span>
                       <span>
                         {`${ethers.utils.formatEther(
-                          userStakedAmount
-                        )} $${tokenSymbol}`}
+                          (ctx?.userStakedAmount).toString()
+                        )} $${ctx.tokenSymbol}`}
                       </span>
                     </div>
                   )}

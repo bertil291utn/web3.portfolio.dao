@@ -21,7 +21,7 @@ export default function TokenProvider({ children }: any) {
 
   const setNFTsMetadata = async (nfts: any) => {
     if (!nfts?.length) return;
-    const NFTEditionContract = getNFTEditionFactory({ provider });
+    const NFTEditionContract = getNFTEditionFactory({ signerProvider: provider });
     return Promise.all(
       nfts.map(async (elem: any) => {
         const ownerBalance = await NFTEditionContract.balanceOf(
