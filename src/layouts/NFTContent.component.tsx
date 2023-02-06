@@ -31,18 +31,18 @@ const NFTContent = () => {
   const [activeClaimingHash, setActiveClaimingHash] = useState<boolean | undefined | null>();
   const [showToast, setShowToast] = useState();
   const [toastVariant, setToastVariant] = useState<string>();
-  const { data: signer } = useSigner();
+  const signer = useSigner();
   const { address } = useAccount();
   const [NFTData, setNFTData] = useState<any>();
-  const { tokenSymbol } = useWalletContext();
+  const ctx = useWalletContext();
   const { NFTData: _NFTData } = useTokenContext();
   const provider = useProvider();
 
   const listenEvents = ({ provider, address }: any) => {
     const NFTEditionContract = getNFTEditionFactory({
-      provider,
+      signerProvider: provider,
     });
-    const tokenContract = getTokenFactory({ provider });
+    const tokenContract = getTokenFactory({ signerProvider: provider });
 
     tokenContract.on('Approval', async (owner: string, spender: string) => {
       if (
@@ -110,11 +110,12 @@ const NFTContent = () => {
   };
 
   const getToken = (tokenId: number) => async () => {
-    const NFTEditionContract = getNFTEditionFactory({ provider });
+    const NFTEditionContract = getNFTEditionFactory({ signerProvider: provider });
+    if (!signer.data) return;
     const NFTClaimableEditionContract = getNFTEditionClaimableFactory({
-      signer,
+      signerProvider: signer.data,
     });
-    const tokenContract = getTokenFactory({ signer });
+    const tokenContract = getTokenFactory({ signerProvider: signer.data });
 
     let tx;
     try {
@@ -168,7 +169,7 @@ const NFTContent = () => {
           <div className={styles['header']}>
             <span className={styles['title']}>{NFTPage.title}</span>
             <p className={styles['description']}>
-              {NFTPage.description(tokenSymbol)}
+              {NFTPage.description(ctx!.tokenSymbol)}
             </p>
           </div>
           <div className={styles['cards']}>
@@ -179,7 +180,7 @@ const NFTContent = () => {
                   key={`card-${++index}`}
                   srcImage={elem.image}
                   name={elem.name}
-                  price={`${elem.free ? 0 : elem.price} ${tokenSymbol}`}
+                  price={`${elem.free ? 0 : elem.price} ${ctx?.tokenSymbol}`}
                   superRare={elem.superRare}
                   isFree={elem.free}
                   onClick={getToken(elem.id)}
