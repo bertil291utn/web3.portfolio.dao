@@ -27,7 +27,7 @@ import { ethers } from 'ethers';
 import LoadingComponent from '@components/common/Loading.component';
 import NFTContent from '@layouts/NFTContent.component';
 import { addNewDevice } from '@utils/firebaseFunctions';
-import { Contract } from '@interfaces/providers'
+import { Contract } from '@interfaces/provider'
 
 
 const TokensComponent = () => {

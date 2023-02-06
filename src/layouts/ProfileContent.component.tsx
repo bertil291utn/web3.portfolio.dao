@@ -31,7 +31,7 @@ import { localStorageKeys } from '@keys/localStorage';
 import ToastComponent from '@components/common/Toast.component';
 import { getAllNFTs } from '@utils/NFT';
 import NFTProfileCard from '@components/common/NFTProfileCard.component';
-import { Contract } from '@interfaces/providers';
+import { Contract } from '@interfaces/provider';
 
 const ProfileContent = () => {
   const router = useRouter();

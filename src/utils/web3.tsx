@@ -20,10 +20,10 @@ import ClaimableABI from '@web3/ABI/Claimable.json';
 import StakingABI from '@web3/ABI/StakingToken.json';
 import ERC1155ABI from '@web3/ABI/ERC1155.json';
 import ERC1155ClaimableABI from '@web3/ABI/ERC1155Claimable.json';
-import {Provider} from '@interfaces/providers'
+import { IProvider } from '@interfaces/provider';
 
 
-interface ContractFactory extends Provider {
+interface ContractFactory extends IProvider {
   address: string
   ABI: ethers.ContractInterface
 }
@@ -32,7 +32,7 @@ export const getContractFactory = ({ address, ABI, signerProvider }: ContractFac
   return new ethers.Contract(address, ABI, signerProvider);
 };
 
-export const getTokenFactory = ({ signerProvider }: Provider) => {
+export const getTokenFactory = ({ signerProvider }: IProvider) => {
   return getContractFactory({
     address: ERC20TokenContractAdd || '',
     ABI: erc20ABI,
@@ -40,7 +40,7 @@ export const getTokenFactory = ({ signerProvider }: Provider) => {
   });
 };
 
-export const getClaimableFactory = ({ signerProvider }: Provider) => {
+export const getClaimableFactory = ({ signerProvider }: IProvider) => {
   return getContractFactory({
     address: ClaimableContractAdd || '',
     ABI: ClaimableABI,
@@ -48,7 +48,7 @@ export const getClaimableFactory = ({ signerProvider }: Provider) => {
   });
 };
 
-export const getStakingFactory = ({ signerProvider }: Provider) => {
+export const getStakingFactory = ({ signerProvider }: IProvider) => {
   return getContractFactory({
     address: StakingContractAdd || '',
     ABI: StakingABI,
@@ -58,7 +58,7 @@ export const getStakingFactory = ({ signerProvider }: Provider) => {
 //
 
 
-export const getNFTEditionFactory = ({ signerProvider }: Provider) => {
+export const getNFTEditionFactory = ({ signerProvider }: IProvider) => {
   return getContractFactory({
     address: NFTEditionContractAdd || '',
     ABI: ERC1155ABI,
@@ -66,7 +66,7 @@ export const getNFTEditionFactory = ({ signerProvider }: Provider) => {
   });
 };
 
-export const getNFTEditionClaimableFactory = ({ signerProvider }: Provider) => {
+export const getNFTEditionClaimableFactory = ({ signerProvider }: IProvider) => {
   return getContractFactory({
     address: NFTEditionClaimableContractAdd || '',
     ABI: ERC1155ClaimableABI,

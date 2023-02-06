@@ -5,10 +5,10 @@ import { getStakingFactory, getTokenFactory } from '@utils/web3';
 import { DEFAULT_TOKEN_NAME } from '@constants/common';
 import Context from '@interfaces/wallet';
 import Props from '@interfaces/children';
-import {Provider} from '@interfaces/providers'
+import { IProvider } from '@interfaces/provider';
 
 
-interface Contract extends Provider {
+interface Contract extends IProvider {
   address: string
 }
 
@@ -34,7 +34,7 @@ export default function WalletProvider({ children }: Props) {
     setUserStakedAmount(userStakedAmount);
   };
 
-  const getTokenSymbol = async ({ signerProvider }: Provider) => {
+  const getTokenSymbol = async ({ signerProvider }: IProvider) => {
     const tokenContract = getTokenFactory({ signerProvider });
     const tokenSymbol = await tokenContract.symbol();
     setTokenSymbol(tokenSymbol || DEFAULT_TOKEN_NAME);

@@ -1,10 +1,10 @@
 import { ethers } from 'ethers'
 
-export interface Provider {
+export interface IProvider {
   signerProvider: ethers.providers.Provider | ethers.Signer
 }
 
-export interface Contract extends Provider {
+export interface Contract extends IProvider {
   address: string
 }
 
