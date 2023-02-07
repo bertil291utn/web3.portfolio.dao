@@ -1,6 +1,12 @@
 import styles from './Loading.module.scss';
 
-const LoadingComponent = ({ fullHeight, title, description }: any) => {
+interface Props {
+  fullHeight?: boolean
+  title: string
+  description?: string
+}
+
+const LoadingComponent = ({ fullHeight, title, description }: Props) => {
   return (
     <div
       className={`${styles['container']} ${fullHeight ? styles['full-height'] : ''
