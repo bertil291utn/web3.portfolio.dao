@@ -1,3 +1,3 @@
-export default interface Props {
+export default interface ChildrenType {
   children: React.ReactNode;
 }

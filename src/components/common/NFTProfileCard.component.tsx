@@ -7,7 +7,7 @@ interface Props {
   srcImage: string
   name: string
   superRare: boolean
-  className: string
+  className?: string
 }
 
 const NFTProfileCard = ({ tokenId, quantity, srcImage, name, superRare, className }: Props) => {

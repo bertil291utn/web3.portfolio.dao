@@ -4,7 +4,7 @@ import { useProvider, useAccount } from 'wagmi';
 import { getStakingFactory, getTokenFactory } from '@utils/web3';
 import { DEFAULT_TOKEN_NAME } from '@constants/common';
 import Context from '@interfaces/wallet';
-import Props from '@interfaces/children';
+import ChildrenType from '@interfaces/children';
 import { IProvider } from '@interfaces/provider';
 
 
@@ -15,7 +15,7 @@ interface Contract extends IProvider {
 
 const WalletContext = createContext<Context | null>(null);
 
-export default function WalletProvider({ children }: Props) {
+export default function WalletProvider({ children }: ChildrenType) {
   const [userCustomTokenBalance, setUserCustomTokenBalance] = useState(0);
   const [userStakedAmount, setUserStakedAmount] = useState(0);
   const [tokenSymbol, setTokenSymbol] = useState("");
