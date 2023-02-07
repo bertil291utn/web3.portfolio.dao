@@ -46,6 +46,7 @@ export default function TokenProvider({ children }: ChildrenType) {
           name: elem.name,
           description: elem.description,
           attributes: elem.attributes,
+          superRare: elem.superRare,
           allMinted,
           quantityLeft,
           totalSupply,

@@ -9,7 +9,7 @@ import {
   getTokenFactory,
 } from '@utils/web3';
 import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ERC20TokenContractAdd,
   NFTEditionClaimableContractAdd,
@@ -24,27 +24,41 @@ import { localStorageKeys } from '@keys/localStorage';
 import { useRouter } from 'next/router';
 import { navbarElements } from '@placeholders/navbar.placeholders';
 import { IdContent } from '@placeholders/profile.placeholder';
+import { Contract } from '@interfaces/provider';
+import { TokenElem } from '@interfaces/tokenProvider';
 
 const NFTContent = () => {
   const router = useRouter();
-  const [activeApprovingHash, setActiveApprovingHash] = useState<boolean | undefined | null>();
-  const [activeClaimingHash, setActiveClaimingHash] = useState<boolean | undefined | null>();
+  const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>(false);
+  const [activeClaimingHash, setActiveClaimingHash] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
-  const [toastVariant, setToastVariant] = useState<string>();
+  const [toastVariant, setToastVariant] = useState<string>('');
   const signer = useSigner();
   const { address } = useAccount();
-  const [NFTData, setNFTData] = useState<any>();
+  const [NFTData, setNFTData] = useState<Array<TokenElem>>([]);
   const ctx = useWalletContext();
   const tokenCtx = useTokenContext();
   const provider = useProvider();
 
-  const listenEvents = ({ provider, address }: any) => {
-    const NFTEditionContract = getNFTEditionFactory({
-      signerProvider: provider,
-    });
-    const tokenContract = getTokenFactory({ signerProvider: provider });
 
-    tokenContract.on('Approval', async (owner: string, spender: string) => {
+  interface HandleError {
+    error: any
+    txHashKeyName: string
+  }
+
+  interface FinishTX {
+    txHashKeyName: string
+    path: string
+    reload?: boolean
+  }
+
+  const listenEvents = ({ signerProvider, address }: Contract) => {
+    const NFTEditionContract = getNFTEditionFactory({
+      signerProvider,
+    });
+    const tokenContract = getTokenFactory({ signerProvider });
+
+    tokenContract.on('Approval', async (owner, spender) => {
       if (
         owner?.toLowerCase() == address?.toLowerCase() &&
         spender?.toLowerCase() == NFTEditionClaimableContractAdd?.toLowerCase()
@@ -56,7 +70,7 @@ const NFTContent = () => {
       }
     });
 
-    NFTEditionContract.on('TransferSingle', async (_: any, from: string, to: string) => {
+    NFTEditionContract.on('TransferSingle', async (_, from, to) => {
       if (
         from?.toLowerCase() == OwnerAddress?.toLowerCase() &&
         to?.toLowerCase() == address?.toLowerCase()
@@ -82,12 +96,12 @@ const NFTContent = () => {
   }, []);
 
   useEffect(() => {
-    listenEvents({ provider, address });
+    listenEvents({ signerProvider: provider, address: address || '' });
   }, [address]);
 
-  const finishTx = async ({ txHashKeyName, path, reload = false }: any) => {
+  const finishTx = async ({ txHashKeyName, path, reload = false }: FinishTX) => {
     removeLocalStorageItem(txHashKeyName);
-    setCurrentTxState[txHashKeyName](null);
+    setCurrentTxState[txHashKeyName](false);
     router.push(`${path}`);
     await new Promise((r) => setTimeout(r, 2000));
     reload && window.location.reload();
@@ -102,11 +116,11 @@ const NFTContent = () => {
     [localStorageKeys.claimingNFTTokenTxHash]: setActiveClaimingHash,
   };
 
-  const handleError = ({ error, txHashKeyName }: any) => {
+  const handleError = ({ error, txHashKeyName }: HandleError) => {
     removeLocalStorageItem(txHashKeyName);
     setShowToast(error.reason?.replace('execution reverted:', ''));
     setToastVariant('error');
-    setCurrentTxState[txHashKeyName](null);
+    setCurrentTxState[txHashKeyName](false);
   };
 
   const getToken = (tokenId: number) => async () => {
@@ -159,7 +173,7 @@ const NFTContent = () => {
   };
 
   useEffect(() => {
-    setNFTData(tokenCtx?.NFTData);
+    tokenCtx?.NFTData && setNFTData(tokenCtx.NFTData);
   }, [tokenCtx?.NFTData]);
 
   return (
@@ -173,7 +187,7 @@ const NFTContent = () => {
             </p>
           </div>
           <div className={styles['cards']}>
-            {NFTData?.map((elem: any, index: number) => {
+            {NFTData?.map((elem, index) => {
               return !elem.allMinted ? (
                 <NFTCard
                   className={styles['card-item']}
@@ -181,7 +195,7 @@ const NFTContent = () => {
                   srcImage={elem.image}
                   name={elem.name}
                   price={`${elem.free ? 0 : elem.price} ${ctx?.tokenSymbol}`}
-                  superRare={elem.superRare}
+                  superRare={!!elem.superRare}
                   isFree={elem.free}
                   onClick={getToken(elem.id)}
                   quantityLeft={elem.quantityLeft}

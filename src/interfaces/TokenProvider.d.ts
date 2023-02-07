@@ -15,6 +15,7 @@ export interface TokenElem {
   totalSupply: string
   price: string
   free: boolean
+  superRare?: boolean
 }
 
 
