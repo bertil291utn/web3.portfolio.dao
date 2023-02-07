@@ -37,7 +37,6 @@ const ProfileContent = () => {
   const router = useRouter();
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>();
   const [tokenCards, setTokenCards] = useState<any>();
-  console.log("🚀 ~ file: ProfileContent.component.tsx:40 ~ ProfileContent ~ tokenCards", tokenCards)
   const [showToast, setShowToast] = useState<any>();
   const [toastVariant, setToastVariant] = useState<string>();
   const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>();
@@ -99,7 +98,6 @@ const ProfileContent = () => {
     if (!signer.data) return;
     const NFTTokenContract = getNFTEditionFactory({ signerProvider: signer.data });
     let resp: any = await getAllNFTs(ownerAddress);
-    console.log("🚀 ~ file: ProfileContent.component.tsx:101 ~ const_getNFTs= ~ resp", resp)
     if (!resp) return;
     resp = resp.ownedNfts.filter(
       (elem: any) =>
@@ -111,13 +109,12 @@ const ProfileContent = () => {
       const _tokenCards = await Promise.all(
         respData.map(async ({ tokenId, quantity }: any) => {
           const tokenURI = await NFTTokenContract.uri(+tokenId);
-          if (!tokenURI) return null;
+          if (!tokenURI) return null; /* it means setUri function has been set tup before*/
           const res = await fetch(tokenURI);
           const tokenURIResp = await res.json();
           return { ...tokenURIResp, tokenId, quantity };
         })
         );
-      console.log("🚀 ~ file: ProfileContent.component.tsx:120 ~ const_getNFTs= ~ _tokenCards", _tokenCards)
       setTokenCards(_tokenCards.filter((elem: any) => elem));
     }
   };
