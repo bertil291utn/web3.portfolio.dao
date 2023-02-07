@@ -59,7 +59,7 @@
       ],
       "@interfaces/*": [
         "src/interfaces/*"
-      ],
+      ]
     }
   },
   "include": [
