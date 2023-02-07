@@ -1,15 +1,25 @@
+import { IconType } from 'react-icons/lib';
 import styles from './Button.module.scss';
+
+interface Props {
+  buttonType: string
+  btnLabel: string
+  onClick?: () => void
+  LeftIcon?: IconType | undefined
+  title?: string
+  className?: string
+  type?: "button" | "submit" | "reset" | undefined
+}
 
 const ButtonComponent = ({
   buttonType,
   btnLabel,
   onClick,
-  leftIcon,
+  LeftIcon,
   title,
   className,
   type,
-}: any): any => {
-  const LeftIcon = leftIcon;
+}: Props) => {
   if (buttonType !== 'fab-button') {
     return (
       <button
@@ -19,7 +29,7 @@ const ButtonComponent = ({
         title={title}
         type={type || 'button'}
       >
-        {leftIcon && <LeftIcon className={styles['left-icon']} />}
+        {LeftIcon && <LeftIcon className={styles['left-icon']} />}
         <span>{btnLabel}</span>
       </button>
     );
@@ -32,10 +42,12 @@ const ButtonComponent = ({
         title={title}
         type={type || 'button'}
       >
-        <LeftIcon className={styles['left-icon']} />
+        {LeftIcon && <LeftIcon className={styles['left-icon']} />}
       </button>
     );
   }
+
+  return (<></>)
 };
 
 export default ButtonComponent;

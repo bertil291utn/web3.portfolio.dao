@@ -114,7 +114,7 @@ const ProfileContent = () => {
           const tokenURIResp = await res.json();
           return { ...tokenURIResp, tokenId, quantity };
         })
-        );
+      );
       setTokenCards(_tokenCards.filter((elem: any) => elem));
     }
   };

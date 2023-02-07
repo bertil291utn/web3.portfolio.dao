@@ -16,7 +16,6 @@ interface Navbar {
 }
 
 interface Props {
-
   navbarElements: Navbar
 }
 
@@ -26,7 +25,7 @@ const NavbarComponent = ({ navbarElements }: Props) => {
   return (
     <ul className={styles['navbar']}>
       {Object.values(navbarElements)?.map(
-        ({ label, path, icon: Icon }: any, index) => {
+        ({ label, path, icon: Icon }, index) => {
           return (
             <li
               className={`${styles['list']} ${router.pathname == path ? `${styles['active']}` : ''
