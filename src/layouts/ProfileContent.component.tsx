@@ -154,6 +154,7 @@ const ProfileContent = () => {
     setIsWalletConnected(isConnected);
     address && signer && _getNFTs(address, signer);
     listenEvents({ signerProvider: provider, address: address || '' });
+    return () => { setTokenCards([]) }
   }, [address, signer]);
 
   const isFormValid = (stakingAmount: string) => {
