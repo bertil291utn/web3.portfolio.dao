@@ -2,6 +2,18 @@ import { cardLabel } from '@placeholders/nft-cards.placeholder';
 import { IoDiamond } from 'react-icons/io5';
 import styles from './NFTCard.module.scss';
 
+interface Props {
+  srcImage: string
+  name: string
+  price: string
+  superRare: string
+  className: string
+  isFree: boolean
+  onClick: () => void
+  quantityLeft: string
+  totalSupply: string
+}
+
 const NFTCard = ({
   srcImage,
   name,
@@ -12,7 +24,7 @@ const NFTCard = ({
   onClick,
   quantityLeft,
   totalSupply,
-}: any) => {
+}: Props) => {
   return (
     <div className={`${className || ''} ${styles['container']}`}>
       {isFree && <span className={styles['chip']}>{cardLabel.free}</span>}
