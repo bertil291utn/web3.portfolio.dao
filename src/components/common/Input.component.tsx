@@ -1,5 +1,16 @@
 import styles from './Input.module.scss';
 
+
+interface Props {
+  type: string
+  name: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  min: string
+  max: string
+  className: string
+}
+
 const InputComponent = ({
   type,
   name,
@@ -8,7 +19,7 @@ const InputComponent = ({
   min,
   max,
   className,
-}: any) => {
+}: Props) => {
   return (
     <input
       className={`${className || ''} ${styles['input']}`}

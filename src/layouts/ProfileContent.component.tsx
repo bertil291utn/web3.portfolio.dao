@@ -332,7 +332,7 @@ const ProfileContent = () => {
                       type='number'
                       name='tokenAmount'
                       value={tokenAmount || ''}
-                      onChange={(e: any) => setTokenAmount(e.target.value)}
+                      onChange={(e) => setTokenAmount(e.target.value)}
                       min={'1'}
                       max={
                         ctx?.userStakedAmount > 0
