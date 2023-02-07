@@ -34,7 +34,7 @@ const NFTContent = () => {
   const [activeClaimingHash, setActiveClaimingHash] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastVariant, setToastVariant] = useState<string>('');
-  const signer = useSigner();
+  const { data: signer } = useSigner();
   const { address } = useAccount();
   const [NFTData, setNFTData] = useState<Array<TokenElem>>([]);
   const ctx = useWalletContext();
@@ -42,7 +42,7 @@ const NFTContent = () => {
   const provider = useProvider();
 
 
-  
+
 
   const listenEvents = ({ signerProvider, address }: Contract) => {
     const NFTEditionContract = getNFTEditionFactory({
@@ -117,11 +117,11 @@ const NFTContent = () => {
 
   const getToken = (tokenId: number) => async () => {
     const NFTEditionContract = getNFTEditionFactory({ signerProvider: provider });
-    if (!signer.data) return;
+    if (!signer) return;
     const NFTClaimableEditionContract = getNFTEditionClaimableFactory({
-      signerProvider: signer.data,
+      signerProvider: signer,
     });
-    const tokenContract = getTokenFactory({ signerProvider: signer.data });
+    const tokenContract = getTokenFactory({ signerProvider: signer });
 
     let tx;
     try {

@@ -46,8 +46,8 @@ const ProfileContent = () => {
   const [activeUnStakingHash, setActiveUnStakingHash] = useState<boolean>();
   const ctx = useWalletContext();
   const [tokenAmount, setTokenAmount] = useState<string>();
-  const acct = useAccount();
-  const signer = useSigner();
+  const { address, isConnected } = useAccount();
+  const { data: signer } = useSigner();
   const provider = useProvider();
 
   const setCurrentTxState = {
@@ -96,9 +96,9 @@ const ProfileContent = () => {
   //TODO: add link to display tokens on metamask
   //https://ethereum.stackexchange.com/questions/99343/how-to-automatically-add-a-custom-token-to-metamask-with-ethers-js
 
-  const _getNFTs = async (ownerAddress: string) => {
-    if (!signer.data) return;
-    const NFTTokenContract = getNFTEditionFactory({ signerProvider: signer.data });
+  const _getNFTs = async (ownerAddress: string, signer: ethers.Signer) => {
+    if (!signer) return;
+    const NFTTokenContract = getNFTEditionFactory({ signerProvider: signer });
     const allNFTs = await getAllNFTs(ownerAddress);
     if (!allNFTs) return;
     const filterdNFTs = allNFTs.ownedNfts.filter(
@@ -151,10 +151,10 @@ const ProfileContent = () => {
   }, [ctx?.userStakedAmount]);
 
   useEffect(() => {
-    setIsWalletConnected(acct.isConnected);
-    _getNFTs(acct.address ?? '');
-    listenEvents({ signerProvider: provider, address: acct.address || '' });
-  }, [acct.address]);
+    setIsWalletConnected(isConnected);
+    address && signer && _getNFTs(address, signer);
+    listenEvents({ signerProvider: provider, address: address || '' });
+  }, [address, signer]);
 
   const isFormValid = (stakingAmount: string) => {
     if (!stakingAmount) return false;
@@ -184,11 +184,11 @@ const ProfileContent = () => {
   };
 
   const stakeAction = async () => {
-    if (!signer.data) return;
-    const stakingContract = getStakingFactory({ signerProvider: signer.data });
-    const tokenContract = getTokenFactory({ signerProvider: signer.data });
+    if (!signer) return;
+    const stakingContract = getStakingFactory({ signerProvider: signer });
+    const tokenContract = getTokenFactory({ signerProvider: signer });
     const allowanceAmount = await tokenContract.allowance(
-      acct.address,
+      address,
       StakingContractAdd
     );
 
@@ -232,8 +232,8 @@ const ProfileContent = () => {
   };
 
   const unStakeAction = async () => {
-    if (!signer.data) return
-    const stakingContract = getStakingFactory({ signerProvider: signer.data });
+    if (!signer) return
+    const stakingContract = getStakingFactory({ signerProvider: signer });
     let tx;
     try {
       tx = await stakingContract.unstake(

@@ -37,10 +37,10 @@ const TokensComponent = () => {
   const [toastVariant, setToastVariant] = useState<string>();
   const [ethUserBalance, setEthUserBalance] = useState<number>(0);
   const [isConnected, setIsConnected] = useState<boolean>();
-  const signer = useSigner();
+  const {data:signer} = useSigner();
   const ctx = useWalletContext();
   const provider = useProvider();
-  const acct = useAccount();
+  const { address, isConnected: _isConnected } = useAccount();
 
   const getBalance = async ({ signerProvider, address }: Contract) => {
     const userBalance = await signerProvider.getBalance(address);
@@ -49,13 +49,13 @@ const TokensComponent = () => {
   };
 
   useEffect(() => {
-    acct.address && getBalance({ signerProvider: provider, address: acct.address });
-    acct.address && isFinishedTransferTx({ signerProvider: provider, address: acct.address });
-  }, [acct.address]);
+    address && getBalance({ signerProvider: provider, address });
+    address && isFinishedTransferTx({ signerProvider: provider, address });
+  }, [address]);
 
   useEffect(() => {
-    setIsConnected(acct.isConnected);
-  }, [acct.isConnected]);
+    setIsConnected(_isConnected);
+  }, [_isConnected]);
 
   const router = useRouter();
 
@@ -102,9 +102,9 @@ const TokensComponent = () => {
   };
 
   const getTokensAction = async () => {
-    if (!signer.data) return;
+    if (!signer) return;
     try {
-      const claimableContract = getClaimableFactory({ signerProvider: signer.data });
+      const claimableContract = getClaimableFactory({ signerProvider: signer });
       let tx = await claimableContract.claim(ERC20TokenContractAdd);
       window.localStorage.setItem(localStorageKeys.claimingTxHash, tx.hash);
       setActiveTknClaimHash(tx.hash);
