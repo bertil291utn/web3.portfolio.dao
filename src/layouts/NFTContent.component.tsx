@@ -35,7 +35,7 @@ const NFTContent = () => {
   const { address } = useAccount();
   const [NFTData, setNFTData] = useState<any>();
   const ctx = useWalletContext();
-  const { NFTData: _NFTData } = useTokenContext();
+  const tokenCtx = useTokenContext();
   const provider = useProvider();
 
   const listenEvents = ({ provider, address }: any) => {
@@ -159,8 +159,8 @@ const NFTContent = () => {
   };
 
   useEffect(() => {
-    setNFTData(_NFTData);
-  }, [_NFTData]);
+    setNFTData(tokenCtx?.NFTData);
+  }, [tokenCtx?.NFTData]);
 
   return (
     <>
