@@ -37,6 +37,7 @@ const ProfileContent = () => {
   const router = useRouter();
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>();
   const [tokenCards, setTokenCards] = useState<any>();
+  console.log("🚀 ~ file: ProfileContent.component.tsx:40 ~ ProfileContent ~ tokenCards", tokenCards)
   const [showToast, setShowToast] = useState<any>();
   const [toastVariant, setToastVariant] = useState<string>();
   const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>();
@@ -105,7 +106,6 @@ const ProfileContent = () => {
         elem.contract.address.toLowerCase() ===
         NFTEditionContractAdd?.toLowerCase()
     );
-    console.log("🚀 ~ file: ProfileContent.component.tsx:108 ~ const_getNFTs= ~ resp after filtered", resp)
     if (resp.length) {
       const respData = resp.map((elem: any) => ({ tokenId: elem.tokenId, quantity: elem.balance }));
       const _tokenCards = await Promise.all(
@@ -116,7 +116,8 @@ const ProfileContent = () => {
           const tokenURIResp = await res.json();
           return { ...tokenURIResp, tokenId, quantity };
         })
-      );
+        );
+      console.log("🚀 ~ file: ProfileContent.component.tsx:120 ~ const_getNFTs= ~ _tokenCards", _tokenCards)
       setTokenCards(_tokenCards.filter((elem: any) => elem));
     }
   };
