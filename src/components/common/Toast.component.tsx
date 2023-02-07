@@ -1,6 +1,14 @@
+import React from 'react';
 import styles from './Toast.module.scss';
 
-const ToastComponent = ({ variant, children, show, setShow }: any) => {
+interface Props {
+  variant: string
+  children: React.ReactNode
+  show: boolean
+  setShow: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const ToastComponent = ({ variant, children, show, setShow }: Props) => {
   const handleClose = () => setShow(false);
   return (
     <div

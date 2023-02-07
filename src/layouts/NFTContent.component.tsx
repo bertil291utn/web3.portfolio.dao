@@ -29,7 +29,7 @@ const NFTContent = () => {
   const router = useRouter();
   const [activeApprovingHash, setActiveApprovingHash] = useState<boolean | undefined | null>();
   const [activeClaimingHash, setActiveClaimingHash] = useState<boolean | undefined | null>();
-  const [showToast, setShowToast] = useState();
+  const [showToast, setShowToast] = useState<boolean>(false);
   const [toastVariant, setToastVariant] = useState<string>();
   const signer = useSigner();
   const { address } = useAccount();
@@ -205,7 +205,7 @@ const NFTContent = () => {
         )}
       </>
       <ToastComponent
-        variant={toastVariant}
+        variant={toastVariant || ''}
         show={showToast}
         setShow={setShowToast}
       >

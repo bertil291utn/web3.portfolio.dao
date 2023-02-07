@@ -383,7 +383,7 @@ const ProfileContent = () => {
         )}
       </div>
       <ToastComponent
-        variant={toastVariant}
+        variant={toastVariant||''}
         show={showToast}
         setShow={setShowToast}
       >

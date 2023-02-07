@@ -33,7 +33,7 @@ import { Contract } from '@interfaces/provider'
 const TokensComponent = () => {
   const [activeTknClaimHash, setActiveTknClaimHash] = useState<boolean>();
   const [activeNFTHash] = useState();
-  const [showToast, setShowToast] = useState();
+  const [showToast, setShowToast] = useState<boolean>(false);
   const [toastVariant, setToastVariant] = useState<string>();
   const [ethUserBalance, setEthUserBalance] = useState<number>(0);
   const [isConnected, setIsConnected] = useState<boolean>();
@@ -173,7 +173,7 @@ const TokensComponent = () => {
           </>
         )}
       <ToastComponent
-        variant={toastVariant}
+        variant={toastVariant || ''}
         show={showToast}
         setShow={setShowToast}
       >
