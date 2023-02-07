@@ -1,6 +1,7 @@
 import { OwnerAddress } from '@config/contracts';
 import ChildrenType from '@interfaces/children';
 import { TokenElem, Context } from '@interfaces/tokenProvider';
+import firebase from 'firebase/compat/app'
 import { getNFTs } from '@utils/firebaseFunctions';
 import { getNFTEditionFactory } from '@utils/web3';
 import { ethers } from 'ethers';
@@ -17,17 +18,17 @@ export default function TokenProvider({ children }: ChildrenType) {
 
 
   const _getNFTs = async () => {
-    let resp: any = await getNFTs();
-    resp = resp.docs.map((doc: any) => doc.data())
-    const mappedNFTData: any = await setNFTsMetadata(resp);
+    const firebaseNFTs = await getNFTs();
+    const mappedNFTs = firebaseNFTs.docs.map((doc) => doc.data())
+    const mappedNFTData = await setNFTsMetadata(mappedNFTs)
     setNFTData(mappedNFTData)
   }
 
-  const setNFTsMetadata = async (nfts: any) => {
-    if (!nfts?.length) return;
+  const setNFTsMetadata = async (nfts: firebase.firestore.DocumentData[]) => {
+    if (!nfts?.length) return [];
     const NFTEditionContract = getNFTEditionFactory({ signerProvider: provider });
     return Promise.all(
-      nfts.map(async (elem: any) => {
+      nfts.map(async (elem) => {
         const ownerBalance = await NFTEditionContract.balanceOf(
           OwnerAddress,
           elem.id
@@ -40,7 +41,11 @@ export default function TokenProvider({ children }: ChildrenType) {
         let price = await NFTEditionContract.getTokenPrice(elem.id);
         price = ethers.utils.formatEther(price).toString();
         return {
-          ...elem,
+          id: elem.id,
+          image: elem.image,
+          name: elem.name,
+          description: elem.description,
+          attributes: elem.attributes,
           allMinted,
           quantityLeft,
           totalSupply,
