@@ -19,6 +19,6 @@ export interface TokenElem {
 }
 
 
-export interface Context {
+export interface TokenContext {
   NFTData: TokenElem[]
 }
