@@ -98,12 +98,14 @@ const ProfileContent = () => {
     if (!signer.data) return;
     const NFTTokenContract = getNFTEditionFactory({ signerProvider: signer.data });
     let resp: any = await getAllNFTs(ownerAddress);
+    console.log("🚀 ~ file: ProfileContent.component.tsx:101 ~ const_getNFTs= ~ resp", resp)
     if (!resp) return;
     resp = resp.ownedNfts.filter(
       (elem: any) =>
         elem.contract.address.toLowerCase() ===
         NFTEditionContractAdd?.toLowerCase()
     );
+    console.log("🚀 ~ file: ProfileContent.component.tsx:108 ~ const_getNFTs= ~ resp after filtered", resp)
     if (resp.length) {
       const respData = resp.map((elem: any) => ({ tokenId: elem.tokenId, quantity: elem.balance }));
       const _tokenCards = await Promise.all(

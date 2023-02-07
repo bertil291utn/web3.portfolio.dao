@@ -1,9 +1,26 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { IconType } from 'react-icons/lib';
 import styles from './Navbar.module.scss';
 
 
-const NavbarComponent = ({ navbarElements }: any) => {
+interface NavElements {
+  label: string
+  path: string
+  icon: IconType
+}
+
+interface Navbar {
+  tokens: NavElements,
+  profile: NavElements,
+}
+
+interface Props {
+
+  navbarElements: Navbar
+}
+
+const NavbarComponent = ({ navbarElements }: Props) => {
   const router = useRouter();
 
   return (
