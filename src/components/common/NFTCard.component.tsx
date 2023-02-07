@@ -6,7 +6,7 @@ interface Props {
   srcImage: string
   name: string
   price: string
-  superRare: string
+  superRare: boolean
   className: string
   isFree: boolean
   onClick: () => void
