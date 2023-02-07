@@ -32,12 +32,14 @@ import ToastComponent from '@components/common/Toast.component';
 import { getAllNFTs } from '@utils/NFT';
 import NFTProfileCard from '@components/common/NFTProfileCard.component';
 import { Contract } from '@interfaces/provider';
+import { Metadata, TokenProfile } from '@interfaces/TokenProfile';
+import { FinishTX, HandleError } from '@interfaces/transactions';
 
 const ProfileContent = () => {
   const router = useRouter();
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>();
-  const [tokenCards, setTokenCards] = useState<any>();
-  const [showToast, setShowToast] = useState<any>();
+  const [tokenCards, setTokenCards] = useState<Array<TokenProfile>>([]);
+  const [showToast, setShowToast] = useState<boolean>(false);
   const [toastVariant, setToastVariant] = useState<string>();
   const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>();
   const [activeStakingHash, setActiveStakingHash] = useState<boolean>();
@@ -59,7 +61,7 @@ const ProfileContent = () => {
     const tokenContract = getTokenFactory({ signerProvider });
     //LISTENERS
     //TODO: listen transfer event not just in token component, but also all over the app _app file
-    tokenContract.on('Approval', async (owner: string, spender: string) => {
+    tokenContract.on('Approval', async (owner, spender) => {
       if (
         owner?.toLowerCase() == address?.toLowerCase() &&
         spender?.toLowerCase() == StakingContractAdd?.toLowerCase()
@@ -71,7 +73,7 @@ const ProfileContent = () => {
       }
     });
 
-    stakingContract.on('Staked', async (user: string) => {
+    stakingContract.on('Staked', async (user) => {
       if (user?.toLowerCase() == address?.toLowerCase()) {
         await finishTx({
           txHashKeyName: localStorageKeys.stakingTxHash,
@@ -81,7 +83,7 @@ const ProfileContent = () => {
       }
     });
 
-    stakingContract.on('Unstake', async (user: string) => {
+    stakingContract.on('Unstake', async (user) => {
       if (user?.toLowerCase() == address?.toLowerCase()) {
         await finishTx({
           txHashKeyName: localStorageKeys.unStakingTxHash,
@@ -97,25 +99,32 @@ const ProfileContent = () => {
   const _getNFTs = async (ownerAddress: string) => {
     if (!signer.data) return;
     const NFTTokenContract = getNFTEditionFactory({ signerProvider: signer.data });
-    let resp: any = await getAllNFTs(ownerAddress);
-    if (!resp) return;
-    resp = resp.ownedNfts.filter(
-      (elem: any) =>
+    const allNFTs = await getAllNFTs(ownerAddress);
+    if (!allNFTs) return;
+    const filterdNFTs = allNFTs.ownedNfts.filter(
+      (elem) =>
         elem.contract.address.toLowerCase() ===
         NFTEditionContractAdd?.toLowerCase()
     );
-    if (resp.length) {
-      const respData = resp.map((elem: any) => ({ tokenId: elem.tokenId, quantity: elem.balance }));
-      const _tokenCards = await Promise.all(
-        respData.map(async ({ tokenId, quantity }: any) => {
+    if (filterdNFTs.length) {
+      const respData = filterdNFTs.map((elem) => ({ tokenId: elem.tokenId, quantity: elem.balance }));
+      const _tokenCards: Array<TokenProfile> = await Promise.all(
+        respData.map(async ({ tokenId, quantity }) => {
           const tokenURI = await NFTTokenContract.uri(+tokenId);
-          if (!tokenURI) return null; /* it means setUri function has been set tup before*/
           const res = await fetch(tokenURI);
-          const tokenURIResp = await res.json();
-          return { ...tokenURIResp, tokenId, quantity };
+          const tokenURIResp: Metadata = await res.json();
+          return {
+            image: tokenURIResp.image,
+            name: tokenURIResp.name,
+            description: tokenURIResp.description,
+            price: tokenURIResp.price,
+            attributes: tokenURIResp.attributes,
+            tokenId: Number(tokenId),
+            quantity
+          };
         })
       );
-      setTokenCards(_tokenCards.filter((elem: any) => elem));
+      setTokenCards(_tokenCards.filter((elem) => elem));
     }
   };
 
@@ -147,9 +156,9 @@ const ProfileContent = () => {
     listenEvents({ signerProvider: provider, address: acct.address || '' });
   }, [acct.address]);
 
-  const isFormValid = ({ stakingAmount }: any) => {
+  const isFormValid = (stakingAmount: string) => {
     if (!stakingAmount) return false;
-    if (stakingAmount <= 0) return false;
+    if (Number(stakingAmount) <= 0) return false;
     //TODO: check stakingAmount is not greater than default staking amount
     //rn there's an input min and max
     return true;
@@ -159,14 +168,14 @@ const ProfileContent = () => {
     window.localStorage.removeItem(txHashKeyName);
   };
 
-  const handleError = ({ error, txHashKeyName }: any) => {
+  const handleError = ({ error, txHashKeyName }: HandleError) => {
     removeLocalStorageItem(txHashKeyName);
     setShowToast(error.reason?.replace('execution reverted:', ''));
     setToastVariant('error');
     setCurrentTxState[txHashKeyName](false);
   };
 
-  const finishTx = async ({ txHashKeyName, path, reload = false }: any) => {
+  const finishTx = async ({ txHashKeyName, path, reload = false }: FinishTX) => {
     removeLocalStorageItem(txHashKeyName);
     setCurrentTxState[txHashKeyName](false);
     router.push(`/${path}`);
@@ -242,15 +251,17 @@ const ProfileContent = () => {
     }
   };
 
-  const unStakingAction = (e: any) => {
+  const unStakingAction = (e: React.FormEvent<HTMLFormElement>) => {
+    if (!tokenAmount) return;
     e.preventDefault();
-    const _isFormValid = isFormValid({ stakingAmount: tokenAmount });
+    const _isFormValid = isFormValid(tokenAmount);
     _isFormValid && unStakeAction();
   };
 
-  const stakingAction = (e: any) => {
+  const stakingAction = (e: React.FormEvent<HTMLFormElement>) => {
+    if (!tokenAmount) return;
     e.preventDefault();
-    const _isFormValid = isFormValid({ stakingAmount: tokenAmount });
+    const _isFormValid = isFormValid(tokenAmount);
     _isFormValid && stakeAction();
   };
 
@@ -295,7 +306,7 @@ const ProfileContent = () => {
             subtitle={ProfileSections.NFTInfoSubtitle}
           >
             <div className={styles['cards']}>
-              {tokenCards.map((elem: any) => (
+              {tokenCards.map((elem) => (
                 <NFTProfileCard
                   key={`card-${elem.tokenId}`}
                   tokenId={elem.tokenId}
@@ -383,7 +394,7 @@ const ProfileContent = () => {
         )}
       </div>
       <ToastComponent
-        variant={toastVariant||''}
+        variant={toastVariant || ''}
         show={showToast}
         setShow={setShowToast}
       >

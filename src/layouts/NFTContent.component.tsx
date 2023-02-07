@@ -26,6 +26,7 @@ import { navbarElements } from '@placeholders/navbar.placeholders';
 import { IdContent } from '@placeholders/profile.placeholder';
 import { Contract } from '@interfaces/provider';
 import { TokenElem } from '@interfaces/tokenProvider';
+import { FinishTX, HandleError } from '@interfaces/transactions';
 
 const NFTContent = () => {
   const router = useRouter();
@@ -41,16 +42,7 @@ const NFTContent = () => {
   const provider = useProvider();
 
 
-  interface HandleError {
-    error: any
-    txHashKeyName: string
-  }
-
-  interface FinishTX {
-    txHashKeyName: string
-    path: string
-    reload?: boolean
-  }
+  
 
   const listenEvents = ({ signerProvider, address }: Contract) => {
     const NFTEditionContract = getNFTEditionFactory({
