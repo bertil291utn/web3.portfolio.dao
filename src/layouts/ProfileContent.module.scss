@@ -19,7 +19,7 @@
 
   .connect-btn {
     &>div {
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: $md) {
         justify-content: center;
         align-items: center;
       }
@@ -34,7 +34,7 @@
     display: flex;
     width: 25%;
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: $md) {
       width: unset;
     }
 

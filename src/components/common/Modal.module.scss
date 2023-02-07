@@ -30,7 +30,7 @@
   padding: 2rem;
   width: 30%;
   max-width: $max-width;
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: $md) {
     width: 75%;
   }
   span {
@@ -44,7 +44,7 @@
 
 .close {
   margin-top: -1rem;
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: $md) {
     margin-right: -1rem;
   }
   &::first-letter {

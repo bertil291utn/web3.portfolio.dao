@@ -19,7 +19,7 @@ ul {
   }
   .navbar__content {
     display: block;
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: $tablet) {
       display: none;
     }
   }
@@ -29,7 +29,7 @@ ul {
     svg {
       font-size: 1.5rem;
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: $tablet) {
       display: block;
       height: 1.5rem;
       width: 1.5rem;

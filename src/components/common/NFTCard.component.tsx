@@ -37,7 +37,7 @@ const NFTCard = ({
       )}
       <img src={srcImage} alt={`${name}`} />
       <footer>
-        <div className={styles['container']}>
+        <div className={styles['footer-container']}>
           <div>
             <span className={styles['name']}>{name}</span>
             <span className={styles['price']}>{price}</span>
