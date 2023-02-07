@@ -25,7 +25,7 @@ import { useRouter } from 'next/router';
 import { navbarElements } from '@placeholders/navbar.placeholders';
 import { IdContent } from '@placeholders/profile.placeholder';
 import { Contract } from '@interfaces/provider';
-import { TokenElem } from '@interfaces/tokenProvider';
+import { TokenElem } from '@interfaces/TokenProvider';
 import { FinishTX, HandleError } from '@interfaces/transactions';
 
 const NFTContent = () => {

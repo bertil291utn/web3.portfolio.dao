@@ -1,16 +1,16 @@
 import { OwnerAddress } from '@config/contracts';
 import ChildrenType from '@interfaces/children';
-import { TokenElem, TokenContext } from '@interfaces/tokenProvider';
 import firebase from 'firebase/compat/app'
 import { getNFTs } from '@utils/firebaseFunctions';
 import { getNFTEditionFactory } from '@utils/web3';
 import { ethers } from 'ethers';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useProvider } from 'wagmi';
+import { Context, TokenElem } from '@interfaces/TokenProvider';
 
 
 
-const TokenContext = createContext<TokenContext | null>(null);
+const TokenContext = createContext<Context | null>(null);
 
 export default function TokenProvider({ children }: ChildrenType) {
   const [NFTData, setNFTData] = useState<Array<TokenElem>>([]);

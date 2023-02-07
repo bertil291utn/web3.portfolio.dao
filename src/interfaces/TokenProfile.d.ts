@@ -1,4 +1,4 @@
-import { Attributes } from '@interfaces/tokenProvider'
+import { Attributes } from '@interfaces/TokenProvider'
 
 export interface Metadata {
   name: string
