@@ -1,0 +1,17 @@
+.container {
+  margin: 4rem 0;
+  .nft-content{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  input {
+    width: 200px;
+    padding: 1rem;
+  }
+
+  .input-nft-name {}
+
+  .input-description {}
+}

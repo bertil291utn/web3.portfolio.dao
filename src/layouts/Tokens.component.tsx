@@ -28,6 +28,7 @@ import LoadingComponent from '@components/common/Loading.component';
 import NFTContent from '@layouts/NFTContent.component';
 import { addNewDevice } from '@utils/firebaseFunctions';
 import { Contract } from '@interfaces/provider'
+import MintUserNFT from '@layouts/MintUserNFT.component';
 
 
 const TokensComponent = () => {
@@ -118,6 +119,7 @@ const TokensComponent = () => {
 
   return (
     <>
+    {/**
       <div className={styles['content']}>
         {!activeTknClaimHash && !activeNFTHash ? (
           <>
@@ -172,6 +174,8 @@ const TokensComponent = () => {
             <NFTContent />
           </>
         )}
+        */}
+        <MintUserNFT/>
       <ToastComponent
         variant={toastVariant || ''}
         show={showToast}

@@ -2,13 +2,14 @@ import styles from './Input.module.scss';
 
 
 interface Props {
-  type: string
   name: string
   value: string
+  type?: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  min: string
-  max: string
-  className: string
+  min?: string
+  max?: string
+  placeholder?: string
+  className?: string
 }
 
 const InputComponent = ({
@@ -18,10 +19,12 @@ const InputComponent = ({
   onChange,
   min,
   max,
+  placeholder,
   className,
 }: Props) => {
   return (
     <input
+      placeholder={placeholder || 'Input'}
       className={`${className || ''} ${styles['input']}`}
       type={type || 'text'}
       name={name}
