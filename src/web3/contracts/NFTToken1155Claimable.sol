@@ -6,27 +6,22 @@ import "./IERC20.sol";
 import "./IERC1155.sol";
 
 contract MultipleEditionClaimable is ReentrancyGuard, Ownable {
-    function mintUser(
+    function buyNFT(
         uint256 id,
         IERC1155 tokenERC1155Address,
-        IERC20 _tokenERC20Address,
-        address owner
-    ) public {
-        if (tokenERC1155Address.getTokenPrice(id) > 0) {
-            //approve for this contract address to transfer funds
-            _tokenERC20Address.transferFrom(
-                msg.sender,
-                address(this),
-                tokenERC1155Address.getTokenPrice(id)
-            );
-        }
-        tokenERC1155Address.safeTransferFrom(owner, msg.sender, id, 1, "");
+        address NFTOwner
+    ) public payable {
+        require(
+            msg.value >= tokenERC1155Address.getCollectionTokenPrice(),
+            "INSUFFICIENT ETH FOR TOKEN PRICE"
+        );
+        tokenERC1155Address.safeTransferFrom(NFTOwner, msg.sender, id, 1, "");
     }
 
     function withdraw() public onlyOwner nonReentrant {
-        (bool success, ) = address(owner()).call{
-            value: address(this).balance
-        }("");
+        (bool success, ) = address(owner()).call{value: address(this).balance}(
+            ""
+        );
         require(success, "withdraw failed to send");
     }
 }

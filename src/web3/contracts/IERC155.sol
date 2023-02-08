@@ -58,5 +58,5 @@ interface IERC1155 {
         address _operator
     ) external view returns (bool);
 
-    function getTokenPrice(uint256 _tokenId) external view returns (uint256);
+    function getCollectionTokenPrice() external pure returns (uint256) ;
 }
