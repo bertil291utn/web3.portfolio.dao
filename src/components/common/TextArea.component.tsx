@@ -37,13 +37,13 @@ const TextArea = ({ className, name, id, placeholder, value, onChange, icon, onS
   }, [resolvedTheme])
 
   return (
-    <div className={styles['txa-content']}>
+    <div className={`${className || ''} ${styles['txa-content']}`}>
       <textarea
         ref={textAreaRef}
         value={value}
         onChange={onChange}
         placeholder={placeholder || 'Input textarea'}
-        className={`${className || ''} ${styles['text-area']}`}
+        className={`${styles['text-area']}`}
         name={name}
         id={id}
       >

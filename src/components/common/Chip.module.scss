@@ -1,0 +1,15 @@
+@import 'src/css/variables.scss';
+
+.container {
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  width: fit-content;
+  &__dark {
+    background-color: $card-bg-color;
+  }
+
+  &__light {
+    background-color: $gray-200;
+  }
+}

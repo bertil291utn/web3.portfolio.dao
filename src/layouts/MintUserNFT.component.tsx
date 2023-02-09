@@ -1,3 +1,4 @@
+import Chip from '@components/common/Chip.component';
 import InputComponent from '@components/common/Input.component';
 import Subtitle from '@components/common/Subtitle.component';
 import TextArea from '@components/common/TextArea.component';
@@ -27,6 +28,7 @@ const MintUserNFT = () => {
         /> */}
 
         <TextArea
+        className={styles['input-description']}
           name='NFTDescription'
           placeholder='An Impressionist oil painting of sunflowers in a purple vase...'
           value={NFTDescription || ''}
@@ -37,6 +39,8 @@ const MintUserNFT = () => {
         <Subtitle>
           Examples
         </Subtitle>
+
+        <Chip>A high tech solarpunk utopia in the Amazon rainforest</Chip>
       </div>
     </div>);
 }

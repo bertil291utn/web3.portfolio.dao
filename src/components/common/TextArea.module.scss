@@ -4,11 +4,11 @@
   position: relative;
   width: 80%;
   padding: 1rem 3rem 1rem 1rem;
-
   border: 1px solid $gray;
   border-radius: 0.25rem;
-
+  
   .text-area {
+    font-size: 1rem;
     border: unset;
     background: unset;
     resize: none;
@@ -16,9 +16,9 @@
     font-family: inherit;
 
     &:focus-visible {
-      outline:0px !important;
-    -webkit-appearance:none;
-    box-shadow: none !important;
+      outline: 0px !important;
+      -webkit-appearance: none;
+      box-shadow: none !important;
     }
   }
 
