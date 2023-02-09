@@ -21,7 +21,7 @@ const TextArea = ({ className, name, id, placeholder, value, onChange, icon, onS
 
   const resizeTextArea = () => {
     if (!textAreaRef.current) return;
-    textAreaRef.current.style.height = "auto";
+    textAreaRef.current.style.height = "0";
     textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px";
 
   };
