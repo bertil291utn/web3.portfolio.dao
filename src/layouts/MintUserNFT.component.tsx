@@ -1,4 +1,5 @@
 import InputComponent from '@components/common/Input.component';
+import Subtitle from '@components/common/Subtitle.component';
 import TextArea from '@components/common/TextArea.component';
 import { countNumberLetters } from '@utils/common';
 import { useState } from 'react';
@@ -33,6 +34,9 @@ const MintUserNFT = () => {
           onSubmit={sendPrompt}
           icon
         />
+        <Subtitle>
+          Examples
+        </Subtitle>
       </div>
     </div>);
 }
