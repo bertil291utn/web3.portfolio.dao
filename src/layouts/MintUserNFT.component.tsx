@@ -55,7 +55,11 @@ const MintUserNFT = () => {
           Examples
         </Subtitle>
         <div className={styles["example-chips-content"]}>
-          {mintPrompts.map(label => (<Chip>{label}</Chip>))}
+          {mintPrompts.map((label, index) => (
+            <div key={index}>
+              <Chip>{label}</Chip>
+            </div>
+          ))}
         </div>
       </div>
     </div>);
