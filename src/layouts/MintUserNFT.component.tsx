@@ -1,5 +1,6 @@
 import InputComponent from '@components/common/Input.component';
 import TextArea from '@components/common/TextArea.component';
+import { countNumberLetters } from '@utils/common';
 import { useState } from 'react';
 import styles from './MintUserNFT.module.scss'
 
@@ -8,9 +9,11 @@ const MintUserNFT = () => {
   const [NFTDescription, setNFTDescription] = useState<string>();
 
   const sendPrompt = () => {
-    if (NFTDescription && NFTDescription.length < 3) return;
+    if (countNumberLetters(NFTDescription || '') < 3) return;
     console.log('send prompt', NFTDescription)
   }
+
+
   return (
     <div className={styles['container']}>
       <div className={styles["nft-content"]}>
