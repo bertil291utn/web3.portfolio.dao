@@ -1,4 +1,5 @@
 import InputComponent from '@components/common/Input.component';
+import TextArea from '@components/common/TextArea.component';
 import { useState } from 'react';
 import styles from './MintUserNFT.module.scss'
 
@@ -11,14 +12,14 @@ const MintUserNFT = () => {
         <InputComponent
           className={styles['input-nft-name']}
           name='NFTName'
-          placeholder='NFT name'
+          placeholder='Sunflowers painting'
           value={NFTName || ''}
           onChange={(e) => setNFTName(e.target.value)}
         />
-        <InputComponent
-          className={styles['input-nft-description']}
+
+        <TextArea
           name='NFTDescription'
-          placeholder='NFT description'
+          placeholder='An Impressionist oil painting of sunflowers in a purple vase...'
           value={NFTDescription || ''}
           onChange={(e) => setNFTDescription(e.target.value)}
         />
