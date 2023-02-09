@@ -1,8 +1,52 @@
-.text-area {
-  background: unset;
+@import 'src/css/variables.scss';
+
+.txa-content {
+  position: relative;
+  width: 80%;
+  padding: 1rem 3rem 1rem 1rem;
+
+  border: 1px solid $gray;
   border-radius: 0.25rem;
-  resize: none;
-  width:100%;
-  font-family: inherit;
-  padding: 1rem 1rem 0 1rem;
+
+  .text-area {
+    border: unset;
+    background: unset;
+    resize: none;
+    width: 100%;
+    font-family: inherit;
+
+    &:focus-visible {
+      outline:0px !important;
+    -webkit-appearance:none;
+    box-shadow: none !important;
+    }
+  }
+
+  .icon-container {
+    position: absolute;
+    background: none;
+    color: inherit;
+    border: none;
+    font: inherit;
+    right: 1%;
+    bottom: 15%;
+    cursor: pointer;
+    padding: 0.1rem 0.35rem;
+
+
+
+    &:hover {
+      border-radius: 8px;
+    }
+
+    &__dark:hover {
+      background-color: $card-bg-color;
+    }
+
+    &__light:hover {
+      background-color: $primary;
+    }
+
+  }
+
 }
