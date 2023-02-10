@@ -49,7 +49,7 @@ const MintUserNFT = () => {
           icon
         />
         <p className={styles['info-text']}>
-          Be as specific as you can and add plenty of clear details. Don't hold back on those details.
+          Be as specific as you can and add plenty of clear details. Do not hold back on those details.
         </p>
       </div>
 
