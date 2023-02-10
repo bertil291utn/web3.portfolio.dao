@@ -2,7 +2,7 @@ import styles from './SectionPanel.module.scss';
 
 interface Props {
   title: string
-  subtitle: string
+  subtitle?: string
   children: React.ReactNode
   className?: string
   id: string

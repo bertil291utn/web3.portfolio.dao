@@ -2,6 +2,9 @@
 
 .container {
   margin: 4rem 0;
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 2rem;
 
   .nft-content {
     display: flex;

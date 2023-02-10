@@ -3,7 +3,7 @@ import InputComponent from '@components/common/Input.component';
 import SectionPanel from '@components/common/SectionPanel.component';
 import Subtitle from '@components/common/Subtitle.component';
 import TextArea from '@components/common/TextArea.component';
-import { generateLabels } from '@placeholders/home-mint.placeholders';
+import { generateLabels, mintLabels } from '@placeholders/home-mint.placeholders';
 import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
 import { countNumberLetters } from '@utils/common';
 import Image from 'next/image';
@@ -66,15 +66,22 @@ const MintUserNFT = () => {
             </div>
           </div>
         </SectionPanel>
+
       </div>
 
-      {/* <InputComponent
+      <SectionPanel
+        id={mintLabels.id}
+        title={mintLabels.title}
+      >
+
+        <InputComponent
           className={styles['input-nft-name']}
           name='NFTName'
           placeholder='Sunflowers painting'
           value={NFTName || ''}
           onChange={(e) => setNFTName(e.target.value)}
-        /> */}
+        />
+      </SectionPanel>
     </div >);
 }
 
