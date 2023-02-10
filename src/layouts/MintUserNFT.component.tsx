@@ -48,6 +48,9 @@ const MintUserNFT = () => {
           onSubmit={sendPrompt}
           icon
         />
+        <p className={styles['info-text']}>
+          Be as specific as you can and add plenty of clear details. Don't hold back on those details.
+        </p>
       </div>
 
       <div className={styles["example-chips-container"]}>

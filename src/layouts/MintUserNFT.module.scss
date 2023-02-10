@@ -19,6 +19,13 @@
 
   .input-nft-name {}
 
+  .info-text{
+    margin-top:0;
+    margin-left: 1rem;
+    font-size: 0.75rem;
+    color:$gray;
+  }
+
   .input-description {
     box-shadow: rgb(0 0 0 / 8%) 5px 9px 15px;
   }
