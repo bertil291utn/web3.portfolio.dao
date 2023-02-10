@@ -6,5 +6,6 @@ export const generateLabels = {
 
 export const mintLabels = {
   title: 'Mint',
+  subtitle: "Take a look at the image you just made. If you're happy with it, give it a title and add some attributes for OpenSea. Then you're ready to mint it",
   id: 'mint-nft-art'
 };

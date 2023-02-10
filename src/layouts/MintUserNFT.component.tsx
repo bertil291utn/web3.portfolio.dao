@@ -13,6 +13,7 @@ import styles from './MintUserNFT.module.scss'
 const MintUserNFT = () => {
   const [NFTName, setNFTName] = useState<string>();
   const [NFTDescription, setNFTDescription] = useState<string>();
+  const [generatedImage, setgeneratedImage] = useState<string>("https://preview.redd.it/an-avocado-armchair-v0-uooc9auz6qs81.png?auto=webp&s=bf5227eca8895def1f055e6407a6f5da5dbee3a7");
 
   const sendPrompt = () => {
     if (countNumberLetters(NFTDescription || '') < 3) return;
@@ -27,18 +28,10 @@ const MintUserNFT = () => {
         <SectionPanel
           id={generateLabels.id}
           title={generateLabels.title}
-          subtitle={generateLabels.subtitle}
+        // subtitle={generateLabels.subtitle}
         >
 
-          <div className={styles["image-content"]}>
-            <Image
-              src={"https://preview.redd.it/an-avocado-armchair-v0-uooc9auz6qs81.png?auto=webp&s=bf5227eca8895def1f055e6407a6f5da5dbee3a7"}
-              width={500}
-              height={500}
-              objectFit='cover'
-              alt={'nft-image'}
-            />
-          </div>
+
 
           <TextArea
             className={styles['input-description']}
@@ -49,9 +42,9 @@ const MintUserNFT = () => {
             onSubmit={sendPrompt}
             icon
           />
-          <p className={styles['info-text']}>
-            Be as specific as you can and add plenty of clear details. Do not hold back on those details.
-          </p>
+          {/* <p className={styles['info-text']}>
+              Be as specific as you can and add plenty of clear details. Do not hold back on those details.
+            </p> */}
 
           <div className={styles["example-chips-container"]}>
             <Subtitle>
@@ -72,15 +65,25 @@ const MintUserNFT = () => {
       <SectionPanel
         id={mintLabels.id}
         title={mintLabels.title}
+      // subtitle={mintLabels.subtitle}
       >
 
-        <InputComponent
+        {generatedImage && <InputComponent
           className={styles['input-nft-name']}
           name='NFTName'
           placeholder='Sunflowers painting'
           value={NFTName || ''}
           onChange={(e) => setNFTName(e.target.value)}
-        />
+        />}
+
+        <div className={styles["image-content"]}>
+          <Image
+            src={generatedImage}
+            layout='fill'
+            objectFit='cover'
+            alt={'nft-image'}
+          />
+        </div>
       </SectionPanel>
     </div >);
 }

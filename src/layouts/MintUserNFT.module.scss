@@ -2,9 +2,17 @@
 
 .container {
   margin: 4rem 0;
-  display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  gap: 2rem;
+  >div {
+    padding: 2rem 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $gray;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
 
   .nft-content {
     display: flex;
@@ -20,21 +28,24 @@
     padding: 1rem;
   }
 
-  .input-nft-name {}
+  .input-nft-name {
+    margin-bottom: 2rem;
+  }
 
-  .info-text{
-    margin-top:0;
+  .info-text {
     margin-left: 1rem;
     font-size: 0.75rem;
-    color:$gray;
+    color: $gray;
   }
 
   .input-description {
+    margin-top: 2rem;
     box-shadow: rgb(0 0 0 / 8%) 5px 9px 15px;
   }
 
   .example-chips-container {
     margin-top: 3rem;
+
     .example-chips-content {
       display: flex;
       gap: 1rem;
@@ -43,8 +54,12 @@
     }
   }
 
-  .image-content{
-    max-width: 700px;
+  .image-content {
+    position: relative;
     margin: 0 auto;
+    max-width: 800px;
+    width: 500px;
+    height: 500px;
+
   }
 }
