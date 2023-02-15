@@ -3,17 +3,19 @@
 .container {
   margin: 4rem 0;
 
-  // >div {
-  //   padding: 2rem 0;
+  .icon {
+    font-size: 1.5rem;
+    cursor: pointer;
 
-  //   &:not(:last-child) {
-  //     border-bottom: 1px solid $gray;
-  //   }
+  }
 
-  //   &:last-child {
-  //     padding-bottom: 0;
-  //   }
-  // }
+  .section-panel {
+    margin-top: 3rem;
+  }
+
+  .text-area-container{
+    margin: 5rem 0;
+  }
 
   .nft-content {
     display: flex;
