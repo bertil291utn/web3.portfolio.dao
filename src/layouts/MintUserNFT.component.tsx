@@ -1,3 +1,4 @@
+import ButtonComponent from '@components/common/Button.component';
 import Chip from '@components/common/Chip.component';
 import InputComponent from '@components/common/Input.component';
 import SectionPanel from '@components/common/SectionPanel.component';
@@ -13,6 +14,7 @@ import styles from './MintUserNFT.module.scss'
 const MintUserNFT = () => {
   const [NFTName, setNFTName] = useState<string>();
   const [NFTDescription, setNFTDescription] = useState<string>();
+  const [currentActiveWindow, setCurrentActiveWindow] = useState<number>(1);
   const [generatedImage, setgeneratedImage] = useState<string>("https://preview.redd.it/an-avocado-armchair-v0-uooc9auz6qs81.png?auto=webp&s=bf5227eca8895def1f055e6407a6f5da5dbee3a7");
 
   const sendPrompt = () => {
@@ -23,7 +25,8 @@ const MintUserNFT = () => {
 
   return (
     <div className={styles['container']}>
-      <div className={styles["nft-content"]}>
+
+      {currentActiveWindow === 1 && <div className={styles["nft-content"]}>
 
         <SectionPanel
           id={generateLabels.id}
@@ -60,9 +63,13 @@ const MintUserNFT = () => {
           </div>
         </SectionPanel>
 
-      </div>
+        <ButtonComponent onClick={() => setCurrentActiveWindow((prev) => ++prev)}>
+          next
+        </ButtonComponent>
 
-      <SectionPanel
+      </div>}
+
+      {currentActiveWindow === 2 && <SectionPanel
         id={mintLabels.id}
         title={mintLabels.title}
       // subtitle={mintLabels.subtitle}
@@ -90,7 +97,8 @@ const MintUserNFT = () => {
             alt={'nft-image'}
           />
         </div>
-      </SectionPanel>
+      </SectionPanel>}
+
     </div >);
 }
 

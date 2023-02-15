@@ -139,18 +139,19 @@ const TokensComponent = () => {
                   {ethUserBalance > 0 && (
                     <ButtonComponent
                       className={styles['button__content']}
-                      buttonType='primary'
-                      btnLabel={tokenPageLabel.buttonLabel}
                       onClick={getTokensAction}
-                    />
+                      >
+                      {tokenPageLabel.buttonLabel}
+                    </ButtonComponent>
                   )}
                   {ethUserBalance <= 0.005 && isConnected && (
                     <ButtonComponent
                       className={styles['get-eth']}
                       buttonType='tertiary'
-                      btnLabel={getEth.buttonLabel}
                       onClick={getEths(getEth.URL)}
-                    />
+                      >
+                      {getEth.buttonLabel}
+                    </ButtonComponent>
                   )}
                 </div>
               </>

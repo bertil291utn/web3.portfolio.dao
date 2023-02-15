@@ -10,10 +10,10 @@ export default function Custom404() {
       <h1>{PageLabel.title}</h1>
       <ButtonComponent
         className={styles['button']}
-        buttonType='primary'
-        btnLabel={PageLabel.btnLabel}
         onClick={() => router.push('/')}
-      />
+      >
+        {PageLabel.btnLabel}
+      </ButtonComponent>
     </div>
   )
 }

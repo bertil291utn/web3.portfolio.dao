@@ -39,14 +39,12 @@ const ModalComponent = ({
   const { resolvedTheme } = useTheme();
   return (
     <div
-      className={`${styles['modal']} ${
-        show ? styles['modal__show'] : styles['modal__hide']
-      }`}
+      className={`${styles['modal']} ${show ? styles['modal__show'] : styles['modal__hide']
+        }`}
     >
       <div
-        className={`${styles['modal-content']} ${
-          resolvedTheme === 'dark' ? styles['modal-content__dark'] : ''
-        }`}
+        className={`${styles['modal-content']} ${resolvedTheme === 'dark' ? styles['modal-content__dark'] : ''
+          }`}
         ref={modalRef}
       >
         {closeButton && (
@@ -60,15 +58,17 @@ const ModalComponent = ({
           {acceptLabel && (
             <div className={styles['footer']}>
               <ButtonComponent
-                buttonType='primary'
-                btnLabel={acceptLabel}
                 onClick={_acceptBtnAction}
-              />
+              >
+                {acceptLabel}
+              </ButtonComponent>
               <ButtonComponent
                 buttonType='tertiary'
-                btnLabel={cancelLabel || ModalText.defaultCancelLabel}
                 onClick={_cancelBtnAction}
-              />
+              >
+                {cancelLabel || ModalText.defaultCancelLabel}
+
+              </ButtonComponent>
             </div>
           )}
         </div>

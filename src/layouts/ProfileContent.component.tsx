@@ -291,9 +291,10 @@ const ProfileContent = () => {
                     onClick={() =>
                       router.push(`${navbarElements.tokens.path}`)
                     }
-                    buttonType='primary'
-                    btnLabel={ProfileLabel.claimTokens}
-                  />
+                  >
+                    {ProfileLabel.claimTokens}
+
+                  </ButtonComponent>
                 </div>
               )}
             </div>
@@ -355,11 +356,12 @@ const ProfileContent = () => {
                     <ButtonComponent
                       className={styles['button']}
                       type={'submit'}
-                      buttonType={'primary'}
-                      btnLabel={
+                    >
+                      {
                         ctx?.userStakedAmount > 0 ? 'Unstake' : 'Stake'
                       }
-                    />
+
+                    </ButtonComponent>
                   </form>
                   {ctx?.userStakedAmount > 0 && (
                     <div>
