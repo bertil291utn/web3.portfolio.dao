@@ -2,6 +2,7 @@
 
 .container {
   margin: 4rem 0;
+
   >div {
     padding: 2rem 0;
 
@@ -28,8 +29,19 @@
     padding: 1rem;
   }
 
+
+
   .input-nft-name {
-    margin-bottom: 2rem;
+    width: 500px;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+
+    @media screen and (max-width:$sm) {
+      width: 90%;
+      margin: 0;
+
+    }
+
   }
 
   .info-text {
@@ -60,6 +72,10 @@
     max-width: 800px;
     width: 500px;
     height: 500px;
+
+    @media only screen and (max-width:$sm) {
+      width: 100%;
+    }
 
   }
 }

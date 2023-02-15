@@ -68,13 +68,19 @@ const MintUserNFT = () => {
       // subtitle={mintLabels.subtitle}
       >
 
-        {generatedImage && <InputComponent
-          className={styles['input-nft-name']}
-          name='NFTName'
-          placeholder='Sunflowers painting'
-          value={NFTName || ''}
-          onChange={(e) => setNFTName(e.target.value)}
-        />}
+        {generatedImage &&
+          <div
+            className={styles['input-nft-name']}
+          >
+
+            <InputComponent
+              name='NFTName'
+              placeholder='Sunflowers painting'
+              value={NFTName || ''}
+              onChange={(e) => setNFTName(e.target.value)}
+            />
+          </div>
+        }
 
         <div className={styles["image-content"]}>
           <Image
