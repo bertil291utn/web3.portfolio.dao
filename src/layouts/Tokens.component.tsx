@@ -29,13 +29,14 @@ import NFTContent from '@layouts/NFTContent.component';
 import { addNewDevice } from '@utils/firebaseFunctions';
 import { Contract } from '@interfaces/provider'
 import MintUserNFT from '@layouts/MintUserNFT.component';
+import { variantType } from '@interfaces/toast';
 
 
 const TokensComponent = () => {
   const [activeTknClaimHash, setActiveTknClaimHash] = useState<boolean>();
   const [activeNFTHash] = useState();
   const [showToast, setShowToast] = useState<boolean>(false);
-  const [toastVariant, setToastVariant] = useState<string>();
+  const [toastVariant, setToastVariant] = useState<variantType>('error');
   const [ethUserBalance, setEthUserBalance] = useState<number>(0);
   const [isConnected, setIsConnected] = useState<boolean>();
   const {data:signer} = useSigner();

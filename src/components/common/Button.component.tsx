@@ -1,4 +1,5 @@
 import { IconType } from 'react-icons/lib';
+import { buttonType, typeAction } from '@interfaces/button';
 import styles from './Button.module.scss';
 
 interface Props {
@@ -7,8 +8,8 @@ interface Props {
   onClick?: () => void
   title?: string
   className?: string
-  buttonType?: "fab-button" | "primary"
-  type?: "button" | "submit" | "reset"
+  buttonType?: buttonType
+  type?: typeAction
 }
 
 const ButtonComponent = ({

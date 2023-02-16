@@ -1,8 +1,9 @@
+import { variantType } from '@interfaces/toast';
 import React from 'react';
 import styles from './Toast.module.scss';
 
 interface Props {
-  variant: "error" | "warning" | "success"
+  variant: variantType
   children: React.ReactNode
   show: boolean
   setShow: React.Dispatch<React.SetStateAction<boolean>>

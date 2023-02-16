@@ -34,13 +34,14 @@ import NFTProfileCard from '@components/common/NFTProfileCard.component';
 import { Contract } from '@interfaces/provider';
 import { Metadata, TokenProfile } from '@interfaces/TokenProfile';
 import { FinishTX, HandleError } from '@interfaces/transactions';
+import { variantType } from '@interfaces/toast';
 
 const ProfileContent = () => {
   const router = useRouter();
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>();
   const [tokenCards, setTokenCards] = useState<Array<TokenProfile>>([]);
   const [showToast, setShowToast] = useState<boolean>(false);
-  const [toastVariant, setToastVariant] = useState<string>();
+  const [toastVariant, setToastVariant] = useState<variantType>('error');
   const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>();
   const [activeStakingHash, setActiveStakingHash] = useState<boolean>();
   const [activeUnStakingHash, setActiveUnStakingHash] = useState<boolean>();
@@ -397,7 +398,7 @@ const ProfileContent = () => {
         )}
       </div>
       <ToastComponent
-        variant={toastVariant || ''}
+        variant={toastVariant}
         show={showToast}
         setShow={setShowToast}
       >

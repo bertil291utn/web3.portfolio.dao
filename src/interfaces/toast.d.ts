@@ -1,0 +1,1 @@
+export type variantType = "error" | "warning" | "success"

@@ -27,13 +27,14 @@ import { IdContent } from '@placeholders/profile.placeholder';
 import { Contract } from '@interfaces/provider';
 import { TokenElem } from '@interfaces/TokenProvider';
 import { FinishTX, HandleError } from '@interfaces/transactions';
+import { variantType } from '@interfaces/toast';
 
 const NFTContent = () => {
   const router = useRouter();
   const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>(false);
   const [activeClaimingHash, setActiveClaimingHash] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
-  const [toastVariant, setToastVariant] = useState<string>('');
+  const [toastVariant, setToastVariant] = useState<variantType>('error');
   const { data: signer } = useSigner();
   const { address } = useAccount();
   const [NFTData, setNFTData] = useState<Array<TokenElem>>([]);
@@ -211,7 +212,7 @@ const NFTContent = () => {
         )}
       </>
       <ToastComponent
-        variant={toastVariant || ''}
+        variant={toastVariant }
         show={showToast}
         setShow={setShowToast}
       >
