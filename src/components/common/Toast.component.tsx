@@ -1,5 +1,5 @@
 import { variantType } from '@interfaces/toast';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './Toast.module.scss';
 
 interface Props {
@@ -10,6 +10,15 @@ interface Props {
 }
 
 const ToastComponent = ({ variant, children, show, setShow }: Props) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShow(false);
+    }, 4000);
+
+    return () => clearTimeout(timer);
+
+  }, [show])
+
   const handleClose = () => setShow(false);
   return (
     <div

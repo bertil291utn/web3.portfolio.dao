@@ -7,7 +7,7 @@ import TextArea from '@components/common/TextArea.component';
 import ToastComponent from '@components/common/Toast.component';
 import { generateLabels, mintLabels } from '@placeholders/home-mint.placeholders';
 import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
-import { countNumberLetters } from '@utils/common';
+import { countNumberWords } from '@utils/common';
 import Image from 'next/image';
 import { useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
@@ -22,7 +22,7 @@ const MintUserNFT = () => {
 
   const sendPrompt = async () => {
     if (!NFTDescription) return;
-    if (countNumberLetters(NFTDescription || '') < 10) {
+    if (countNumberWords(NFTDescription) <= 5) {
       setIsInvalidPrompt(true);
       return;
     }
@@ -133,7 +133,7 @@ const MintUserNFT = () => {
         setShow={setIsInvalidPrompt}
 
       >
-        Enter more than 10 characters
+        Enter more than 5 words
       </ToastComponent>
     </div >);
 }
