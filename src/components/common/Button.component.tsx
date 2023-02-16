@@ -3,11 +3,11 @@ import styles from './Button.module.scss';
 
 interface Props {
   children: React.ReactNode
-  LeftIcon?: IconType | undefined
+  LeftIcon?: IconType
   onClick?: () => void
   title?: string
   className?: string
-  buttonType?: string
+  buttonType?: "fab-button" | "primary"
   type?: "button" | "submit" | "reset"
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Toast.module.scss';
 
 interface Props {
-  variant: string
+  variant: "error" | "warning" | "success"
   children: React.ReactNode
   show: boolean
   setShow: React.Dispatch<React.SetStateAction<boolean>>

@@ -4,6 +4,7 @@ import InputComponent from '@components/common/Input.component';
 import SectionPanel from '@components/common/SectionPanel.component';
 import Subtitle from '@components/common/Subtitle.component';
 import TextArea from '@components/common/TextArea.component';
+import ToastComponent from '@components/common/Toast.component';
 import { generateLabels, mintLabels } from '@placeholders/home-mint.placeholders';
 import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
 import { countNumberLetters } from '@utils/common';
@@ -16,12 +17,15 @@ const MintUserNFT = () => {
   const [NFTName, setNFTName] = useState<string>();
   const [NFTDescription, setNFTDescription] = useState<string>();
   const [currentActiveWindow, setCurrentActiveWindow] = useState<number>(1);
-  const [generatedImage, setGeneratedImage] = useState<string>(
-    // "https://preview.redd.it/an-avocado-armchair-v0-uooc9auz6qs81.png?auto=webp&s=bf5227eca8895def1f055e6407a6f5da5dbee3a7"
-  );
+  const [generatedImage, setGeneratedImage] = useState<string>();
+  const [isInvalidPrompt, setIsInvalidPrompt] = useState<boolean>(false);
 
-  const sendPrompt = () => {
-    if (countNumberLetters(NFTDescription || '') < 3) return;
+  const sendPrompt = async () => {
+    if (!NFTDescription) return;
+    if (countNumberLetters(NFTDescription || '') < 10) {
+      setIsInvalidPrompt(true);
+      return;
+    }
     console.log('send prompt', NFTDescription)
   }
 
@@ -123,6 +127,14 @@ const MintUserNFT = () => {
         </>
       }
 
+      <ToastComponent
+        variant={`error`}
+        show={isInvalidPrompt}
+        setShow={setIsInvalidPrompt}
+
+      >
+        Enter more than 10 characters
+      </ToastComponent>
     </div >);
 }
 
