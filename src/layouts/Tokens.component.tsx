@@ -35,11 +35,11 @@ import { variantType } from '@interfaces/toast';
 const TokensComponent = () => {
   const [activeTknClaimHash, setActiveTknClaimHash] = useState<boolean>();
   const [activeNFTHash] = useState();
-  const [showToast, setShowToast] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState<boolean | string>(false);
   const [toastVariant, setToastVariant] = useState<variantType>('error');
   const [ethUserBalance, setEthUserBalance] = useState<number>(0);
   const [isConnected, setIsConnected] = useState<boolean>();
-  const {data:signer} = useSigner();
+  const { data: signer } = useSigner();
   const ctx = useWalletContext();
   const provider = useProvider();
   const { address, isConnected: _isConnected } = useAccount();
@@ -120,7 +120,7 @@ const TokensComponent = () => {
 
   return (
     <>
-    {/**
+      {/**
       <div className={styles['content']}>
         {!activeTknClaimHash && !activeNFTHash ? (
           <>
@@ -177,7 +177,7 @@ const TokensComponent = () => {
           </>
         )}
         */}
-        <MintUserNFT/>
+      <MintUserNFT />
       <ToastComponent
         variant={toastVariant || ''}
         show={showToast}
@@ -190,5 +190,5 @@ const TokensComponent = () => {
 };
 
 export default TokensComponent;
-//TODO-WIP: leave as 1155 and remoive rarity all collection, and change each token quantity should has only 5 
+//TODO-WIP: leave as 1155 and remoive rarity all collection, and change each token quantity should has only 5
 //set fixed price added on 

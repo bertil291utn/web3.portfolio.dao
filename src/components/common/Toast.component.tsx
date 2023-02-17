@@ -5,8 +5,8 @@ import styles from './Toast.module.scss';
 interface Props {
   variant: variantType
   children: React.ReactNode
-  show: boolean
-  setShow: React.Dispatch<React.SetStateAction<boolean>>
+  show: boolean | string
+  setShow: React.Dispatch<React.SetStateAction<boolean | string>>
 }
 
 const ToastComponent = ({ variant, children, show, setShow }: Props) => {

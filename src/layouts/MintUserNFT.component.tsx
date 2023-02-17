@@ -18,13 +18,19 @@ const MintUserNFT = () => {
   const [NFTDescription, setNFTDescription] = useState<string>();
   const [currentActiveWindow, setCurrentActiveWindow] = useState<number>(1);
   const [generatedImage, setGeneratedImage] = useState<string>();
-  const [isInvalidPrompt, setIsInvalidPrompt] = useState<boolean>(false);
+  const [showToastModal, setShowToastModal] = useState<boolean | string>(false);
 
   const sendPrompt = async () => {
     if (!NFTDescription) return;
-    if (countNumberWords(NFTDescription) <= 5) {
-      setIsInvalidPrompt(true);
+    if (countNumberWords(NFTDescription) < 5) {
+      setShowToastModal('Enter at least 5 words');
       return;
+    }
+
+    try {
+
+    } catch (error) {
+
     }
     console.log('send prompt', NFTDescription)
   }
@@ -129,12 +135,14 @@ const MintUserNFT = () => {
 
       <ToastComponent
         variant={`error`}
-        show={isInvalidPrompt}
-        setShow={setIsInvalidPrompt}
+        show={showToastModal}
+        setShow={setShowToastModal}
 
       >
-        Enter more than 5 words
+        {showToastModal}
       </ToastComponent>
+
+
     </div >);
 }
 

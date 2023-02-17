@@ -40,7 +40,7 @@ const ProfileContent = () => {
   const router = useRouter();
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>();
   const [tokenCards, setTokenCards] = useState<Array<TokenProfile>>([]);
-  const [showToast, setShowToast] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState<boolean | string>(false);
   const [toastVariant, setToastVariant] = useState<variantType>('error');
   const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>();
   const [activeStakingHash, setActiveStakingHash] = useState<boolean>();
