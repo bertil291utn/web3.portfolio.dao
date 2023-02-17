@@ -1,6 +1,7 @@
 import ButtonComponent from '@components/common/Button.component';
 import Chip from '@components/common/Chip.component';
 import InputComponent from '@components/common/Input.component';
+import LoadingComponent from '@components/common/Loading.component';
 import SectionPanel from '@components/common/SectionPanel.component';
 import Subtitle from '@components/common/Subtitle.component';
 import TextArea from '@components/common/TextArea.component';
@@ -9,10 +10,11 @@ import { generateLabels, mintLabels } from '@placeholders/home-mint.placeholders
 import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
 import { countNumberWords } from '@utils/common';
 import { generateImage } from '@utils/HuggingFace.utils';
-import Image from 'next/image';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import styles from './MintUserNFT.module.scss'
+
+const GeneratedImage = lazy(() => import('@components/GeneratedImage.component'))
 
 const MintUserNFT = () => {
   const [NFTName, setNFTName] = useState<string>('');
@@ -21,21 +23,26 @@ const MintUserNFT = () => {
   const [generatedImage, setGeneratedImage] = useState<string>();
   const [showToastModal, setShowToastModal] = useState<boolean | string>(false);
 
+  const _generateImage = async () => {
+
+    try {
+      const { contentType, dataBuffer } = await generateImage(NFTDescription);
+      const base64data = Buffer.from(dataBuffer).toString("base64");
+      return `data:${contentType};base64,` + base64data;
+
+    } catch (error) {
+      setShowToastModal((error as Error).message);
+    }
+
+  }
+
   const sendPrompt = async () => {
     if (!NFTDescription) return;
     if (countNumberWords(NFTDescription) < 5) {
       setShowToastModal('Enter at least 5 words');
       return;
     }
-
-    try {
-      const { contentType, dataBuffer } = await generateImage(NFTDescription);
-      const base64data = Buffer.from(dataBuffer).toString("base64");
-      const img = `data:${contentType};base64,` + base64data; 
-      setGeneratedImage(img);
-    } catch (error) {
-      setShowToastModal((error as Error).message);
-    }
+    setGeneratedImage(await _generateImage());
 
   }
 
@@ -44,21 +51,18 @@ const MintUserNFT = () => {
     <div className={styles['container']}>
 
       {currentActiveWindow === 1 && <div className={styles["nft-content"]}>
-
         <SectionPanel
           id={generateLabels.id}
           title={generateLabels.title}
           subtitle={generateLabels.subtitle}
         >
 
-          {generatedImage && <div className={styles["image-content"]}>
-            <Image
-              src={generatedImage}
-              layout='fill'
-              objectFit='cover'
-              alt={'nft-image'}
-            />
-          </div>}
+
+          {generatedImage &&
+            <Suspense fallback={<LoadingComponent title='Generating image...' />}>
+              {generatedImage && <GeneratedImage src={generatedImage} />}
+            </Suspense>
+          }
 
 
           <div className={styles["text-area-container"]}>
@@ -78,7 +82,7 @@ const MintUserNFT = () => {
           </div>
 
           {generatedImage && <ButtonComponent onClick={() => setCurrentActiveWindow((prev) => ++prev)}>
-            go to mint
+            mint
           </ButtonComponent>}
 
           <div className={styles["example-chips-container"]}>
@@ -94,9 +98,6 @@ const MintUserNFT = () => {
             </div>
           </div>
         </SectionPanel>
-
-
-
       </div>}
 
       {currentActiveWindow === 2 &&
@@ -123,14 +124,7 @@ const MintUserNFT = () => {
                   />
                 </div>
 
-                <div className={styles["image-content"]}>
-                  <Image
-                    src={generatedImage}
-                    layout='fill'
-                    objectFit='cover'
-                    alt={'nft-image'}
-                  />
-                </div>
+                <GeneratedImage src={generatedImage} />
               </>
             }
           </SectionPanel>
