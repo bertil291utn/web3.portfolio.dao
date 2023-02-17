@@ -1,3 +1,4 @@
+import { hugginFaceApiKey } from '@config/hugginface';
 
 export const HuggingFaceSDK = (model: string, body: string) => {
 
@@ -7,7 +8,7 @@ export const HuggingFaceSDK = (model: string, body: string) => {
   return fetch(URL, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_HUGGING_FACE_API_KEY}`
+      Authorization: `Bearer ${hugginFaceApiKey}`
     },
     body,
   });

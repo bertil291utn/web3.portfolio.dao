@@ -8,14 +8,15 @@ import ToastComponent from '@components/common/Toast.component';
 import { generateLabels, mintLabels } from '@placeholders/home-mint.placeholders';
 import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
 import { countNumberWords } from '@utils/common';
+import { generateImage } from '@utils/HuggingFace.utils';
 import Image from 'next/image';
 import { useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import styles from './MintUserNFT.module.scss'
 
 const MintUserNFT = () => {
-  const [NFTName, setNFTName] = useState<string>();
-  const [NFTDescription, setNFTDescription] = useState<string>();
+  const [NFTName, setNFTName] = useState<string>('');
+  const [NFTDescription, setNFTDescription] = useState<string>('');
   const [currentActiveWindow, setCurrentActiveWindow] = useState<number>(1);
   const [generatedImage, setGeneratedImage] = useState<string>();
   const [showToastModal, setShowToastModal] = useState<boolean | string>(false);
@@ -28,11 +29,14 @@ const MintUserNFT = () => {
     }
 
     try {
-
+      const { contentType, dataBuffer } = await generateImage(NFTDescription);
+      const base64data = Buffer.from(dataBuffer).toString("base64");
+      const img = `data:${contentType};base64,` + base64data; 
+      setGeneratedImage(img);
     } catch (error) {
-
+      setShowToastModal((error as Error).message);
     }
-    console.log('send prompt', NFTDescription)
+
   }
 
 
@@ -63,7 +67,7 @@ const MintUserNFT = () => {
               className={styles['input-description']}
               name='NFTDescription'
               placeholder='An Impressionist oil painting of sunflowers in a purple vase...'
-              value={NFTDescription || ''}
+              value={NFTDescription}
               onChange={(e) => setNFTDescription(e.target.value)}
               onSubmit={sendPrompt}
               icon
@@ -114,7 +118,7 @@ const MintUserNFT = () => {
                   <InputComponent
                     name='NFTName'
                     placeholder='Sunflowers painting'
-                    value={NFTName || ''}
+                    value={NFTName}
                     onChange={(e) => setNFTName(e.target.value)}
                   />
                 </div>
