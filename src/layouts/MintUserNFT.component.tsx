@@ -10,11 +10,16 @@ import { generateLabels, mintLabels } from '@placeholders/home-mint.placeholders
 import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
 import { countNumberWords } from '@utils/common';
 import { generateImage } from '@utils/HuggingFace.utils';
-import { lazy, Suspense, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { Fragment, useEffect, useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import styles from './MintUserNFT.module.scss'
 
-const GeneratedImage = lazy(() => import('@components/GeneratedImage.component'))
+const GeneratedImage = dynamic(() => import('@components/GeneratedImage.component'),
+  {
+    loading: () => <LoadingComponent title='Generating image...' />,
+    ssr: false,
+  })
 
 const MintUserNFT = () => {
   const [NFTName, setNFTName] = useState<string>('');
@@ -22,6 +27,8 @@ const MintUserNFT = () => {
   const [currentActiveWindow, setCurrentActiveWindow] = useState<number>(1);
   const [generatedImage, setGeneratedImage] = useState<string>();
   const [showToastModal, setShowToastModal] = useState<boolean | string>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [imageKey, setImageKey] = useState<number>(0);
 
   const _generateImage = async () => {
 
@@ -33,10 +40,16 @@ const MintUserNFT = () => {
     } catch (error) {
       setShowToastModal((error as Error).message);
     }
+    finally {
+      setLoading(false);
+      setImageKey(imageKey + 1);
+    }
 
   }
 
   const sendPrompt = async () => {
+    setLoading(true);
+    setGeneratedImage('')
     if (!NFTDescription) return;
     if (countNumberWords(NFTDescription) < 5) {
       setShowToastModal('Enter at least 5 words');
@@ -46,6 +59,7 @@ const MintUserNFT = () => {
 
   }
 
+  useEffect(() => { !NFTDescription && setGeneratedImage('') }, [NFTDescription]);
 
   return (
     <div className={styles['container']}>
@@ -56,12 +70,12 @@ const MintUserNFT = () => {
           title={generateLabels.title}
           subtitle={generateLabels.subtitle}
         >
-
-
-          {generatedImage &&
-            <Suspense fallback={<LoadingComponent title='Generating image...' />}>
-              {generatedImage && <GeneratedImage src={generatedImage} />}
-            </Suspense>
+          {loading ? (
+            <LoadingComponent title='Generating image...' />
+          ) : generatedImage &&
+          <Fragment key={imageKey}>
+            <GeneratedImage src={generatedImage} />
+          </Fragment>
           }
 
 
@@ -74,6 +88,7 @@ const MintUserNFT = () => {
               value={NFTDescription}
               onChange={(e) => setNFTDescription(e.target.value)}
               onSubmit={sendPrompt}
+              buttonTitle='Render image'
               icon
             />
             <p className={styles['info-text']}>
@@ -81,7 +96,7 @@ const MintUserNFT = () => {
             </p>
           </div>
 
-          {generatedImage && <ButtonComponent onClick={() => setCurrentActiveWindow((prev) => ++prev)}>
+          {generatedImage && <ButtonComponent className={styles['mint-button']}onClick={() => setCurrentActiveWindow((prev) => ++prev)}>
             mint
           </ButtonComponent>}
 

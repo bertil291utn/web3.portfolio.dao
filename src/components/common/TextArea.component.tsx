@@ -11,10 +11,12 @@ interface Props {
   id?: string
   className?: string
   placeholder?: string
-  icon?: boolean
+  icon?: boolean,
+  buttonTitle?: string,
+
 }
 
-const TextArea = ({ className, name, id, placeholder, value, onChange, icon, onSubmit }: Props) => {
+const TextArea = ({ className, name, id, placeholder, value, onChange, icon, onSubmit, buttonTitle }: Props) => {
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [themeClass, setThemeClass] = useState('');
@@ -49,7 +51,7 @@ const TextArea = ({ className, name, id, placeholder, value, onChange, icon, onS
       >
       </textarea>
 
-      {icon && <button className={`${styles['icon-container']} ${themeClass}`} onClick={onSubmit}>
+      {icon && <button className={`${styles['icon-container']} ${themeClass}`} onClick={onSubmit} title={buttonTitle}>
         <FiSend className={styles['icon']} />
       </button>}
     </div>

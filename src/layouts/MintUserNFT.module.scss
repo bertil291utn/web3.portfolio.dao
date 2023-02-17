@@ -68,5 +68,13 @@
     }
   }
 
-  
+  .mint-button{
+    width: 500px;
+    margin: 0 auto;
+    border-radius: 2rem;
+    @media only screen and (max-width:$sm) {
+      width: 100%;
+      
+    }
+  }
 }
