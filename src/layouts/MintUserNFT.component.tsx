@@ -48,13 +48,13 @@ const MintUserNFT = () => {
   }
 
   const sendPrompt = async () => {
-    setLoading(true);
     setGeneratedImage('')
     if (!NFTDescription) return;
     if (countNumberWords(NFTDescription) < 5) {
       setShowToastModal('Enter at least 5 words');
       return;
     }
+    setLoading(true);
     setGeneratedImage(await _generateImage());
 
   }
@@ -73,9 +73,16 @@ const MintUserNFT = () => {
           {loading ? (
             <LoadingComponent title='Generating image...' />
           ) : generatedImage &&
-          <Fragment key={imageKey}>
-            <GeneratedImage src={generatedImage} />
-          </Fragment>
+          <div className={styles['image-nft-container']}>
+            <Fragment key={imageKey}>
+              <GeneratedImage src={generatedImage}
+                className={`${styles['image-nft']}`}
+              />
+            </Fragment>
+            <ButtonComponent className={styles['mint-button']} onClick={() => setCurrentActiveWindow((prev) => ++prev)}>
+              mint
+            </ButtonComponent>
+          </div>
           }
 
 
@@ -96,9 +103,7 @@ const MintUserNFT = () => {
             </p>
           </div>
 
-          {generatedImage && <ButtonComponent className={styles['mint-button']}onClick={() => setCurrentActiveWindow((prev) => ++prev)}>
-            mint
-          </ButtonComponent>}
+
 
           <div className={styles["example-chips-container"]}>
             <Subtitle>

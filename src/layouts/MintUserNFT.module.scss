@@ -1,5 +1,7 @@
 @import 'src/css/variables.scss';
 
+$radius-image:0.5rem;
+
 .container {
   margin: 4rem 0;
 
@@ -13,7 +15,7 @@
     margin-top: 3rem;
   }
 
-  .text-area-container{
+  .text-area-container {
     margin: 5rem 0;
   }
 
@@ -68,13 +70,39 @@
     }
   }
 
-  .mint-button{
-    width: 500px;
+  .image-nft-container {
+    width: fit-content;
     margin: 0 auto;
-    border-radius: 2rem;
+    position: relative;
     @media only screen and (max-width:$sm) {
       width: 100%;
-      
+    }
+
+    &:hover {
+      .mint-button {
+        display: block;
+      }
+    }
+
+    .image-nft {
+      img {
+        border-radius: $radius-image;
+      }
+    }
+
+    .mint-button {
+      position: absolute;
+      bottom: 0;
+      display: none;
+      width: 500px;
+      margin: 0 auto;
+      border-radius: 0 0 $radius-image $radius-image;
+
+      @media only screen and (max-width:$sm) {
+        width: 100%;
+
+      }
     }
   }
+
 }
