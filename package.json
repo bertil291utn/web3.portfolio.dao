@@ -20,6 +20,7 @@
     "firebase": "^9.15.0",
     "next": "^12.3.0",
     "next-themes": "^0.2.1",
+    "nft.storage": "^7.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sass": "^1.56.2",

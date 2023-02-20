@@ -1,4 +1,4 @@
-import { hugginFaceApiKey } from '@config/hugginface';
+import { hugginFaceApiKey } from '@config/api-keys';
 
 export const HuggingFaceSDK = (model: string, body: string) => {
 

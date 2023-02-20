@@ -10,6 +10,7 @@ import { generateLabels, mintLabels } from '@placeholders/home-mint.placeholders
 import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
 import { countNumberWords } from '@utils/common';
 import { generateImage } from '@utils/HuggingFace.utils';
+import { uploadImage } from '@utils/NFTStorageSDK.utils';
 import dynamic from 'next/dynamic';
 import { Fragment, useEffect, useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
@@ -25,7 +26,8 @@ const MintUserNFT = () => {
   const [NFTName, setNFTName] = useState<string>('');
   const [NFTDescription, setNFTDescription] = useState<string>('');
   const [currentActiveWindow, setCurrentActiveWindow] = useState<number>(1);
-  const [generatedImage, setGeneratedImage] = useState<string>();
+  const [generatedImage, setGeneratedImage] = useState<string>('');
+  const [mimeType, setMimeType] = useState<string>('');
   const [showToastModal, setShowToastModal] = useState<boolean | string>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [imageKey, setImageKey] = useState<number>(0);
@@ -35,6 +37,7 @@ const MintUserNFT = () => {
     try {
       const { contentType, dataBuffer } = await generateImage(NFTDescription);
       const base64data = Buffer.from(dataBuffer).toString("base64");
+      contentType && setMimeType(contentType);
       return `data:${contentType};base64,` + base64data;
 
     } catch (error) {
@@ -55,13 +58,14 @@ const MintUserNFT = () => {
       return;
     }
     setLoading(true);
-    setGeneratedImage(await _generateImage());
+    const _image = await _generateImage();
+    _image && setGeneratedImage(_image);
 
   }
 
   useEffect(() => { !NFTDescription && setGeneratedImage('') }, [NFTDescription]);
 
-  const mintNFT=()=>{
+  const mintNFT = async () => {
     if (!NFTName) {
       setShowToastModal('Add an image title');
       return
@@ -72,6 +76,26 @@ const MintUserNFT = () => {
       return;
     }
     console.log('mint nft');
+    const r2 = await uploadImage({
+      imageData: generatedImage,
+      imageName: `${NFTName.trim().replace(/\s+/g, '-')}.${mimeType.split('/').pop()}`,
+      mimeType,
+      name: NFTName.trim(),
+      description: NFTDescription,
+      attributes: [
+        {
+          trait_type: "Name",
+          value: NFTName
+        },
+        {
+          trait_type: "Rarity",
+          value: Math.floor(Math.random() * 96) + 5
+        }
+      ]
+    })
+    //mint with this url
+    console.log("🚀 ~ file: MintUserNFT.component.tsx:96 ~ mintNFT ~ r2:", r2)
+
   }
 
   return (
