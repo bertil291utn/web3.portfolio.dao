@@ -61,6 +61,19 @@ const MintUserNFT = () => {
 
   useEffect(() => { !NFTDescription && setGeneratedImage('') }, [NFTDescription]);
 
+  const mintNFT=()=>{
+    if (!NFTName) {
+      setShowToastModal('Add an image title');
+      return
+    }
+
+    if (countNumberWords(NFTName) < 2) {
+      setShowToastModal('Add at least 2 meaningful words');
+      return;
+    }
+    console.log('mint nft');
+  }
+
   return (
     <div className={styles['container']}>
 
@@ -80,7 +93,7 @@ const MintUserNFT = () => {
               />
             </Fragment>
             <ButtonComponent className={styles['mint-button']} onClick={() => setCurrentActiveWindow((prev) => ++prev)}>
-              mint
+              go to mint
             </ButtonComponent>
           </div>
           }
@@ -144,7 +157,14 @@ const MintUserNFT = () => {
                   />
                 </div>
 
-                <GeneratedImage src={generatedImage} />
+                <div className={styles['image-nft-container']}>
+                  <GeneratedImage src={generatedImage}
+                    className={`${styles['image-nft']}`}
+                  />
+                  <ButtonComponent className={styles['mint-button']} onClick={mintNFT}>
+                    mint
+                  </ButtonComponent>
+                </div>
               </>
             }
           </SectionPanel>
