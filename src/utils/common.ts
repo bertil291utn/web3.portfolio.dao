@@ -11,3 +11,11 @@ export const countNumberWords = (prompt: string): number => {
   const regex = /\s/g;
   return prompt.trim().split(regex).length;
 }
+
+export function toTitleCase(str: string) {
+  return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+}
+
+export function capitalizeFirstWord(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}

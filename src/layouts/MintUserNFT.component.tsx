@@ -6,10 +6,10 @@ import SectionPanel from '@components/common/SectionPanel.component';
 import Subtitle from '@components/common/Subtitle.component';
 import TextArea from '@components/common/TextArea.component';
 import ToastComponent from '@components/common/Toast.component';
-import { signerOrProvider } from '@interfaces/provider';
+import { Contract, signerOrProvider } from '@interfaces/provider';
 import { generateLabels, mintLabels } from '@placeholders/home-mint.placeholders';
 import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
-import { countNumberWords } from '@utils/common';
+import { capitalizeFirstWord, countNumberWords } from '@utils/common';
 import { generateImage } from '@utils/HuggingFace.utils';
 import { uploadImage } from '@utils/NFTStorageSDK.utils';
 import { getNFT721Factory } from '@utils/web3';
@@ -17,8 +17,11 @@ import { ethers } from 'ethers';
 import dynamic from 'next/dynamic';
 import { Fragment, useEffect, useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
-import { useSigner } from 'wagmi';
+import { useAccount, useProvider, useSigner } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { localStorageKeys } from '@keys/localStorage';
+import { useRouter } from 'next/router';
+import { navbarElements } from '@placeholders/navbar.placeholders';
 import styles from './MintUserNFT.module.scss'
 
 const GeneratedImage = dynamic(() => import('@components/GeneratedImage.component'),
@@ -38,8 +41,30 @@ const MintUserNFT = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [imageKey, setImageKey] = useState<number>(0);
   const [theresTokenURI, setTheresTokenURI] = useState<string>('');
+  const [activeMintNFTHash, setActiveMintNFTHash] = useState<boolean>(false);
   const { data: signer } = useSigner();
   const { openConnectModal } = useConnectModal();
+  const router = useRouter();
+  const provider = useProvider();
+  const { address } = useAccount();
+
+
+  const isFinishedTransferTx = async ({ signerOrProvider, address }: Contract) => {
+    const NFT721Contract = getNFT721Factory(signerOrProvider);
+    //TODO: listen transfer event not just in token component, but also all over the app _app file
+    NFT721Contract.on('Transfer', async (from, to) => {
+      if (
+        from?.toLowerCase() == ethers.constants.AddressZero &&
+        to?.toLowerCase() == address?.toLowerCase()
+      ) {
+        try {
+          await finishTx();
+        } catch (error: any) {
+          setShowToastModal(error.reason?.replace('execution reverted:', ''))
+        }
+      }
+    });
+  };
 
   const _generateImage = async () => {
 
@@ -79,15 +104,26 @@ const MintUserNFT = () => {
     signer && theresTokenURI && _mintNFT(theresTokenURI, signer);
   }, [theresTokenURI])
 
+  useEffect(() => {
+    setActiveMintNFTHash(
+      !!window.localStorage.getItem(localStorageKeys.claimingTxHash)
+    );
+  }, []);
+
+  useEffect(() => {
+    address && isFinishedTransferTx({ signerOrProvider: provider, address });
+  }, [address]);
+
   const _mintNFT = async (tokenUri: string, signer: signerOrProvider) => {
     try {
       const NFT721Contract = getNFT721Factory(signer);
       let tx = await NFT721Contract.safeMint(tokenUri, { value: ethers.utils.parseEther('0.27') });
+      window.localStorage.setItem(localStorageKeys.mintNFTTokenTxHash, tx.hash);
+      setActiveMintNFTHash(tx.hash);
       await tx.wait();
     } catch (error: any) {
-      setShowToastModal(error.reason)
+      setShowToastModal(error.reason?.replace('execution reverted:', ''))
     }
-
   }
 
   const mintNFT = async () => {
@@ -112,8 +148,8 @@ const MintUserNFT = () => {
       imageData: dataBuffer,
       imageName: `${NFTName.trim().replace(/\s+/g, '-')}.${mimeType.split('/').pop()}`,
       mimeType,
-      name: NFTName.trim(),
-      description: NFTDescription,
+      name: capitalizeFirstWord(NFTName.trim()),
+      description: capitalizeFirstWord(NFTDescription),
       attributes: [
         {
           trait_type: "Name",
@@ -128,9 +164,19 @@ const MintUserNFT = () => {
 
     tokenuri && setTheresTokenURI(tokenuri)
 
-
-
   }
+
+  const setCloseCurrentTx = () => {
+    window.localStorage.removeItem(localStorageKeys.mintNFTTokenTxHash);
+  };
+
+  const finishTx = async () => {
+    setCloseCurrentTx();
+    setActiveMintNFTHash(false);
+    router.push(navbarElements.profile.path);
+    await new Promise((r) => setTimeout(r, 2000));
+    window.location.reload();
+  };
 
   return (
     <div className={styles['container']}>
@@ -201,30 +247,32 @@ const MintUserNFT = () => {
             className={styles['section-panel']}
           >
 
-            {generatedImage &&
-              <>
-                <div
-                  className={styles['input-nft-name']}
-                >
+            {!activeMintNFTHash ? <>
+              <div
+                className={styles['input-nft-name']}
+              >
 
-                  <InputComponent
-                    name='NFTName'
-                    placeholder='Sunflowers painting'
-                    value={NFTName}
-                    onChange={(e) => setNFTName(e.target.value)}
-                  />
-                </div>
+                <InputComponent
+                  name='NFTName'
+                  placeholder='Sunflowers painting'
+                  value={NFTName}
+                  onChange={(e) => setNFTName(e.target.value)}
+                />
+              </div>
 
-                <div className={styles['image-nft-container']}>
-                  <GeneratedImage src={generatedImage}
-                    className={`${styles['image-nft']}`}
-                  />
-                  <ButtonComponent className={styles['mint-button']} onClick={mintNFT}>
-                    mint
-                  </ButtonComponent>
-                </div>
-              </>
-            }
+              <div className={styles['image-nft-container']}>
+                <GeneratedImage src={generatedImage}
+                  className={`${styles['image-nft']}`}
+                />
+                <ButtonComponent className={styles['mint-button']} onClick={mintNFT}>
+                  mint
+                </ButtonComponent>
+              </div>
+            </> : <>
+              <LoadingComponent
+                title={`Minting...`}
+              />
+            </>}
           </SectionPanel>
         </>
       }
