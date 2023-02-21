@@ -13,11 +13,12 @@ import { countNumberWords } from '@utils/common';
 import { generateImage } from '@utils/HuggingFace.utils';
 import { uploadImage } from '@utils/NFTStorageSDK.utils';
 import { getNFT721Factory } from '@utils/web3';
-import { Signer } from 'ethers';
+import { ethers } from 'ethers';
 import dynamic from 'next/dynamic';
-import { Fragment, Provider, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
-import { useProvider, useSigner } from 'wagmi';
+import { useSigner } from 'wagmi';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import styles from './MintUserNFT.module.scss'
 
 const GeneratedImage = dynamic(() => import('@components/GeneratedImage.component'),
@@ -32,11 +33,13 @@ const MintUserNFT = () => {
   const [currentActiveWindow, setCurrentActiveWindow] = useState<number>(1);
   const [generatedImage, setGeneratedImage] = useState<string>('');
   const [mimeType, setMimeType] = useState<string>('');
+  const [dataBuffer, setDataBuffer] = useState<ArrayBuffer>(new ArrayBuffer(0));
   const [showToastModal, setShowToastModal] = useState<boolean | string>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [imageKey, setImageKey] = useState<number>(0);
-  // const provider = useProvider();
+  const [theresTokenURI, setTheresTokenURI] = useState<string>('');
   const { data: signer } = useSigner();
+  const { openConnectModal } = useConnectModal();
 
   const _generateImage = async () => {
 
@@ -44,6 +47,7 @@ const MintUserNFT = () => {
       const { contentType, dataBuffer } = await generateImage(NFTDescription);
       const base64data = Buffer.from(dataBuffer).toString("base64");
       contentType && setMimeType(contentType);
+      dataBuffer && setDataBuffer(dataBuffer);
       return `data:${contentType};base64,` + base64data;
 
     } catch (error) {
@@ -51,7 +55,7 @@ const MintUserNFT = () => {
     }
     finally {
       setLoading(false);
-      setImageKey(imageKey + 1);
+      setImageKey((prev) => ++prev);
     }
 
   }
@@ -71,11 +75,14 @@ const MintUserNFT = () => {
 
   useEffect(() => { !NFTDescription && setGeneratedImage('') }, [NFTDescription]);
 
+  useEffect(() => {
+    signer && theresTokenURI && _mintNFT(theresTokenURI, signer);
+  }, [theresTokenURI])
+
   const _mintNFT = async (tokenUri: string, signer: signerOrProvider) => {
     try {
-
       const NFT721Contract = getNFT721Factory(signer);
-      let tx = NFT721Contract && await NFT721Contract.safeMint(tokenUri);
+      let tx = await NFT721Contract.safeMint(tokenUri, { value: ethers.utils.parseEther('0.27') });
       await tx.wait();
     } catch (error: any) {
       setShowToastModal(error.reason)
@@ -84,6 +91,8 @@ const MintUserNFT = () => {
   }
 
   const mintNFT = async () => {
+
+
     if (!NFTName) {
       setShowToastModal('Add an image title');
       return
@@ -93,11 +102,14 @@ const MintUserNFT = () => {
       setShowToastModal('Add at least 2 meaningful words');
       return;
     }
-    console.log('mint nft');
-    console.log('display a loading message');
+
+    if (!signer) {
+      openConnectModal && await openConnectModal();
+
+    }
 
     const tokenuri = await uploadImage({
-      imageData: generatedImage,
+      imageData: dataBuffer,
       imageName: `${NFTName.trim().replace(/\s+/g, '-')}.${mimeType.split('/').pop()}`,
       mimeType,
       name: NFTName.trim(),
@@ -114,8 +126,9 @@ const MintUserNFT = () => {
       ]
     })
 
-    signer && tokenuri && _mintNFT(tokenuri, signer);
-    console.log("🚀 ~ file: MintUserNFT.component.tsx:96 ~ mintNFT ~ r2:", tokenuri)
+    tokenuri && setTheresTokenURI(tokenuri)
+
+
 
   }
 

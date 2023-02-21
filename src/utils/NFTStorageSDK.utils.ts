@@ -14,7 +14,7 @@ interface uploadBody {
 }
 
 interface IUploadImage {
-  imageData: string
+  imageData: ArrayBuffer
   imageName: string
   mimeType: string
   name: string
