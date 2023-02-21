@@ -5,12 +5,9 @@ import { getStakingFactory, getTokenFactory } from '@utils/web3';
 import { DEFAULT_TOKEN_NAME } from '@constants/common';
 import Context from '@interfaces/wallet';
 import ChildrenType from '@interfaces/children';
-import { IProvider } from '@interfaces/provider';
+import { Contract, signerOrProvider } from '@interfaces/provider';
 
 
-interface Contract extends IProvider {
-  address: string
-}
 
 
 const WalletContext = createContext<Context | null>(null);
@@ -22,28 +19,28 @@ export default function WalletProvider({ children }: ChildrenType) {
   const wallet = useAccount();
   const provider = useProvider();
 
-  const getUserCustomTokenBalance = async ({ signerProvider, address }: Contract) => {
-    const tokenContract = getTokenFactory({ signerProvider });
+  const getUserCustomTokenBalance = async ({ signerOrProvider, address }: Contract) => {
+    const tokenContract = getTokenFactory(signerOrProvider);
     const userTokenAmount = await tokenContract.balanceOf(address);
     setUserCustomTokenBalance(userTokenAmount);
   };
 
-  const getUserStakedAmount = async ({ signerProvider, address }: Contract) => {
-    const stakingContract = getStakingFactory({ signerProvider });
+  const getUserStakedAmount = async ({ signerOrProvider, address }: Contract) => {
+    const stakingContract = getStakingFactory(signerOrProvider);
     const userStakedAmount = await stakingContract.balanceOf(address);
     setUserStakedAmount(userStakedAmount);
   };
 
-  const getTokenSymbol = async ({ signerProvider }: IProvider) => {
-    const tokenContract = getTokenFactory({ signerProvider });
+  const getTokenSymbol = async (signerOrProvider: signerOrProvider) => {
+    const tokenContract = getTokenFactory(signerOrProvider);
     const tokenSymbol = await tokenContract.symbol();
     setTokenSymbol(tokenSymbol || DEFAULT_TOKEN_NAME);
   };
 
   useEffect(() => {
-    wallet.isConnected && getUserCustomTokenBalance({ signerProvider: provider, address: wallet.address || '' });
-    wallet.isConnected && getUserStakedAmount({ signerProvider: provider, address: wallet.address || '' });
-    getTokenSymbol({ signerProvider: provider });
+    wallet.isConnected && getUserCustomTokenBalance({ signerOrProvider: provider, address: wallet.address || '' });
+    wallet.isConnected && getUserStakedAmount({ signerOrProvider: provider, address: wallet.address || '' });
+    getTokenSymbol(provider);
   }, [wallet.address]);
 
   return (

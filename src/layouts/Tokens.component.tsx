@@ -44,15 +44,15 @@ const TokensComponent = () => {
   const provider = useProvider();
   const { address, isConnected: _isConnected } = useAccount();
 
-  const getBalance = async ({ signerProvider, address }: Contract) => {
-    const userBalance = await signerProvider.getBalance(address);
+  const getBalance = async ({ signerOrProvider, address }: Contract) => {
+    const userBalance = await signerOrProvider.getBalance(address);
     const _balance = ethers.utils.formatEther(userBalance?.toString());
     setEthUserBalance(+_balance);
   };
 
   useEffect(() => {
-    address && getBalance({ signerProvider: provider, address });
-    address && isFinishedTransferTx({ signerProvider: provider, address });
+    address && getBalance({ signerOrProvider: provider, address });
+    address && isFinishedTransferTx({ signerOrProvider: provider, address });
   }, [address]);
 
   useEffect(() => {
@@ -61,8 +61,8 @@ const TokensComponent = () => {
 
   const router = useRouter();
 
-  const isFinishedTransferTx = async ({ signerProvider, address }: Contract) => {
-    const tokenContract = getTokenFactory({ signerProvider });
+  const isFinishedTransferTx = async ({ signerOrProvider, address }: Contract) => {
+    const tokenContract = getTokenFactory(signerOrProvider);
     //TODO: listen transfer event not just in token component, but also all over the app _app file
     tokenContract.on('Transfer', async (from: string, to: string) => {
       if (
@@ -106,7 +106,7 @@ const TokensComponent = () => {
   const getTokensAction = async () => {
     if (!signer) return;
     try {
-      const claimableContract = getClaimableFactory({ signerProvider: signer });
+      const claimableContract = getClaimableFactory(signer);
       let tx = await claimableContract.claim(ERC20TokenContractAdd);
       window.localStorage.setItem(localStorageKeys.claimingTxHash, tx.hash);
       setActiveTknClaimHash(tx.hash);

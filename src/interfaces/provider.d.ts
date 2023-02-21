@@ -1,11 +1,11 @@
 import { ethers } from 'ethers'
 
-export interface IProvider {
-  signerProvider: ethers.providers.Provider | ethers.Signer
-}
 
-export interface Contract extends IProvider {
+export type signerOrProvider = ethers.Signer | ethers.providers.Provider
+
+export interface Contract {
   address: string
+  signerOrProvider:signerOrProvider
 }
 
 

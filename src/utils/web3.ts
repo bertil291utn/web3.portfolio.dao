@@ -1,10 +1,12 @@
-import { ethers } from 'ethers';
+import { Contract, ethers } from 'ethers';
 import {
   ClaimableContractAdd,
   ERC20TokenContractAdd,
+  ERC721ContractAdd,
   NFTEditionClaimableContractAdd,
   NFTEditionContractAdd,
   StakingContractAdd,
+
 } from '@config/contracts';
 import { getDefaultWallets } from '@rainbow-me/rainbowkit';
 import {
@@ -19,58 +21,68 @@ import { publicProvider } from 'wagmi/providers/public';
 import ClaimableABI from '@web3/ABI/Claimable.json';
 import StakingABI from '@web3/ABI/StakingToken.json';
 import ERC1155ABI from '@web3/ABI/ERC1155.json';
+import BatlDaoTokensABI from '@web3/ABI/BatlDaoTokens.json';
 import ERC1155ClaimableABI from '@web3/ABI/ERC1155Claimable.json';
-import { IProvider } from '@interfaces/provider';
+import { signerOrProvider } from '@interfaces/provider';
 
 
-interface ContractFactory extends IProvider {
+interface ContractFactory {
   address: string
   ABI: ethers.ContractInterface
+  signerOrProvider: signerOrProvider
 }
 
-export const getContractFactory = ({ address, ABI, signerProvider }: ContractFactory) => {
-  return new ethers.Contract(address, ABI, signerProvider);
+export const getContractFactory = ({ address, ABI, signerOrProvider }: ContractFactory) => {
+  return new ethers.Contract(address, ABI, signerOrProvider);
 };
 
-export const getTokenFactory = ({ signerProvider }: IProvider) => {
+export const getTokenFactory = (signerOrProvider: signerOrProvider) => {
   return getContractFactory({
-    address: ERC20TokenContractAdd || '',
+    address: ERC20TokenContractAdd!,
     ABI: erc20ABI,
-    signerProvider,
+    signerOrProvider,
   });
 };
 
-export const getClaimableFactory = ({ signerProvider }: IProvider) => {
+export const getClaimableFactory = (signerOrProvider: signerOrProvider) => {
   return getContractFactory({
-    address: ClaimableContractAdd || '',
+    address: ClaimableContractAdd!,
     ABI: ClaimableABI,
-    signerProvider,
+    signerOrProvider,
   });
 };
 
-export const getStakingFactory = ({ signerProvider }: IProvider) => {
+export const getStakingFactory = (signerOrProvider: signerOrProvider) => {
   return getContractFactory({
-    address: StakingContractAdd || '',
+    address: StakingContractAdd!,
     ABI: StakingABI,
-    signerProvider
+    signerOrProvider
   });
 };
-//
 
 
-export const getNFTEditionFactory = ({ signerProvider }: IProvider) => {
+
+export const getNFTEditionFactory = (signerOrProvider: signerOrProvider) => {
   return getContractFactory({
-    address: NFTEditionContractAdd || '',
+    address: NFTEditionContractAdd!,
     ABI: ERC1155ABI,
-    signerProvider
+    signerOrProvider
   });
 };
 
-export const getNFTEditionClaimableFactory = ({ signerProvider }: IProvider) => {
+export const getNFTEditionClaimableFactory = (signerOrProvider: signerOrProvider) => {
   return getContractFactory({
-    address: NFTEditionClaimableContractAdd || '',
+    address: NFTEditionClaimableContractAdd!,
     ABI: ERC1155ClaimableABI,
-    signerProvider
+    signerOrProvider
+  });
+};
+
+export const getNFT721Factory = (signerOrProvider: signerOrProvider) => {
+  return getContractFactory({
+    address: ERC721ContractAdd!,
+    ABI: BatlDaoTokensABI,
+    signerOrProvider
   });
 };
 

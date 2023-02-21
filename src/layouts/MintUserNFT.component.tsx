@@ -6,14 +6,18 @@ import SectionPanel from '@components/common/SectionPanel.component';
 import Subtitle from '@components/common/Subtitle.component';
 import TextArea from '@components/common/TextArea.component';
 import ToastComponent from '@components/common/Toast.component';
+import { signerOrProvider } from '@interfaces/provider';
 import { generateLabels, mintLabels } from '@placeholders/home-mint.placeholders';
 import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
 import { countNumberWords } from '@utils/common';
 import { generateImage } from '@utils/HuggingFace.utils';
 import { uploadImage } from '@utils/NFTStorageSDK.utils';
+import { getNFT721Factory } from '@utils/web3';
+import { Signer } from 'ethers';
 import dynamic from 'next/dynamic';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, Provider, useEffect, useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
+import { useProvider, useSigner } from 'wagmi';
 import styles from './MintUserNFT.module.scss'
 
 const GeneratedImage = dynamic(() => import('@components/GeneratedImage.component'),
@@ -31,6 +35,8 @@ const MintUserNFT = () => {
   const [showToastModal, setShowToastModal] = useState<boolean | string>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [imageKey, setImageKey] = useState<number>(0);
+  // const provider = useProvider();
+  const { data: signer } = useSigner();
 
   const _generateImage = async () => {
 
@@ -65,6 +71,18 @@ const MintUserNFT = () => {
 
   useEffect(() => { !NFTDescription && setGeneratedImage('') }, [NFTDescription]);
 
+  const _mintNFT = async (tokenUri: string, signer: signerOrProvider) => {
+    try {
+
+      const NFT721Contract = getNFT721Factory(signer);
+      let tx = NFT721Contract && await NFT721Contract.safeMint(tokenUri);
+      await tx.wait();
+    } catch (error: any) {
+      setShowToastModal(error.reason)
+    }
+
+  }
+
   const mintNFT = async () => {
     if (!NFTName) {
       setShowToastModal('Add an image title');
@@ -76,6 +94,8 @@ const MintUserNFT = () => {
       return;
     }
     console.log('mint nft');
+    console.log('display a loading message');
+
     const tokenuri = await uploadImage({
       imageData: generatedImage,
       imageName: `${NFTName.trim().replace(/\s+/g, '-')}.${mimeType.split('/').pop()}`,
@@ -93,7 +113,8 @@ const MintUserNFT = () => {
         }
       ]
     })
-    //mint with this url
+
+    signer && tokenuri && _mintNFT(tokenuri, signer);
     console.log("🚀 ~ file: MintUserNFT.component.tsx:96 ~ mintNFT ~ r2:", tokenuri)
 
   }

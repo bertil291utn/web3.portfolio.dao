@@ -45,11 +45,11 @@ const NFTContent = () => {
 
 
 
-  const listenEvents = ({ signerProvider, address }: Contract) => {
-    const NFTEditionContract = getNFTEditionFactory({
-      signerProvider,
-    });
-    const tokenContract = getTokenFactory({ signerProvider });
+  const listenEvents = ({ signerOrProvider, address }: Contract) => {
+    const NFTEditionContract = getNFTEditionFactory(
+      signerOrProvider,
+    );
+    const tokenContract = getTokenFactory(signerOrProvider);
 
     tokenContract.on('Approval', async (owner, spender) => {
       if (
@@ -89,7 +89,7 @@ const NFTContent = () => {
   }, []);
 
   useEffect(() => {
-    listenEvents({ signerProvider: provider, address: address || '' });
+    listenEvents({ signerOrProvider: provider, address: address || '' });
   }, [address]);
 
   const finishTx = async ({ txHashKeyName, path, reload = false }: FinishTX) => {
@@ -117,12 +117,10 @@ const NFTContent = () => {
   };
 
   const getToken = (tokenId: number) => async () => {
-    const NFTEditionContract = getNFTEditionFactory({ signerProvider: provider });
+    const NFTEditionContract = getNFTEditionFactory(provider);
     if (!signer) return;
-    const NFTClaimableEditionContract = getNFTEditionClaimableFactory({
-      signerProvider: signer,
-    });
-    const tokenContract = getTokenFactory({ signerProvider: signer });
+    const NFTClaimableEditionContract = getNFTEditionClaimableFactory(signer);
+    const tokenContract = getTokenFactory(signer);
 
     let tx;
     try {

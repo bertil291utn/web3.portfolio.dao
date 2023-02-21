@@ -31,7 +31,7 @@ import { localStorageKeys } from '@keys/localStorage';
 import ToastComponent from '@components/common/Toast.component';
 import { getAllNFTs } from '@utils/NFT';
 import NFTProfileCard from '@components/common/NFTProfileCard.component';
-import { Contract } from '@interfaces/provider';
+import { Contract, signerOrProvider } from '@interfaces/provider';
 import { Metadata, TokenProfile } from '@interfaces/TokenProfile';
 import { FinishTX, HandleError } from '@interfaces/transactions';
 import { variantType } from '@interfaces/toast';
@@ -57,9 +57,9 @@ const ProfileContent = () => {
     [localStorageKeys.unStakingTxHash]: setActiveUnStakingHash,
   };
 
-  const listenEvents = ({ signerProvider, address }: Contract) => {
-    const stakingContract = getStakingFactory({ signerProvider });
-    const tokenContract = getTokenFactory({ signerProvider });
+  const listenEvents = ({ signerOrProvider, address }: Contract) => {
+    const stakingContract = getStakingFactory(signerOrProvider);
+    const tokenContract = getTokenFactory(signerOrProvider);
     //LISTENERS
     //TODO: listen transfer event not just in token component, but also all over the app _app file
     tokenContract.on('Approval', async (owner, spender) => {
@@ -97,9 +97,9 @@ const ProfileContent = () => {
   //TODO: add link to display tokens on metamask
   //https://ethereum.stackexchange.com/questions/99343/how-to-automatically-add-a-custom-token-to-metamask-with-ethers-js
 
-  const _getNFTs = async (ownerAddress: string, signer: ethers.Signer) => {
+  const _getNFTs = async (ownerAddress: string, signer: signerOrProvider) => {
     if (!signer) return;
-    const NFTTokenContract = getNFTEditionFactory({ signerProvider: signer });
+    const NFTTokenContract = getNFTEditionFactory(signer);
     const allNFTs = await getAllNFTs(ownerAddress);
     if (!allNFTs) return;
     const filterdNFTs = allNFTs.ownedNfts.filter(
@@ -154,7 +154,7 @@ const ProfileContent = () => {
   useEffect(() => {
     setIsWalletConnected(isConnected);
     address && signer && _getNFTs(address, signer);
-    listenEvents({ signerProvider: provider, address: address || '' });
+    listenEvents({ signerOrProvider: provider, address: address || '' });
     return () => { setTokenCards([]) }
   }, [address, signer]);
 
@@ -187,8 +187,8 @@ const ProfileContent = () => {
 
   const stakeAction = async () => {
     if (!signer) return;
-    const stakingContract = getStakingFactory({ signerProvider: signer });
-    const tokenContract = getTokenFactory({ signerProvider: signer });
+    const stakingContract = getStakingFactory(signer);
+    const tokenContract = getTokenFactory(signer);
     const allowanceAmount = await tokenContract.allowance(
       address,
       StakingContractAdd
@@ -235,7 +235,7 @@ const ProfileContent = () => {
 
   const unStakeAction = async () => {
     if (!signer) return
-    const stakingContract = getStakingFactory({ signerProvider: signer });
+    const stakingContract = getStakingFactory(signer);
     let tx;
     try {
       tx = await stakingContract.unstake(
