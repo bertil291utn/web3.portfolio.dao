@@ -76,7 +76,7 @@ const MintUserNFT = () => {
       return;
     }
     console.log('mint nft');
-    const r2 = await uploadImage({
+    const tokenuri = await uploadImage({
       imageData: generatedImage,
       imageName: `${NFTName.trim().replace(/\s+/g, '-')}.${mimeType.split('/').pop()}`,
       mimeType,
@@ -94,7 +94,7 @@ const MintUserNFT = () => {
       ]
     })
     //mint with this url
-    console.log("🚀 ~ file: MintUserNFT.component.tsx:96 ~ mintNFT ~ r2:", r2)
+    console.log("🚀 ~ file: MintUserNFT.component.tsx:96 ~ mintNFT ~ r2:", tokenuri)
 
   }
 
