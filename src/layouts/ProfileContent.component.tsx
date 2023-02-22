@@ -24,7 +24,7 @@ import {
   ERC20TokenContractAdd,
   NFTEditionContractAdd,
   StakingContractAdd,
-  ERC721ContractAdd
+  ERC1155ContractAdd
 } from '@config/contracts';
 import LoadingComponent from '@components/common/Loading.component';
 import { localStorageKeys } from '@keys/localStorage';
@@ -108,7 +108,7 @@ const ProfileContent = () => {
     const filterdNFTs = allNFTs.ownedNfts.filter(
       (elem) =>
         elem.contract.address.toLowerCase() ===
-        ERC721ContractAdd?.toLowerCase()
+        ERC1155ContractAdd?.toLowerCase()
     );
     if (filterdNFTs.length == 0) return;
     const respData: Array<TokenProfile> = filterdNFTs.map((elem, _, arr) => (
@@ -310,9 +310,10 @@ const ProfileContent = () => {
           >
             <div className={styles['cards']}>
               {tokenCards.map((elem) => (
-                <div className={styles["card-container"]}>
+                <div className={styles["card-container"]}
+                  key={`card-${elem.tokenId}`}
+                >
                   <NFTProfileCard
-                    key={`card-${elem.tokenId}`}
                     tokenId={elem.tokenId}
                     srcImage={elem.image}
                     name={elem.name}

@@ -277,7 +277,7 @@ const MintUserNFT = () => {
                   className={`${styles['image-nft']}`}
                 />
                 <ButtonComponent className={styles['mint-button']} onClick={mintNFT}>
-                  {`mint ${ethers.utils.formatEther(tokenPrice)} ETH`}
+                  {`mint for ${ethers.utils.formatEther(tokenPrice)} ETH`}
                 </ButtonComponent>
               </div>
             </> : <>

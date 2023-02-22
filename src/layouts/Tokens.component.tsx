@@ -168,15 +168,8 @@ const TokensComponent = () => {
           />
         )}
       </div>
-      {isConnected &&
-        ctx && ctx.userCustomTokenBalance > 0 &&
-        !activeTknClaimHash &&
-        !activeNFTHash && (
-          <>
-            <NFTContent />
-          </>
-        )}
-        */}
+          */}
+        {/* //todo: display claim layout erc20 tokens if user has already minted nfts */}
       <MintUserNFT />
       <ToastComponent
         variant={toastVariant || ''}

@@ -6,5 +6,5 @@ export const NFTEditionContractAdd =
 export const NFTEditionClaimableContractAdd =
   process.env.NEXT_PUBLIC_NFT_EDITION_CLAIMABLE_ADDRESS;
 export const OwnerAddress = process.env.NEXT_PUBLIC_OWNER_ADDRESS;
-export const ERC721ContractAdd = process.env.NEXT_PUBLIC_NFT_721_UNIQUE;
+export const ERC1155ContractAdd = process.env.NEXT_PUBLIC_NFT_1155_V1;
 

@@ -2,7 +2,7 @@ import { Contract, ethers } from 'ethers';
 import {
   ClaimableContractAdd,
   ERC20TokenContractAdd,
-  ERC721ContractAdd,
+  ERC1155ContractAdd,
   NFTEditionClaimableContractAdd,
   NFTEditionContractAdd,
   StakingContractAdd,
@@ -21,7 +21,7 @@ import { publicProvider } from 'wagmi/providers/public';
 import ClaimableABI from '@web3/ABI/Claimable.json';
 import StakingABI from '@web3/ABI/StakingToken.json';
 import ERC1155ABI from '@web3/ABI/ERC1155.json';
-import BatlDaoTokensABI from '@web3/ABI/BatlDaoTokens.json';
+import BATL1155DAOTokenABI from '@web3/ABI/BATL1155DAOToken.json';
 import ERC1155ClaimableABI from '@web3/ABI/ERC1155Claimable.json';
 import { signerOrProvider } from '@interfaces/provider';
 
@@ -80,8 +80,8 @@ export const getNFTEditionClaimableFactory = (signerOrProvider: signerOrProvider
 
 export const getNFT721Factory = (signerOrProvider: signerOrProvider) => {
   return getContractFactory({
-    address: ERC721ContractAdd!,
-    ABI: BatlDaoTokensABI,
+    address: ERC1155ContractAdd!,
+    ABI: BATL1155DAOTokenABI,
     signerOrProvider
   });
 };
