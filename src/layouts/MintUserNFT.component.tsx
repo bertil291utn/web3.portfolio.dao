@@ -42,6 +42,7 @@ const MintUserNFT = () => {
   const [imageKey, setImageKey] = useState<number>(0);
   const [theresTokenURI, setTheresTokenURI] = useState<string>('');
   const [activeMintNFTHash, setActiveMintNFTHash] = useState<boolean>(false);
+  const [tokenPrice, setTokenPrice] = useState<string>('');
   const { data: signer } = useSigner();
   const { openConnectModal } = useConnectModal();
   const router = useRouter();
@@ -85,6 +86,12 @@ const MintUserNFT = () => {
 
   }
 
+  const _getTokenPrice = async (signerOrProvider: signerOrProvider) => {
+    const NFT721Contract = getNFT721Factory(signerOrProvider);
+    const price = await NFT721Contract.getPriceToken()
+    setTokenPrice(price)
+  }
+
   const sendPrompt = async () => {
     setGeneratedImage('')
     if (!NFTDescription) return;
@@ -108,11 +115,16 @@ const MintUserNFT = () => {
     setActiveMintNFTHash(
       !!window.localStorage.getItem(localStorageKeys.claimingTxHash)
     );
+
   }, []);
 
   useEffect(() => {
     address && isFinishedTransferTx({ signerOrProvider: provider, address });
   }, [address]);
+
+  useEffect(() => {
+    provider && _getTokenPrice(provider)
+  }, [provider]);
 
   const _mintNFT = async (tokenUri: string, signer: signerOrProvider) => {
     try {
@@ -265,7 +277,7 @@ const MintUserNFT = () => {
                   className={`${styles['image-nft']}`}
                 />
                 <ButtonComponent className={styles['mint-button']} onClick={mintNFT}>
-                  mint
+                  {`mint ${ethers.utils.formatEther(tokenPrice)} ETH`}
                 </ButtonComponent>
               </div>
             </> : <>

@@ -43,7 +43,6 @@ const ProfileContent = () => {
   const router = useRouter();
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>();
   const [tokenCards, setTokenCards] = useState<Array<TokenProfile>>([]);
-  console.log("🚀 ~ file: ProfileContent.component.tsx:44 ~ ProfileContent ~ tokenCards:", tokenCards)
   const [showToast, setShowToast] = useState<boolean | string>(false);
   const [toastVariant, setToastVariant] = useState<variantType>('error');
   const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>();
