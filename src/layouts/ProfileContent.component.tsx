@@ -12,7 +12,6 @@ import {
 import ButtonComponent from '@components/common/Button.component';
 import { navbarElements } from '@placeholders/navbar.placeholders';
 import { useRouter } from 'next/router';
-import styles from './ProfileContent.module.scss';
 import SectionPanel from '@components/common/SectionPanel.component';
 import { defaultStakingAmount, minStakingAmount } from '@constants/common';
 import InputComponent from '@components/common/Input.component';
@@ -36,6 +35,9 @@ import { Contract, signerOrProvider } from '@interfaces/provider';
 import { TokenProfile } from '@interfaces/TokenProfile';
 import { FinishTX, HandleError } from '@interfaces/transactions';
 import { variantType } from '@interfaces/toast';
+import { VscJson } from 'react-icons/vsc';
+import { TbShip } from 'react-icons/tb';
+import styles from './ProfileContent.module.scss';
 
 const ProfileContent = () => {
   const router = useRouter();
@@ -318,13 +320,11 @@ const ProfileContent = () => {
                     superRare={elem.superRare}
                     onClick={redirect(elem)}
                   />
-                  <div className={styles['buttons']}>
-                    <ButtonComponent className={styles['opensea-button']} onClick={() => { }}>
-                      opensea
-                    </ButtonComponent>
-                    <ButtonComponent className={styles['metada-button']} onClick={() => { }}>
-                      metadata
-                    </ButtonComponent>
+                  <div className={styles['buttons-container']}>
+                    <div className={styles['buttons-content']}>
+                      <ButtonComponent title='Opensea' className={styles['opensea-button']} onClick={() => { }} buttonType='rounded' LeftIcon={TbShip} />
+                      <ButtonComponent title='Metadata' className={styles['metada-button']} onClick={() => { }} buttonType='rounded' LeftIcon={VscJson} />
+                    </div>
                   </div>
                 </div>
               ))}

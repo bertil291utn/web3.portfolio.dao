@@ -55,6 +55,33 @@
       border-radius: 0 0.5rem 0.5rem 0;
     }
   }
+
+  .card-container {
+    position: relative;
+    width: fit-content;
+
+    &:hover {
+      .buttons-container {
+        display: block;
+      }
+    }
+
+  }
+
+  $center-val: 50%;
+
+  .buttons-container {
+    display: none;
+    position: absolute;
+    top: $center-val;
+    left: $center-val;
+    transform: translate(-$center-val, -$center-val);
+    z-index: 100;
+
+    .buttons-content {
+      display: flex;
+    }
+  }
 }
 
 .claim-btn {

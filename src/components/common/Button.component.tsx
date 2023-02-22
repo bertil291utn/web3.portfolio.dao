@@ -3,7 +3,7 @@ import { buttonType, typeAction } from '@interfaces/button';
 import styles from './Button.module.scss';
 
 interface Props {
-  children: React.ReactNode
+  children?: React.ReactNode
   LeftIcon?: IconType
   onClick?: () => void
   title?: string
@@ -21,7 +21,7 @@ const ButtonComponent = ({
   type = 'button',
   buttonType = 'primary',
 }: Props) => {
-  if (buttonType !== 'fab-button') {
+  if (buttonType === 'primary') {
     return (
       <button
         className={`${className ? className : ''} ${styles['button']} ${styles[buttonType]
@@ -36,6 +36,19 @@ const ButtonComponent = ({
     );
   }
   if (buttonType === 'fab-button') {
+    return (
+      <button
+        className={`${className ? className : ''} ${styles[buttonType]}`}
+        onClick={onClick}
+        title={title}
+        type={type}
+      >
+        {LeftIcon && <LeftIcon className={styles['left-icon']} />}
+      </button>
+    );
+  }
+
+  if (buttonType === 'rounded') {
     return (
       <button
         className={`${className ? className : ''} ${styles[buttonType]}`}
