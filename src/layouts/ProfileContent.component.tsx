@@ -264,8 +264,8 @@ const ProfileContent = () => {
     _isFormValid && stakeAction();
   };
 
-  const redirect = (token: TokenProfile) => () => {
-
+  const redirect = (link: string) => () => {
+    link && window.open(link, '_blank')
   }
 
   return (
@@ -318,12 +318,11 @@ const ProfileContent = () => {
                     srcImage={elem.image}
                     name={elem.name}
                     superRare={elem.superRare}
-                    onClick={redirect(elem)}
                   />
                   <div className={styles['buttons-container']}>
                     <div className={styles['buttons-content']}>
-                      <ButtonComponent title='Opensea' className={styles['opensea-button']} onClick={() => { }} buttonType='rounded' LeftIcon={TbShip} />
-                      <ButtonComponent title='Metadata' className={styles['metada-button']} onClick={() => { }} buttonType='rounded' LeftIcon={VscJson} />
+                      <ButtonComponent title='Opensea' className={styles['opensea-button']} onClick={redirect(elem.links.opensea)} buttonType='rounded' LeftIcon={TbShip} />
+                      <ButtonComponent title='Metadata' className={styles['metada-button']} onClick={redirect(elem.links.metadata)} buttonType='rounded' LeftIcon={VscJson} />
                     </div>
                   </div>
                 </div>
