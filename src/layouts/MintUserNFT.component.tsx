@@ -12,7 +12,7 @@ import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
 import { capitalizeFirstWord, countNumberWords } from '@utils/common';
 import { generateImage } from '@utils/HuggingFace.utils';
 import { uploadImage } from '@utils/NFTStorageSDK.utils';
-import { getNFT721Factory } from '@utils/web3';
+import { getNFT1155Factory } from '@utils/web3';
 import { ethers } from 'ethers';
 import dynamic from 'next/dynamic';
 import { Fragment, useEffect, useState } from 'react';
@@ -51,9 +51,9 @@ const MintUserNFT = () => {
 
 
   const isFinishedTransferTx = async ({ signerOrProvider, address }: Contract) => {
-    const NFT721Contract = getNFT721Factory(signerOrProvider);
+    const NFT721Contract = getNFT1155Factory(signerOrProvider);
     //TODO: listen transfer event not just in token component, but also all over the app _app file
-    NFT721Contract.on('Transfer', async (from, to) => {
+    NFT721Contract.on('TransferSingle', async (_, from, to) => {
       if (
         from?.toLowerCase() == ethers.constants.AddressZero &&
         to?.toLowerCase() == address?.toLowerCase()
@@ -87,7 +87,7 @@ const MintUserNFT = () => {
   }
 
   const _getTokenPrice = async (signerOrProvider: signerOrProvider) => {
-    const NFT721Contract = getNFT721Factory(signerOrProvider);
+    const NFT721Contract = getNFT1155Factory(signerOrProvider);
     const price = await NFT721Contract.getPriceToken()
     setTokenPrice(price)
   }
@@ -128,8 +128,8 @@ const MintUserNFT = () => {
 
   const _mintNFT = async (tokenUri: string, signer: signerOrProvider) => {
     try {
-      const NFT721Contract = getNFT721Factory(signer);
-      let tx = await NFT721Contract.safeMint(tokenUri, { value: ethers.utils.parseEther('0.27') });
+      const NFT721Contract = getNFT1155Factory(signer);
+      let tx = await NFT721Contract.mint(1, tokenUri, { value: ethers.utils.parseEther('0.27') });
       window.localStorage.setItem(localStorageKeys.mintNFTTokenTxHash, tx.hash);
       setActiveMintNFTHash(tx.hash);
       await tx.wait();

@@ -107,9 +107,9 @@ const ProfileContent = () => {
     if (!allNFTs) return;
     const filterdNFTs = allNFTs.ownedNfts.filter(
       (elem) =>
-        elem.contract.address.toLowerCase() ===
-        ERC1155ContractAdd?.toLowerCase()
-    );
+      elem.contract.address.toLowerCase() ===
+      ERC1155ContractAdd?.toLowerCase()
+      );
     if (filterdNFTs.length == 0) return;
     const respData: Array<TokenProfile> = filterdNFTs.map((elem, _, arr) => (
       {

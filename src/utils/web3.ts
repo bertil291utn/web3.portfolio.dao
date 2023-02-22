@@ -78,7 +78,7 @@ export const getNFTEditionClaimableFactory = (signerOrProvider: signerOrProvider
   });
 };
 
-export const getNFT721Factory = (signerOrProvider: signerOrProvider) => {
+export const getNFT1155Factory = (signerOrProvider: signerOrProvider) => {
   return getContractFactory({
     address: ERC1155ContractAdd!,
     ABI: BATL1155DAOTokenABI,
