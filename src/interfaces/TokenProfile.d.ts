@@ -1,14 +1,14 @@
 import { Attributes } from '@interfaces/TokenProvider'
 
-export interface Metadata {
-  name: string
-  description: string
-  image: string
-  price: number,
-  attributes: Attributes[]
+interface Link {
+  opensea: string,
+  metadata: string
 }
-export interface TokenProfile extends Metadata {
+export interface TokenProfile {
   tokenId: number
-  quantity: number
+  name: string
+  image: string
+  links: Link
+  superRare:boolean
 }
 

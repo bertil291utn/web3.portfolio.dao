@@ -25,6 +25,7 @@ import {
   ERC20TokenContractAdd,
   NFTEditionContractAdd,
   StakingContractAdd,
+  ERC721ContractAdd
 } from '@config/contracts';
 import LoadingComponent from '@components/common/Loading.component';
 import { localStorageKeys } from '@keys/localStorage';
@@ -32,7 +33,7 @@ import ToastComponent from '@components/common/Toast.component';
 import { getAllNFTs } from '@utils/NFT';
 import NFTProfileCard from '@components/common/NFTProfileCard.component';
 import { Contract, signerOrProvider } from '@interfaces/provider';
-import { Metadata, TokenProfile } from '@interfaces/TokenProfile';
+import { TokenProfile } from '@interfaces/TokenProfile';
 import { FinishTX, HandleError } from '@interfaces/transactions';
 import { variantType } from '@interfaces/toast';
 
@@ -40,6 +41,7 @@ const ProfileContent = () => {
   const router = useRouter();
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>();
   const [tokenCards, setTokenCards] = useState<Array<TokenProfile>>([]);
+  console.log("🚀 ~ file: ProfileContent.component.tsx:44 ~ ProfileContent ~ tokenCards:", tokenCards)
   const [showToast, setShowToast] = useState<boolean | string>(false);
   const [toastVariant, setToastVariant] = useState<variantType>('error');
   const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>();
@@ -105,28 +107,21 @@ const ProfileContent = () => {
     const filterdNFTs = allNFTs.ownedNfts.filter(
       (elem) =>
         elem.contract.address.toLowerCase() ===
-        NFTEditionContractAdd?.toLowerCase()
+        ERC721ContractAdd?.toLowerCase()
     );
-    if (filterdNFTs.length) {
-      const respData = filterdNFTs.map((elem) => ({ tokenId: elem.tokenId, quantity: elem.balance }));
-      const _tokenCards: Array<TokenProfile> = await Promise.all(
-        respData.map(async ({ tokenId, quantity }) => {
-          const tokenURI = await NFTTokenContract.uri(+tokenId);
-          const res = await fetch(tokenURI);
-          const tokenURIResp: Metadata = await res.json();
-          return {
-            image: tokenURIResp.image,
-            name: tokenURIResp.name,
-            description: tokenURIResp.description,
-            price: tokenURIResp.price,
-            attributes: tokenURIResp.attributes,
-            tokenId: Number(tokenId),
-            quantity
-          };
-        })
-      );
-      setTokenCards(_tokenCards.filter((elem) => elem));
-    }
+    if (filterdNFTs.length == 0) return;
+    const respData: Array<TokenProfile> = filterdNFTs.map((elem, _, arr) => (
+      {
+        tokenId: Number(elem.tokenId),
+        name: elem.title,
+        image: elem.media[0].gateway,
+        superRare: (elem.rawMetadata?.attributes!.find(elem => elem['trait_type'] == "Rarity")?.value || 0) >= 75,
+        links: {
+          opensea: `https://testnets.opensea.io/assets/goerli/${elem.contract.address}/${elem.tokenId}`,
+          metadata: elem.tokenUri!.gateway
+        }
+      }));
+    setTokenCards(respData);
   };
 
   useEffect(() => {
@@ -267,6 +262,10 @@ const ProfileContent = () => {
     _isFormValid && stakeAction();
   };
 
+  const redirect = (token: TokenProfile) => () => {
+
+  }
+
   return (
     <>
       <div className={styles['content']}>
@@ -278,7 +277,7 @@ const ProfileContent = () => {
           <div className={styles['connect-btn']}>
             <ConnectButton showBalance={false} />
           </div>
-          {isWalletConnected && (
+          {/* {isWalletConnected && (
             <div className={styles['profile']}>
               <span className={`subtitle`}>{ProfileLabel.availableTokens}</span>
               <span>
@@ -299,7 +298,7 @@ const ProfileContent = () => {
                 </div>
               )}
             </div>
-          )}
+          )} */}
         </SectionPanel>
 
         {tokenCards?.length > 0 && (
@@ -310,20 +309,30 @@ const ProfileContent = () => {
           >
             <div className={styles['cards']}>
               {tokenCards.map((elem) => (
-                <NFTProfileCard
-                  key={`card-${elem.tokenId}`}
-                  tokenId={elem.tokenId}
-                  srcImage={elem.image}
-                  name={elem.name}
-                  quantity={elem.quantity}
-                  superRare={elem.attributes[0].value > 70}
-                />
+                <div className={styles["card-container"]}>
+                  <NFTProfileCard
+                    key={`card-${elem.tokenId}`}
+                    tokenId={elem.tokenId}
+                    srcImage={elem.image}
+                    name={elem.name}
+                    superRare={elem.superRare}
+                    onClick={redirect(elem)}
+                  />
+                  <div className={styles['buttons']}>
+                    <ButtonComponent className={styles['opensea-button']} onClick={() => { }}>
+                      opensea
+                    </ButtonComponent>
+                    <ButtonComponent className={styles['metada-button']} onClick={() => { }}>
+                      metadata
+                    </ButtonComponent>
+                  </div>
+                </div>
               ))}
             </div>
           </SectionPanel>
         )}
 
-        {ctx?.userCustomTokenBalance !== undefined && ctx?.userCustomTokenBalance > 0 && (
+        {/* {ctx?.userCustomTokenBalance !== undefined && ctx?.userCustomTokenBalance > 0 && (
           <SectionPanel
             id={IdContent.staking}
             title={ProfileSections.stakingSectionTitle}
@@ -395,7 +404,7 @@ const ProfileContent = () => {
               </>
             }
           </SectionPanel>
-        )}
+        )} */}
       </div>
       <ToastComponent
         variant={toastVariant}
