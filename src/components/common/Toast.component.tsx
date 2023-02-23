@@ -13,7 +13,7 @@ const ToastComponent = ({ variant, children, show, setShow }: Props) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShow(false);
-    }, 4000);
+    }, 5000);
 
     return () => clearTimeout(timer);
 
