@@ -39,16 +39,19 @@ contract BatlDaoTokens is
         return TOKEN_PRICE;
     }
 
-    function mint(uint256 amount, string calldata newuri) public payable {
+    function mint(uint256 amount, string calldata _uri) public payable {
         require(
             balanceOf(msg.sender) < MAXIMUM_MINTED_AMOUNT,
             "MAXIMUM MINTED TOKEN REACHED"
         );
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
-        require(msg.value >= TOKEN_PRICE, "INSUFFICIENT ETH FOR TOKEN PRICE");
+        require(
+            msg.value >= TOKEN_PRICE * amount,
+            "INSUFFICIENT ETH AMOUNT"
+        );
         _mint(msg.sender, tokenId, amount, "");
-        _setURI(tokenId, newuri);
+        _setURI(tokenId, _uri);
     }
 
     function balanceOf(address owner) public view returns (uint256) {
@@ -59,22 +62,22 @@ contract BatlDaoTokens is
         return totalBalance;
     }
 
-    function tokenURI(uint256 tokenId) public view returns (string memory) {
+    function uri(uint256 tokenId) public view override returns (string memory) {
         bytes memory tokenURIBtyes = bytes(_tokenURIs[tokenId]);
 
-        string memory uri;
+        string memory _uri;
         if (tokenURIBtyes.length == 0) {
-            uri = "";
+            _uri = "";
         } else {
-            uri = string(tokenURIBtyes);
+            _uri = string(tokenURIBtyes);
         }
 
-        return uri;
+        return _uri;
     }
 
-    function _setURI(uint256 tokenId, string memory uri) private {
-        _tokenURIs[tokenId] = uri;
-        emit URI(uri, tokenId);
+    function _setURI(uint256 tokenId, string memory _uri) private {
+        _tokenURIs[tokenId] = _uri;
+        emit URI(_uri, tokenId);
     }
 
     function _authorizeUpgrade(address newImplementation)
@@ -99,3 +102,5 @@ contract BatlDaoTokens is
 
     fallback() external payable {}
 }
+
+//goerli 0xDE6dA1E62C8c65F91b70DB1280bc495A87F68dC2

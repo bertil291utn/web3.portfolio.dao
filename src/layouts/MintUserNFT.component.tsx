@@ -45,7 +45,8 @@ const MintUserNFT = () => {
   const [theresTokenURI, setTheresTokenURI] = useState<string>('');
   const [activeMintNFTHash, setActiveMintNFTHash] = useState<boolean>(false);
   const [tokenPrice, setTokenPrice] = useState<string>('');
-  const [NFTQuantity, setNFTQuantity] = useState<string>('1');
+  const [NFTQuantity, setNFTQuantity] = useState<string>('2');
+  //todo: add input quantity
   const { data: signer } = useSigner();
   const { openConnectModal } = useConnectModal();
   const router = useRouter();
@@ -187,7 +188,7 @@ const MintUserNFT = () => {
         arrayBufferImageData: dataBuffer,
         metadata
       });
-      tokenuri && setTheresTokenURI(tokenuri)
+      tokenuri && setTheresTokenURI(`ipfs://${tokenuri}`)
     } catch (error: any) {
       setShowToastModal(error.message)
 

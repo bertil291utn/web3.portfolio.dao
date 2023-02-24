@@ -100,22 +100,16 @@ const ProfileContent = () => {
   //TODO: add link to display tokens on metamask
   //https://ethereum.stackexchange.com/questions/99343/how-to-automatically-add-a-custom-token-to-metamask-with-ethers-js
 
-  const _getNFTs = async (ownerAddress: string, signer: signerOrProvider) => {
-    if (!signer) return;
-    const NFTTokenContract = getNFTEditionFactory(signer);
-    const allNFTs = await getAllNFTs(ownerAddress);
-    if (!allNFTs) return;
-    const filterdNFTs = allNFTs.ownedNfts.filter(
-      (elem) =>
-      elem.contract.address.toLowerCase() ===
-      ERC1155ContractAdd?.toLowerCase()
-      );
-    if (filterdNFTs.length == 0) return;
-    const respData: Array<TokenProfile> = filterdNFTs.map((elem, _, arr) => (
+
+  const setNFTsData = async (ownerAddress: string) => {
+    let response = await getAllNFTs(ownerAddress, [ERC1155ContractAdd!])
+
+    if (response?.ownedNfts.length == 0) return;
+    const respData: Array<TokenProfile> = response!.ownedNfts.map((elem) => (
       {
         tokenId: Number(elem.tokenId),
         name: elem.title,
-        image: elem.media[0].gateway,
+        image: `https://gateway.pinata.cloud/ipfs/${elem.rawMetadata?.image}`,
         superRare: (elem.rawMetadata?.attributes!.find(elem => elem['trait_type'] == "Rarity")?.value || 0) >= 75,
         links: {
           opensea: `https://testnets.opensea.io/assets/goerli/${elem.contract.address}/${elem.tokenId}`,
@@ -149,7 +143,7 @@ const ProfileContent = () => {
 
   useEffect(() => {
     setIsWalletConnected(isConnected);
-    address && signer && _getNFTs(address, signer);
+    address && setNFTsData(address);
     listenEvents({ signerOrProvider: provider, address: address || '' });
     return () => { setTokenCards([]) }
   }, [address, signer]);
