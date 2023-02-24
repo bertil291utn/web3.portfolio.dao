@@ -38,7 +38,7 @@ const IPFSFactory = (url: string, data: any, contentType: string) => {
 
 
 
-export const pinImage = ({ imageName, imageMimeType, arrayBufferImageData }: ImageUpload) => {
+const pinImage = ({ imageName, imageMimeType, arrayBufferImageData }: ImageUpload) => {
   const imageBlob = new Blob([arrayBufferImageData!], { type: imageMimeType });
 
   const url = `${IPFSMainURL}/pinFileToIPFS`;
@@ -50,7 +50,7 @@ export const pinImage = ({ imageName, imageMimeType, arrayBufferImageData }: Ima
 };
 
 
-export const pinJSON = (metadata: string, metadataFileName: string, imageData: string) => {
+const pinJSON = (metadata: string, metadataFileName: string, imageData: string) => {
   const url = `${IPFSMainURL}/pinJSONToIPFS`;
   const pinataMetadata = JSON.stringify({
     "pinataMetadata": {
