@@ -101,6 +101,13 @@ contract BatlDaoTokens is
     receive() external payable {}
 
     fallback() external payable {}
+
+    function withdraw() public onlyOwner nonReentrant {
+        (bool success, ) = address(owner()).call{value: address(this).balance}(
+            ""
+        );
+        require(success, "withdraw failed to send");
+    }
 }
 
-//goerli 0xDE6dA1E62C8c65F91b70DB1280bc495A87F68dC2
+//goerli 0x9a8a2EEE7cB063d951ff6e9ff5Af5D883A925928
