@@ -11,7 +11,6 @@ import { generateLabels, mintLabels } from '@placeholders/home-mint.placeholders
 import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
 import { capitalizeFirstWord, countNumberWords } from '@utils/common';
 import { generateImage } from '@utils/HuggingFace.utils';
-import { uploadImage } from '@utils/NFTStorageSDK.utils';
 import { getNFT1155Factory } from '@utils/web3';
 import { ethers } from 'ethers';
 import dynamic from 'next/dynamic';
@@ -22,6 +21,8 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { localStorageKeys } from '@keys/localStorage';
 import { useRouter } from 'next/router';
 import { navbarElements } from '@placeholders/navbar.placeholders';
+import { pinIPFSImage } from '@utils/PinataSDK.utils';
+// import GeneratedImage from '@components/GeneratedImage.component';
 import styles from './MintUserNFT.module.scss'
 
 const GeneratedImage = dynamic(() => import('@components/GeneratedImage.component'),
@@ -29,6 +30,7 @@ const GeneratedImage = dynamic(() => import('@components/GeneratedImage.componen
     loading: () => <LoadingComponent title='Generating image...' />,
     ssr: false,
   })
+//todo: check this dynamic and may be test with react lazy
 
 const MintUserNFT = () => {
   const [NFTName, setNFTName] = useState<string>('');
@@ -43,7 +45,7 @@ const MintUserNFT = () => {
   const [theresTokenURI, setTheresTokenURI] = useState<string>('');
   const [activeMintNFTHash, setActiveMintNFTHash] = useState<boolean>(false);
   const [tokenPrice, setTokenPrice] = useState<string>('');
-  const [NFTQuantity, setNFTQuantity] = useState<string>('2');
+  const [NFTQuantity, setNFTQuantity] = useState<string>('1');
   const { data: signer } = useSigner();
   const { openConnectModal } = useConnectModal();
   const router = useRouter();
@@ -158,13 +160,10 @@ const MintUserNFT = () => {
 
     if (!signer) {
       openConnectModal && await openConnectModal();
-
+      return;
     }
 
-    const tokenuri = await uploadImage({
-      imageData: dataBuffer,
-      imageName: `${NFTName.trim().replace(/\s+/g, '-')}.${mimeType.split('/').pop()}`,
-      mimeType,
+    const metadata = JSON.stringify({
       name: capitalizeFirstWord(NFTName.trim()),
       description: capitalizeFirstWord(NFTDescription),
       attributes: [
@@ -174,12 +173,26 @@ const MintUserNFT = () => {
         },
         {
           trait_type: "Rarity",
-          value: Math.floor(Math.random() * 96) + 5
+          value: (Math.floor(Math.random() * 96) + 5).toString()
         }
       ]
     })
+    setActiveMintNFTHash(true);
 
-    tokenuri && setTheresTokenURI(tokenuri)
+    try {
+
+      const tokenuri = await pinIPFSImage({
+        imageName: `${NFTName.trim().replace(/\s+/g, '-')}`,
+        imageMimeType: mimeType,
+        arrayBufferImageData: dataBuffer,
+        metadata
+      });
+      tokenuri && setTheresTokenURI(tokenuri)
+    } catch (error: any) {
+      setShowToastModal(error.message)
+
+    }
+
 
   }
 
