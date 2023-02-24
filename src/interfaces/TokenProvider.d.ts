@@ -1,8 +1,6 @@
+import { Attributes } from '@interfaces/Image'
 
-interface Attributes {
-  trait_rarity: string
-  value: number
-}
+
 
 export interface TokenElem {
   id: number

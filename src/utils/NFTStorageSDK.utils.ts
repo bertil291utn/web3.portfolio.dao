@@ -1,16 +1,14 @@
 import { NFTSrorageApiKey } from '@config/api-keys';
+import { Attributes } from '@interfaces/Image';
 import { NFTStorage, File } from 'nft.storage';
 
-interface attributes {
-  "trait_type": string
-  "value": string | number | boolean
-}
+
 
 interface uploadBody {
   name: string
   description: string
   image: File
-  attributes: Array<attributes>
+  attributes: Array<Attributes>
 }
 
 interface IUploadImage {
@@ -19,7 +17,7 @@ interface IUploadImage {
   mimeType: string
   name: string
   description: string
-  attributes: Array<attributes>
+  attributes: Array<Attributes>
 }
 
 

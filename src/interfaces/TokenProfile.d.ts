@@ -1,4 +1,3 @@
-import { Attributes } from '@interfaces/TokenProvider'
 
 interface Link {
   opensea: string,
