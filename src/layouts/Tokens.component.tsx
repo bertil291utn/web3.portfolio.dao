@@ -169,8 +169,12 @@ const TokensComponent = () => {
         )}
       </div>
           */}
-        {/* //todo: display claim layout erc20 tokens if user has already minted nfts */}
-      <MintUserNFT />
+      {/* //todo: display claim layout erc20 tokens if user has already minted nfts */}
+
+      {!isConnected && <div className={styles['connect-btn']}>
+        <ConnectButton showBalance={false} />
+      </div>}
+      {isConnected && <MintUserNFT />}
       <ToastComponent
         variant={toastVariant || ''}
         show={showToast}

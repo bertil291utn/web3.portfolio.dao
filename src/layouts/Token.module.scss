@@ -7,6 +7,7 @@
   align-items: center;
 
   height: 45vh;
+
   @media screen and (max-width: $md) {
     height: 35vh;
   }
@@ -14,11 +15,14 @@
 
 .content {
   width: 80%;
+
   @media screen and (max-width: $md) {
     width: unset;
   }
+
   margin: 0 auto;
   text-align: center;
+
   .title {
     font-size: 3rem;
     font-weight: bold;
@@ -35,6 +39,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     &__content {
       margin-top: 3rem;
       width: 60%;
@@ -48,4 +53,13 @@
 
 .get-eth {
   margin: 1.5rem 0;
+}
+
+.connect-btn {
+  &>div {
+    @media screen and (max-width: $md) {
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }

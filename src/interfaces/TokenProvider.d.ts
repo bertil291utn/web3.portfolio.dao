@@ -1,4 +1,5 @@
 import { Attributes } from '@interfaces/Image'
+import { TokenProfile } from '@interfaces/TokenProfile'
 
 
 
@@ -17,6 +18,8 @@ export interface TokenElem {
 }
 
 
-export interface Context {
-  NFTData: TokenElem[]
+export interface ITokenContext {
+  NFTData: TokenElem[],
+  NFTBalance: number,
+  NFTDataProfile: Array<TokenProfile>
 }

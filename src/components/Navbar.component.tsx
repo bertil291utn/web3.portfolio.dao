@@ -1,32 +1,44 @@
+import { navbarElements } from '@placeholders/navbar.placeholders';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { IconType } from 'react-icons/lib';
+import { useAccount } from 'wagmi';
 import styles from './Navbar.module.scss';
 
 
 interface NavElements {
   label: string
   path: string
+  visible: boolean
   icon: IconType
 }
 
-interface Navbar {
-  tokens: NavElements,
-  profile: NavElements,
-}
 
-interface Props {
-  navbarElements: Navbar
-}
 
-const NavbarComponent = ({ navbarElements }: Props) => {
+const NavbarComponent = () => {
   const router = useRouter();
+  const [navbar, setNavbar] = useState<Array<NavElements>>(Object.values(navbarElements))
+  const { isConnected } = useAccount();
+
+  useEffect(() => {
+isConnected && setNavbar(prevState =>
+  prevState.map(navbarElement => {
+    if (navbarElement.label === "profile") {
+      return { ...navbarElement, visible: true };
+    }
+    return navbarElement;
+  }))
+  return()=>{
+
+  }
+  }, [isConnected])
 
   return (
     <ul className={styles['navbar']}>
-      {Object.values(navbarElements)?.map(
-        ({ label, path, icon: Icon }, index) => {
-          return (
+      {navbar?.map(
+        ({ label, path, visible, icon: Icon }, index) => {
+          return visible ? (
             <li
               className={`${styles['list']} ${router.pathname == path ? `${styles['active']}` : ''
                 }`}
@@ -45,7 +57,7 @@ const NavbarComponent = ({ navbarElements }: Props) => {
                 </a>
               </Link>
             </li>
-          );
+          ) : null;
         }
       )}
     </ul>

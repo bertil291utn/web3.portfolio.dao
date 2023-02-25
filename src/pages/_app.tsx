@@ -22,7 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <WagmiConfig client={client}>
           <RainbowKitProvider chains={chainProv}>
             <ThemeProvider>
-              <NavbarComponent navbarElements={navbarElements} />
+              <NavbarComponent />
               <div className='content'>
                 <Component {...pageProps} />
               </div>
