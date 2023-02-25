@@ -19,22 +19,29 @@ interface NavElements {
 const NavbarComponent = () => {
   const router = useRouter();
   const [navbar, setNavbar] = useState<Array<NavElements>>(Object.values(navbarElements))
-  const { isConnected } = useAccount();
+  const { isConnected: _isConnected } = useAccount();
+  const [isConnected, setIsConnected] = useState<boolean | null>(null);
 
   useEffect(() => {
-isConnected && setNavbar(prevState =>
-  prevState.map(navbarElement => {
-    if (navbarElement.label === "profile") {
-      return { ...navbarElement, visible: true };
-    }
-    return navbarElement;
-  }))
-  return()=>{
+    setIsConnected(_isConnected);
+  }, [_isConnected]);
 
-  }
+
+  useEffect(() => {
+
+     isConnected && setNavbar(prevState => {
+      return prevState.map(navbarElement => {
+        if (navbarElement.label === "profile") {
+          return { ...navbarElement, visible: true };
+        }
+        return navbarElement;
+      })
+    })
   }, [isConnected])
 
-  return (
+
+
+  return isConnected != null ? (
     <ul className={styles['navbar']}>
       {navbar?.map(
         ({ label, path, visible, icon: Icon }, index) => {
@@ -61,7 +68,7 @@ isConnected && setNavbar(prevState =>
         }
       )}
     </ul>
-  );
+  ) : null;
 };
 
 export default NavbarComponent;

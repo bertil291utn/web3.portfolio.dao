@@ -2,7 +2,6 @@
 import '@rainbow-me/rainbowkit/styles.css';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { WagmiConfig } from 'wagmi';
-import NavbarComponent from '@components/Navbar.component';
 import FooterComponent from '@components/Footer.component';
 import { navbarElements } from '@placeholders/navbar.placeholders';
 import { ThemeProvider } from 'next-themes';
@@ -11,6 +10,15 @@ import WalletProvider from '@context/WalletProvider';
 import type { AppProps } from 'next/app'
 import '../css/global.scss';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
+import LoadingComponent from '@components/common/Loading.component';
+
+const NavbarComponent = dynamic(() => import('@components/Navbar.component'),
+  {
+    loading: () => <LoadingComponent title='Starting...'  fullHeight/>,
+    ssr: false,
+  })
+
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
