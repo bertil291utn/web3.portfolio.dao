@@ -3,14 +3,15 @@ import styles from './NFTProfileCard.module.scss';
 
 interface Props {
   tokenId: number
+  balance: number
   srcImage: string
   name: string
   superRare: boolean
   className?: string
-  onClick?: () => void 
+  onClick?: () => void
 }
 
-const NFTProfileCard = ({ tokenId, srcImage, name, superRare, className, onClick }: Props) => {
+const NFTProfileCard = ({ tokenId, srcImage, name, superRare, className, balance, onClick }: Props) => {
   return (
     <div className={`${className || ''} ${styles['container']}`} onClick={onClick}>
       {superRare && (
@@ -25,6 +26,7 @@ const NFTProfileCard = ({ tokenId, srcImage, name, superRare, className, onClick
         <div className={styles['footer-container']}>
           <div>
             <span className={styles['name']}>{name}</span>
+            {balance > 1 && <span className={styles['token-id']}>{`You own ${balance} items`}</span>}
           </div>
           <div>
             <span className={styles['token-id']}>{`#${tokenId}`}</span>

@@ -8,6 +8,7 @@ export interface TokenProfile {
   name: string
   image: string
   links: Link
-  superRare:boolean
+  superRare: boolean
+  balance: number
 }
 

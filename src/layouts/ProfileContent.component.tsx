@@ -102,12 +102,13 @@ const ProfileContent = () => {
 
 
   const setNFTsData = async (ownerAddress: string) => {
-    let response = await getAllNFTs(ownerAddress, [ERC1155ContractAdd!])
+    const response = await getAllNFTs(ownerAddress, [ERC1155ContractAdd!])
 
     if (response?.ownedNfts.length == 0) return;
     const respData: Array<TokenProfile> = response!.ownedNfts.map((elem) => (
       {
         tokenId: Number(elem.tokenId),
+        balance: elem.balance,
         name: elem.title,
         image: `https://gateway.pinata.cloud/ipfs/${elem.rawMetadata?.image}`,
         superRare: (elem.rawMetadata?.attributes!.find(elem => elem['trait_type'] == "Rarity")?.value || 0) >= 75,
@@ -311,6 +312,7 @@ const ProfileContent = () => {
                     tokenId={elem.tokenId}
                     srcImage={elem.image}
                     name={elem.name}
+                    balance={elem.balance}
                     superRare={elem.superRare}
                   />
                   <div className={styles['buttons-container']}>

@@ -210,7 +210,7 @@ const MintUserNFT = () => {
     window.location.reload();
   };
 
-  const ETHAmount = (Number(ethers.utils.formatEther(tokenPrice)) * Number(NFTQuantity)).toFixed(Number(NFTQuantity) === 0 ? 1 : 3)
+  const ETHAmount = tokenPrice && (Number(ethers.utils.formatEther(tokenPrice)) * Number(NFTQuantity)).toFixed(Number(NFTQuantity) === 0 ? 1 : 3)
 
   return (
     <div className={styles['container']}>
