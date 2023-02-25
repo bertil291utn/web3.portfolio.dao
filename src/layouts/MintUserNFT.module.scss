@@ -1,6 +1,6 @@
 @import 'src/css/variables.scss';
 
-$radius-image:0.5rem;
+$radius-image: 0.5rem;
 
 .container {
   margin: 4rem 0;
@@ -74,12 +74,15 @@ $radius-image:0.5rem;
     width: fit-content;
     margin: 0 auto;
     position: relative;
+
     @media only screen and (max-width:$sm) {
       width: 100%;
     }
 
     &:hover {
-      .mint-button {
+
+      .mint-button,
+      .action-container-button {
         display: block;
       }
     }
@@ -90,17 +93,57 @@ $radius-image:0.5rem;
       }
     }
 
-    .mint-button {
+    @mixin absolute-bottom {
       position: absolute;
       bottom: 0;
       display: none;
-      width: 500px;
+      width: 100%;
       margin: 0 auto;
+
+    }
+
+    @mixin mint-button-container {
       border-radius: 0 0 $radius-image $radius-image;
 
       @media only screen and (max-width:$sm) {
         width: 100%;
 
+      }
+    }
+
+    .mint-button {
+      @include absolute-bottom();
+      @include mint-button-container();
+
+    }
+
+    .action-container-button {
+      @include absolute-bottom();
+
+      .action-content {
+        display: flex;
+
+        .input {
+          width: 25%;
+          background-color: $gray-200;
+          border: unset;
+          border-radius: 0 0 0 $radius-image ;
+          color: black;
+          font-weight: bold;
+
+          &:focus-visible {
+            outline: 0px;
+            -webkit-appearance: none;
+            box-shadow: none;
+          }
+        }
+
+        .mint-button-input {
+          border-radius: 0 0 $radius-image 0;
+          width: 100%;
+          box-shadow: unset;
+
+        }
       }
     }
   }

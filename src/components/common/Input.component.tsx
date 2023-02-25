@@ -4,8 +4,8 @@ import styles from './Input.module.scss';
 interface Props {
   name: string
   value: string
-  type?: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  type?: string
   min?: string
   max?: string
   placeholder?: string

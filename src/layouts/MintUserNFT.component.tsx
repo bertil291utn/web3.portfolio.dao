@@ -22,7 +22,6 @@ import { localStorageKeys } from '@keys/localStorage';
 import { useRouter } from 'next/router';
 import { navbarElements } from '@placeholders/navbar.placeholders';
 import { pinIPFSImage } from '@utils/PinataSDK.utils';
-// import GeneratedImage from '@components/GeneratedImage.component';
 import styles from './MintUserNFT.module.scss'
 
 const GeneratedImage = dynamic(() => import('@components/GeneratedImage.component'),
@@ -45,8 +44,7 @@ const MintUserNFT = () => {
   const [theresTokenURI, setTheresTokenURI] = useState<string>('');
   const [activeMintNFTHash, setActiveMintNFTHash] = useState<boolean>(false);
   const [tokenPrice, setTokenPrice] = useState<string>('');
-  const [NFTQuantity, setNFTQuantity] = useState<string>('2');
-  //todo: add input quantity
+  const [NFTQuantity, setNFTQuantity] = useState<string>('1');
   const { data: signer } = useSigner();
   const { openConnectModal } = useConnectModal();
   const router = useRouter();
@@ -157,6 +155,10 @@ const MintUserNFT = () => {
       setShowToastModal('Add at least 2 meaningful words');
       return;
     }
+    if (Number(NFTQuantity) > 5) {
+      setShowToastModal('Maximum amount to mint is 5');
+      return;
+    }
 
     if (!signer) {
       openConnectModal && await openConnectModal();
@@ -207,6 +209,8 @@ const MintUserNFT = () => {
     await new Promise((r) => setTimeout(r, 2000));
     window.location.reload();
   };
+
+  const ETHAmount = (Number(ethers.utils.formatEther(tokenPrice)) * Number(NFTQuantity)).toFixed(Number(NFTQuantity) === 0 ? 1 : 3)
 
   return (
     <div className={styles['container']}>
@@ -294,9 +298,23 @@ const MintUserNFT = () => {
                 <GeneratedImage src={generatedImage}
                   className={`${styles['image-nft']}`}
                 />
-                <ButtonComponent className={styles['mint-button']} onClick={mintNFT}>
-                  {`mint for ${Number(ethers.utils.formatEther(tokenPrice)) * Number(NFTQuantity)} ETH`}
-                </ButtonComponent>
+                <div className={styles["action-container-button"]}>
+                  <div className={styles["action-content"]}>
+                    <InputComponent
+                      name={`NFTQuantity`}
+                      value={NFTQuantity}
+                      onChange={(ev) => setNFTQuantity(ev.target.value)}
+                      type={`number`}
+                      min='1'
+                      max='5'
+                      placeholder='Qty.'
+                      className={styles['input']}
+                    />
+                    <ButtonComponent className={styles['mint-button-input']} onClick={mintNFT}>
+                      {`mint for ${ETHAmount} ETH`}
+                    </ButtonComponent>
+                  </div>
+                </div>
               </div>
             </> : <>
               <LoadingComponent
