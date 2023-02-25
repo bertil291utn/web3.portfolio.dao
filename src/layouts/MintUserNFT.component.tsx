@@ -78,7 +78,7 @@ const MintUserNFT = () => {
       const base64data = Buffer.from(dataBuffer).toString("base64");
       contentType && setMimeType(contentType);
       dataBuffer && setDataBuffer(dataBuffer);
-      return `data:${contentType};base64,` + base64data;
+      setGeneratedImage(`data:${contentType};base64,` + base64data);
 
     } catch (error) {
       setShowToastModal((error as Error).message);
@@ -104,8 +104,7 @@ const MintUserNFT = () => {
       return;
     }
     setLoading(true);
-    const _image = await _generateImage();
-    _image && setGeneratedImage(_image);
+    _generateImage();
 
   }
 
