@@ -1,3 +1,8 @@
+export const tokenMainPage = {
+  title: 'BATL DAO web3 ',
+  description: "Gm gm ✋, welcome to BATL DAO - the ultimate spot for all you crypto-heads out there! Here, you can score some sick NFTs and become a part of our badass community. Grab your token now and watch it grow - soon, you'll be able to trade it for our dope ERC20 token. Join us on this epic journey and help us create some seriously cool stuff.  So what are you waiting for? Let's make some crypto magic happen!",
+  buttonLabel: 'gimme my tokens',
+};
 export const tokenPageLabel = {
   title: 'Claim your 100 free tokens',
   description: (tokenSymbol: string | null) =>

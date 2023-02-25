@@ -2,6 +2,7 @@ import ButtonComponent from '@components/common/Button.component';
 import {
   getEth,
   NFTPage,
+  tokenMainPage,
   tokenModal,
   tokenPageLabel,
 } from '@placeholders/tokens.placeholder';
@@ -38,11 +39,11 @@ const TokensComponent = () => {
   const [showToast, setShowToast] = useState<boolean | string>(false);
   const [toastVariant, setToastVariant] = useState<variantType>('error');
   const [ethUserBalance, setEthUserBalance] = useState<number>(0);
-  const [isConnected, setIsConnected] = useState<boolean>();
   const { data: signer } = useSigner();
   const ctx = useWalletContext();
   const provider = useProvider();
   const { address, isConnected: _isConnected } = useAccount();
+  const [isConnected, setIsConnected] = useState<boolean | null>(null);
 
   const getBalance = async ({ signerOrProvider, address }: Contract) => {
     const userBalance = await signerOrProvider.getBalance(address);
@@ -118,7 +119,7 @@ const TokensComponent = () => {
     }
   };
 
-  return (
+  return isConnected != null ? (
     <>
       {/**
       <div className={styles['content']}>
@@ -171,7 +172,11 @@ const TokensComponent = () => {
           */}
       {/* //todo: display claim layout erc20 tokens if user has already minted nfts */}
 
-      {!isConnected && <div className={styles['connect-btn']}>
+      {!isConnected && < div className={styles['connect-btn']}>
+        <span className={styles['title']}>{tokenMainPage.title}</span>
+        <p dangerouslySetInnerHTML={{
+          __html: tokenMainPage.description,
+        }} />
         <ConnectButton showBalance={false} />
       </div>}
       {isConnected && <MintUserNFT />}
@@ -183,7 +188,7 @@ const TokensComponent = () => {
         {showToast}
       </ToastComponent>
     </>
-  );
+  ) : null;
 };
 
 export default TokensComponent;

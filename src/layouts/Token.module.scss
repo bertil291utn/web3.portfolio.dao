@@ -13,6 +13,11 @@
   }
 }
 
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
 .content {
   width: 80%;
 
@@ -23,10 +28,7 @@
   margin: 0 auto;
   text-align: center;
 
-  .title {
-    font-size: 3rem;
-    font-weight: bold;
-  }
+  
 
   .description {
     margin: 3rem 0;
@@ -56,6 +58,17 @@
 }
 
 .connect-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 45vh;
+
+  p {
+    margin-top: 2rem;
+    margin-bottom: 5rem;
+  }
+
   &>div {
     @media screen and (max-width: $md) {
       justify-content: center;
