@@ -26,7 +26,7 @@ const NFTProfileCard = ({ tokenId, srcImage, name, superRare, className, balance
         <div className={styles['footer-container']}>
           <div>
             <span className={styles['name']}>{name}</span>
-            {balance > 1 && <span className={styles['token-id']}>{`You own ${balance} items`}</span>}
+            {balance > 1 && <span className={styles['token-id']}>{`You hold ${balance} NFTs`}</span>}
           </div>
           <div>
             <span className={styles['token-id']}>{`#${tokenId}`}</span>

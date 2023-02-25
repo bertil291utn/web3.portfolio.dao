@@ -21,6 +21,7 @@ contract BatlDaoTokens is
     uint256 private constant MAXIMUM_MINTED_AMOUNT = 5;
     uint256 private constant TOKEN_PRICE = 0.27 ether;
     mapping(uint256 => string) private _tokenURIs;
+    mapping(address => bool) private _minted;
 
     CountersUpgradeable.Counter private _tokenIdCounter;
 
@@ -41,43 +42,26 @@ contract BatlDaoTokens is
 
     function mint(uint256 amount, string calldata _uri) public payable {
         require(
-            balanceOf(msg.sender) < MAXIMUM_MINTED_AMOUNT,
-            "MAXIMUM MINTED TOKEN REACHED"
+            amount > 0 && amount <= MAXIMUM_MINTED_AMOUNT,
+            "INVALID AMOUNT"
         );
-        _tokenIdCounter.increment();
-        uint256 tokenId = _tokenIdCounter.current();
-        require(
-            msg.value >= TOKEN_PRICE * amount,
-            "INSUFFICIENT ETH AMOUNT"
-        );
+        require(msg.value == TOKEN_PRICE * amount, "INSUFFICIENT ETH AMOUNT");
+        require(!_minted[msg.sender], "ALREADY MINTED");
+
+        uint256 tokenId = _tokenIdCounter.current() + 1;
         _mint(msg.sender, tokenId, amount, "");
         _setURI(tokenId, _uri);
-    }
 
-    function balanceOf(address owner) public view returns (uint256) {
-        uint256 totalBalance = 0;
-        for (uint256 i = 1; i <= _tokenIdCounter.current(); i++) {
-            totalBalance += balanceOf(owner, i);
-        }
-        return totalBalance;
+        _tokenIdCounter.increment();
+        _minted[msg.sender] = true;
     }
 
     function uri(uint256 tokenId) public view override returns (string memory) {
-        bytes memory tokenURIBtyes = bytes(_tokenURIs[tokenId]);
-
-        string memory _uri;
-        if (tokenURIBtyes.length == 0) {
-            _uri = "";
-        } else {
-            _uri = string(tokenURIBtyes);
-        }
-
-        return _uri;
+        return _tokenURIs[tokenId];
     }
 
     function _setURI(uint256 tokenId, string memory _uri) private {
         _tokenURIs[tokenId] = _uri;
-        emit URI(_uri, tokenId);
     }
 
     function _authorizeUpgrade(address newImplementation)
@@ -103,11 +87,17 @@ contract BatlDaoTokens is
     fallback() external payable {}
 
     function withdraw() public onlyOwner nonReentrant {
-        (bool success, ) = address(owner()).call{value: address(this).balance}(
-            ""
-        );
+        // Ensure that the owner is an EOA (not a contract)
+        address payable ownerAddress = payable(owner());
+        uint256 codeSize;
+        assembly {
+            codeSize := extcodesize(ownerAddress)
+        }
+        require(codeSize == 0, "Cannot withdraw to a contract");
+
+        (bool success, ) = ownerAddress.call{value: address(this).balance}("");
         require(success, "withdraw failed to send");
     }
 }
 
-//goerli 0x9a8a2EEE7cB063d951ff6e9ff5Af5D883A925928
+//goerli 0xf645525Ec60c5C237e6a4549EC533Dd57D76f3d9

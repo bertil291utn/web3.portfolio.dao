@@ -140,6 +140,8 @@ const MintUserNFT = () => {
       await tx.wait();
     } catch (error: any) {
       setShowToastModal(error.reason?.replace('execution reverted:', ''))
+    } finally {
+      setActiveMintNFTHash(false)
     }
   }
 
