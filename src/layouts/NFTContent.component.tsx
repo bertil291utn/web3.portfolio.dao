@@ -1,7 +1,7 @@
 import LoadingComponent from '@components/common/Loading.component';
 import NFTCard from '@components/common/NFTCard.component';
 import { defaultStakingAmount } from '@constants/common';
-import { useTokenContext } from '@context/TokenProvider';
+import { useTokenContext } from '@context/TokenProfileProvider';
 import { useWalletContext } from '@context/WalletProvider';
 import {
   getNFTEditionClaimableFactory,

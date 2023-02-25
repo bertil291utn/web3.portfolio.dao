@@ -38,11 +38,13 @@ import { variantType } from '@interfaces/toast';
 import { VscJson } from 'react-icons/vsc';
 import { TbShip } from 'react-icons/tb';
 import styles from './ProfileContent.module.scss';
+import { useTokenContext } from '@context/TokenProfileProvider';
 
 const ProfileContent = () => {
   const router = useRouter();
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>();
-  const [tokenCards, setTokenCards] = useState<Array<TokenProfile>>([]);
+  const TknCtx = useTokenContext();
+  const [tokenCards] = useState<Array<TokenProfile>>(TknCtx!.NFTDataProfile);
   const [showToast, setShowToast] = useState<boolean | string>(false);
   const [toastVariant, setToastVariant] = useState<variantType>('error');
   const [activeApprovingHash, setActiveApprovingHash] = useState<boolean>();
@@ -101,24 +103,6 @@ const ProfileContent = () => {
   //https://ethereum.stackexchange.com/questions/99343/how-to-automatically-add-a-custom-token-to-metamask-with-ethers-js
 
 
-  const setNFTsData = async (ownerAddress: string) => {
-    const response = await getAllNFTs(ownerAddress, [ERC1155ContractAdd!])
-
-    if (response?.ownedNfts.length == 0) return;
-    const respData: Array<TokenProfile> = response!.ownedNfts.map((elem) => (
-      {
-        tokenId: Number(elem.tokenId),
-        balance: elem.balance,
-        name: elem.title,
-        image: `https://gateway.pinata.cloud/ipfs/${elem.rawMetadata?.image}`,
-        superRare: (elem.rawMetadata?.attributes!.find(elem => elem['trait_type'] == "Rarity")?.value || 0) >= 75,
-        links: {
-          opensea: `https://testnets.opensea.io/assets/goerli/${elem.contract.address}/${elem.tokenId}`,
-          metadata: elem.tokenUri!.gateway
-        }
-      }));
-    setTokenCards(respData);
-  };
 
   useEffect(() => {
     setActiveApprovingHash(
@@ -144,9 +128,7 @@ const ProfileContent = () => {
 
   useEffect(() => {
     setIsWalletConnected(isConnected);
-    address && setNFTsData(address);
     listenEvents({ signerOrProvider: provider, address: address || '' });
-    return () => { setTokenCards([]) }
   }, [address, signer]);
 
   const isFormValid = (stakingAmount: string) => {

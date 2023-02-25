@@ -8,14 +8,15 @@ import { ThemeProvider } from 'next-themes';
 import { chainProv, client } from '@utils/web3';
 import WalletProvider from '@context/WalletProvider';
 import type { AppProps } from 'next/app'
-import '../css/global.scss';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import LoadingComponent from '@components/common/Loading.component';
+import TokenProfileProvider from '@context/TokenProfileProvider';
+import '../css/global.scss';
 
 const NavbarComponent = dynamic(() => import('@components/Navbar.component'),
   {
-    loading: () => <LoadingComponent title='Starting...'  fullHeight/>,
+    loading: () => <LoadingComponent title='Starting...' fullHeight />,
     ssr: false,
   })
 
@@ -27,17 +28,21 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>Web3 DAO</title>
       </Head>
       <WalletProvider>
-        <WagmiConfig client={client}>
-          <RainbowKitProvider chains={chainProv}>
-            <ThemeProvider>
-              <NavbarComponent />
-              <div className='content'>
-                <Component {...pageProps} />
-              </div>
-              <FooterComponent />
-            </ThemeProvider>
-          </RainbowKitProvider>
-        </WagmiConfig>
+        <TokenProfileProvider>
+          {/* TODO:it might not be the right option add token profile warpping the entire app, think another way */}
+
+          <WagmiConfig client={client}>
+            <RainbowKitProvider chains={chainProv}>
+              <ThemeProvider>
+                <NavbarComponent />
+                <div className='content'>
+                  <Component {...pageProps} />
+                </div>
+                <FooterComponent />
+              </ThemeProvider>
+            </RainbowKitProvider>
+          </WagmiConfig>
+        </TokenProfileProvider>
       </WalletProvider>
     </>
   )
