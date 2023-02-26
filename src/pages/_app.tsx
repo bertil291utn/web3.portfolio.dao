@@ -28,8 +28,6 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>Web3 DAO</title>
       </Head>
       <WalletProvider>
-        <TokenProfileProvider>
-          {/* TODO:it might not be the right option add token profile warpping the entire app, think another way */}
 
           <WagmiConfig client={client}>
             <RainbowKitProvider chains={chainProv}>
@@ -42,7 +40,6 @@ export default function App({ Component, pageProps }: AppProps) {
               </ThemeProvider>
             </RainbowKitProvider>
           </WagmiConfig>
-        </TokenProfileProvider>
       </WalletProvider>
     </>
   )

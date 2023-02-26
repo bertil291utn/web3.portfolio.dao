@@ -17,41 +17,18 @@ const TokenContext = createContext<ITokenContext | null>(null);
 export default function TokenProfileProvider({ children }: ChildrenType) {
   const [NFTData, setNFTData] = useState<Array<TokenElem>>([]);
   const [NFTDataProfile, setNFTDataProfile] = useState<Array<TokenProfile>>([]);
-  const [NFTBalance, setNFTBalance] = useState<number>(0);
+  
   const provider = useProvider();
   const { address } = useAccount();
 
 
 
-  const _getNFTs = async (ownerAddress: string) => {
-    const NFTs = await getAllNFTs(ownerAddress, [ERC1155ContractAdd!]);
-    setNFTBalance(NFTs!.ownedNfts.length)
-    if (NFTs?.ownedNfts.length == 0) return;
-    const respData: Array<TokenProfile> = NFTs!.ownedNfts.map((elem) => (
-      {
-        tokenId: Number(elem.tokenId),
-        balance: elem.balance,
-        name: elem.title,
-        image: `https://gateway.pinata.cloud/ipfs/${elem.rawMetadata?.image}`,
-        superRare: (elem.rawMetadata?.attributes!.find(elem => elem['trait_type'] == "Rarity")?.value || 0) >= 75,
-        links: {
-          opensea: `https://testnets.opensea.io/assets/goerli/${elem.contract.address}/${elem.tokenId}`,
-          metadata: elem.tokenUri!.gateway
-        }
-      }));
-    setNFTDataProfile(respData)
-  }
-
-  useEffect(() => {
-    address && _getNFTs(address);
-  }, [address])
+ 
 
   return (
     <TokenContext.Provider
       value={{
         NFTData,
-        NFTBalance,
-        NFTDataProfile,
       }}
     >
       {children}
@@ -59,6 +36,6 @@ export default function TokenProfileProvider({ children }: ChildrenType) {
   );
 }
 
-export const useTokenContext = () => {
+export const useTokenProfileContext = () => {
   return useContext(TokenContext);
 };

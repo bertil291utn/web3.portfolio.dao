@@ -20,6 +20,4 @@ export interface TokenElem {
 
 export interface ITokenContext {
   NFTData: TokenElem[],
-  NFTBalance: number,
-  NFTDataProfile: Array<TokenProfile>
 }

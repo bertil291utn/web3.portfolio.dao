@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useAccount, useSigner } from 'wagmi';
 import {
   ClaimableContractAdd,
+  ERC1155ContractAdd,
   ERC20TokenContractAdd,
 } from 'src/config/contracts';
 import ToastComponent from '@components/common/Toast.component';
@@ -23,7 +24,6 @@ import { useRouter } from 'next/router';
 import { useProvider } from 'wagmi';
 import { useWalletContext } from '@context/WalletProvider';
 import { navbarElements } from '@placeholders/navbar.placeholders';
-import styles from './Token.module.scss';
 import { ethers } from 'ethers';
 import LoadingComponent from '@components/common/Loading.component';
 import NFTContent from '@layouts/NFTContent.component';
@@ -31,6 +31,9 @@ import { addNewDevice } from '@utils/firebaseFunctions';
 import { Contract } from '@interfaces/provider'
 import MintUserNFT from '@layouts/MintUserNFT.component';
 import { variantType } from '@interfaces/toast';
+import { useTokenProfileContext } from '@context/TokenProfileProvider';
+import styles from './Token.module.scss';
+import { getAllNFTs } from '@utils/NFT';
 
 
 const TokensComponent = () => {
@@ -44,6 +47,8 @@ const TokensComponent = () => {
   const provider = useProvider();
   const { address, isConnected: _isConnected } = useAccount();
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
+  const TknCtx = useTokenProfileContext();
+  const [NFTBalance, setNFTBalance] = useState<number>(0);
 
   const getBalance = async ({ signerOrProvider, address }: Contract) => {
     const userBalance = await signerOrProvider.getBalance(address);
@@ -51,9 +56,16 @@ const TokensComponent = () => {
     setEthUserBalance(+_balance);
   };
 
+  const _setNFTBalance = async (ownerAddress: string) => {
+    const NFTs = await getAllNFTs(ownerAddress, [ERC1155ContractAdd!]);
+    NFTs!.ownedNfts.length > 0 && setNFTBalance(NFTs!.ownedNfts[0].balance)
+  }
+
   useEffect(() => {
     address && getBalance({ signerOrProvider: provider, address });
     address && isFinishedTransferTx({ signerOrProvider: provider, address });
+    address && _setNFTBalance(address);
+    return () => { setNFTBalance(0) }
   }, [address]);
 
   useEffect(() => {
@@ -121,56 +133,51 @@ const TokensComponent = () => {
 
   return isConnected != null ? (
     <>
-      {/**
-      <div className={styles['content']}>
-        {!activeTknClaimHash && !activeNFTHash ? (
-          <>
-            {(!isConnected || ctx && ctx.userCustomTokenBalance <= 0) && (
-              <>
-                <span className={styles['title']}>{tokenPageLabel.title}</span>
-                <p
-                  className={styles['description']}
-                  dangerouslySetInnerHTML={{
-                    __html: tokenPageLabel.description(ctx && ctx.tokenSymbol),
-                  }}
-                />
-                <div className={styles['button']}>
-                  <div className={styles['user-connected-btn']}>
-                    <ConnectButton showBalance={false} />
-                  </div>
-                  {ethUserBalance > 0 && (
-                    <ButtonComponent
-                      className={styles['button__content']}
-                      onClick={getTokensAction}
-                      >
-                      {tokenPageLabel.buttonLabel}
-                    </ButtonComponent>
-                  )}
-                  {ethUserBalance <= 0.005 && isConnected && (
-                    <ButtonComponent
-                      className={styles['get-eth']}
-                      buttonType='tertiary'
-                      onClick={getEths(getEth.URL)}
-                      >
-                      {getEth.buttonLabel}
-                    </ButtonComponent>
-                  )}
-                </div>
-              </>
-            )}
-          </>
-        ) : (
-          <LoadingComponent
-            title={
-              activeTknClaimHash ? tokenModal.claiming : NFTPage.transferringNFT
-            }
-            description={tokenModal.description}
-            fullHeight
-          />
-        )}
-      </div>
-          */}
-      {/* //todo: display claim layout erc20 tokens if user has already minted nfts */}
+      {isConnected && <>
+        {NFTBalance > 0 && <div className={styles['content']}>
+          {!activeTknClaimHash && !activeNFTHash ? (
+            <>
+              <span className={styles['title']}>{tokenPageLabel.title}</span>
+              {/* //todo: update and description and update smart contract */}
+              <p
+                className={styles['description']}
+                dangerouslySetInnerHTML={{
+                  __html: tokenPageLabel.description(ctx && ctx.tokenSymbol),
+                }}
+              />
+              <div className={styles['button']}>
+                {ethUserBalance > 0 && (
+                  <ButtonComponent
+                    className={styles['button__content']}
+                    onClick={getTokensAction}
+                  >
+                    {tokenPageLabel.buttonLabel}
+                  </ButtonComponent>
+                )}
+                {ethUserBalance <= 0.005 && isConnected && (
+                  <ButtonComponent
+                    className={styles['get-eth']}
+                    buttonType='tertiary'
+                    onClick={getEths(getEth.URL)}
+                  >
+                    {getEth.buttonLabel}
+                  </ButtonComponent>
+                )}
+              </div>
+            </>
+          ) : (
+            <LoadingComponent
+              title={
+                activeTknClaimHash ? tokenModal.claiming : NFTPage.transferringNFT
+              }
+              description={tokenModal.description}
+              fullHeight
+            />
+          )}
+        </div>}
+        {NFTBalance == 0 && <MintUserNFT />}
+      </>}
+
 
       {!isConnected && < div className={styles['connect-btn']}>
         <span className={styles['title']}>{tokenMainPage.title}</span>
@@ -179,7 +186,6 @@ const TokensComponent = () => {
         }} />
         <ConnectButton showBalance={false} />
       </div>}
-      {isConnected && <MintUserNFT />}
       <ToastComponent
         variant={toastVariant || ''}
         show={showToast}
