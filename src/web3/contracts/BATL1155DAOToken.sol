@@ -64,6 +64,14 @@ contract BatlDaoTokens is
         _tokenURIs[tokenId] = _uri;
     }
 
+   function balanceOf(address owner) public view returns (uint256) {
+        uint256 totalBalance = 0;
+        for (uint256 i = 1; i <= _tokenIdCounter.current(); i++) {
+            totalBalance += balanceOf(owner, i);
+        }
+        return totalBalance;
+    }
+
     function _authorizeUpgrade(address newImplementation)
         internal
         override
@@ -100,4 +108,4 @@ contract BatlDaoTokens is
     }
 }
 
-//goerli 0xf645525Ec60c5C237e6a4549EC533Dd57D76f3d9
+//goerli 0x8ef1eCf5CF7f8f473FD4d81FD5c8eaAb80865D27

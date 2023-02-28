@@ -41,22 +41,27 @@ interface IERC1155 {
         bytes calldata _data
     ) external;
 
-    function balanceOf(
-        address _owner,
-        uint256 _id
-    ) external view returns (uint256);
+    function balanceOf(address _owner, uint256 _id)
+        external
+        view
+        returns (uint256);
 
-    function balanceOfBatch(
-        address[] calldata _owners,
-        uint256[] calldata _ids
-    ) external view returns (uint256[] memory);
+    function balanceOf(address _owner)
+        external
+        view
+        returns (uint256);
+
+    function balanceOfBatch(address[] calldata _owners, uint256[] calldata _ids)
+        external
+        view
+        returns (uint256[] memory);
 
     function setApprovalForAll(address _operator, bool _approved) external;
 
-    function isApprovedForAll(
-        address _owner,
-        address _operator
-    ) external view returns (bool);
+    function isApprovedForAll(address _owner, address _operator)
+        external
+        view
+        returns (bool);
 
     function getCollectionTokenPrice() external pure returns (uint256) ;
 }

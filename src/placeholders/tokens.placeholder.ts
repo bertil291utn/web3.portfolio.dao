@@ -4,9 +4,9 @@ export const tokenMainPage = {
   buttonLabel: 'gimme my tokens',
 };
 export const tokenPageLabel = {
-  title: 'Claim your 100 free tokens',
+  title: 'Claim your free tokens',
   description: (tokenSymbol: string | null) =>
-    `With <b>$${tokenSymbol}</b> tokens, you'll able to rank, view repos, buy NFTs and get in touch with Bertil 😂. Furthermore with these tokens you're going to participate in our DAO. <i>(Goerli test network)</i>`,
+    `With <b>$${tokenSymbol}</b> tokens, you'll able to rank, view repos, and get in touch with Bertil 😂. Furthermore with these tokens you're going to participate in our DAO. <i>(Goerli test network)</i>`,
   buttonLabel: 'gimme my tokens',
 };
 
