@@ -9,6 +9,7 @@ export const generateImage = async (description: string) => {
   try {
     const response = await HuggingFaceSDK('stabilityai/stable-diffusion-2', JSON.stringify({
       inputs: description,
+      options: { wait_for_model: true }
     }))
     const contentType = await response.headers.get('content-type');
     const dataBuffer = await response.arrayBuffer();

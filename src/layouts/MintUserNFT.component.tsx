@@ -13,7 +13,6 @@ import { capitalizeFirstWord, countNumberWords } from '@utils/common';
 import { generateImage } from '@utils/HuggingFace.utils';
 import { getNFT1155Factory } from '@utils/web3';
 import { ethers } from 'ethers';
-import dynamic from 'next/dynamic';
 import { Fragment, useEffect, useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { useAccount, useProvider, useSigner } from 'wagmi';
@@ -23,13 +22,8 @@ import { useRouter } from 'next/router';
 import { navbarElements } from '@placeholders/navbar.placeholders';
 import { pinIPFSImage } from '@utils/PinataSDK.utils';
 import styles from './MintUserNFT.module.scss'
+import GeneratedImage from '@components/GeneratedImage.component';
 
-const GeneratedImage = dynamic(() => import('@components/GeneratedImage.component'),
-  {
-    loading: () => <LoadingComponent title='Generating image...' />,
-    ssr: false,
-  })
-//todo: check this dynamic and may be test with react lazy
 
 const MintUserNFT = () => {
   const [NFTName, setNFTName] = useState<string>('');
@@ -212,6 +206,11 @@ const MintUserNFT = () => {
     window.location.reload();
   };
 
+  const onChangeInputValue = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const regex = /^[1-5]$/;
+    regex.test(ev.target.value) && setNFTQuantity(ev.target.value)
+  }
+
   const ETHAmount = tokenPrice && (Number(ethers.utils.formatEther(tokenPrice)) * Number(NFTQuantity)).toFixed(Number(NFTQuantity) === 0 ? 1 : 3)
 
   return (
@@ -223,15 +222,16 @@ const MintUserNFT = () => {
           title={generateLabels.title}
           subtitle={generateLabels.subtitle}
         >
+          {/* TODO: make more friendly aiting message 
+           it'd be great to add gif or somethind while is loading the generative image.
+          and after lest say 30 seconds the image doens t work just reload the page */}
           {loading ? (
-            <LoadingComponent title='Generating image...' />
+            <LoadingComponent title='Generating image...' description='This could take few seconds. Just wait' />
           ) : generatedImage &&
           <div className={styles['image-nft-container']}>
-            <Fragment key={imageKey}>
-              <GeneratedImage src={generatedImage}
-                className={`${styles['image-nft']}`}
-              />
-            </Fragment>
+            <GeneratedImage src={generatedImage}
+              className={`${styles['image-nft']}`}
+            />
             <ButtonComponent className={styles['mint-button']} onClick={() => setCurrentActiveWindow((prev) => ++prev)}>
               go to mint
             </ButtonComponent>
@@ -305,7 +305,7 @@ const MintUserNFT = () => {
                     <InputComponent
                       name={`NFTQuantity`}
                       value={NFTQuantity}
-                      onChange={(ev) => setNFTQuantity(ev.target.value)}
+                      onChange={onChangeInputValue}
                       type={`number`}
                       min='1'
                       max='5'
