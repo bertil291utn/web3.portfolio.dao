@@ -59,8 +59,9 @@ const TokensComponent = () => {
 
   const _setNFTBalance = async (ownerAddress: string, provider: signerOrProvider) => {
     const NFT1155Contract = getNFT1155Factory(provider);
-    const balance = await NFT1155Contract.balanceOfByOwner(ownerAddress);
-    Number(balance) != 0 && setNFTBalance(Number(balance))
+    let balance = await NFT1155Contract.balanceOfByOwner(ownerAddress);
+    balance = Number(balance);
+    balance != 0 && setNFTBalance(balance)
   }
 
   useEffect(() => {

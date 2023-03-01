@@ -7,7 +7,7 @@ export const analyzePrompt = async (text: string) => {
 
 export const generateImage = async (description: string) => {
   try {
-    const response = await HuggingFaceSDK('stabilityai/stable-diffusion-2', JSON.stringify({
+    const response = await HuggingFaceSDK('stabilityai/stable-diffusion-2-1', JSON.stringify({
       inputs: description,
       options: { wait_for_model: true }
     }))
