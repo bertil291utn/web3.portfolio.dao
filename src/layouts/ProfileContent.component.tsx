@@ -274,7 +274,7 @@ const ProfileContent = () => {
           <div className={styles['connect-btn']}>
             <ConnectButton showBalance={false} />
           </div>
-          {/* {isWalletConnected && (
+          {isWalletConnected && Number(ctx?.userCustomTokenBalance) != 0 && (
             <div className={styles['profile']}>
               <span className={`subtitle`}>{ProfileLabel.availableTokens}</span>
               <span>
@@ -282,27 +282,14 @@ const ProfileContent = () => {
                   ctx?.userCustomTokenBalance || 0
                 )} $${ctx?.tokenSymbol}`}
               </span>
-              {ctx?.userCustomTokenBalance == 0 && (
-                <div className={styles['claim-btn']}>
-                  <ButtonComponent
-                    onClick={() =>
-                      router.push(`${navbarElements.tokens.path}`)
-                    }
-                  >
-                    {ProfileLabel.claimTokens}
-
-                  </ButtonComponent>
-                </div>
-              )}
             </div>
-          )} */}
+          )}
         </SectionPanel>
 
         {tokenCards?.length > 0 && (
           <SectionPanel
             id={IdContent.nfts}
             title={ProfileSections.NFTInfoTitle}
-            subtitle={ProfileSections.NFTInfoSubtitle}
           >
             <div className={styles['cards']}>
               {tokenCards.map((elem) => (

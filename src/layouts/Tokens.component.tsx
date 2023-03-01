@@ -83,9 +83,9 @@ const TokensComponent = () => {
   const isFinishedTransferTx = async ({ signerOrProvider, address }: Contract) => {
     const tokenContract = getTokenFactory(signerOrProvider);
     //TODO: listen transfer event not just in token component, but also all over the app _app file
-    tokenContract.on('Transfer', async (from: string, to: string) => {
+    tokenContract.on('Transfer', async (from, to) => {
       if (
-        from?.toLowerCase() == ClaimableContractAdd?.toLowerCase() &&
+        from?.toLowerCase() == ethers.constants.AddressZero &&
         to?.toLowerCase() == address?.toLowerCase()
       ) {
         try {
@@ -125,8 +125,8 @@ const TokensComponent = () => {
   const getTokensAction = async () => {
     if (!signer) return;
     try {
-      const claimableContract = getClaimableFactory(signer);
-      let tx = await claimableContract.claim(ERC20TokenContractAdd);
+      const ERC20TokenContract = getTokenFactory(signer);
+      let tx = await ERC20TokenContract.claim(ERC1155ContractAdd);
       window.localStorage.setItem(localStorageKeys.claimingTxHash, tx.hash);
       setActiveTknClaimHash(tx.hash);
       await tx.wait();
