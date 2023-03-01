@@ -1,61 +1,13 @@
 @import 'src/css/variables.scss';
 
-.claimingTokens {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 
-  height: 45vh;
-
-  @media screen and (max-width: $md) {
-    height: 35vh;
-  }
-}
 
 .title {
   font-size: 3rem;
   font-weight: bold;
 }
 
-.content {
-  width: 80%;
 
-  @media screen and (max-width: $md) {
-    width: unset;
-  }
-
-  margin: 0 auto;
-  text-align: center;
-
-  
-
-  .description {
-    margin: 3rem 0;
-    font-size: 1.125rem;
-    line-height: 1.5rem;
-  }
-
-  .button {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    &__content {
-      margin-top: 3rem;
-      width: 60%;
-    }
-  }
-
-  b {
-    color: $primary;
-  }
-}
-
-.get-eth {
-  margin: 1.5rem 0;
-}
 
 .connect-btn {
   display: flex;

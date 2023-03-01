@@ -35,27 +35,17 @@ import { variantType } from '@interfaces/toast';
 import { useTokenProfileContext } from '@context/TokenProfileProvider';
 import styles from './Token.module.scss';
 import { getAllNFTs } from '@utils/NFT';
+import ClaimTokens from '@layouts/ClaimTokens';
 
 
 const TokensComponent = () => {
-  const [activeTknClaimHash, setActiveTknClaimHash] = useState<boolean>();
-  const [activeNFTHash] = useState();
   const [showToast, setShowToast] = useState<boolean | string>(false);
-  const [toastVariant, setToastVariant] = useState<variantType>('error');
-  const [ethUserBalance, setEthUserBalance] = useState<number>(0);
-  const { data: signer } = useSigner();
-  const ctx = useWalletContext();
   const provider = useProvider();
   const { address, isConnected: _isConnected } = useAccount();
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
-  const TknCtx = useTokenProfileContext();
   const [NFTBalance, setNFTBalance] = useState<number>(0);
 
-  const getBalance = async ({ signerOrProvider, address }: Contract) => {
-    const userBalance = await signerOrProvider.getBalance(address);
-    const _balance = ethers.utils.formatEther(userBalance?.toString());
-    setEthUserBalance(+_balance);
-  };
+
 
   const _setNFTBalance = async (ownerAddress: string, provider: signerOrProvider) => {
     const NFT1155Contract = getNFT1155Factory(provider);
@@ -64,10 +54,7 @@ const TokensComponent = () => {
     balance != 0 && setNFTBalance(balance)
   }
 
-  useEffect(() => {
-    address && getBalance({ signerOrProvider: provider, address });
-    address && isFinishedTransferTx({ signerOrProvider: provider, address });
-  }, [address]);
+
 
   useEffect(() => {
     address && provider && _setNFTBalance(address, provider);
@@ -78,112 +65,22 @@ const TokensComponent = () => {
     setIsConnected(_isConnected);
   }, [_isConnected]);
 
-  const router = useRouter();
-
-  const isFinishedTransferTx = async ({ signerOrProvider, address }: Contract) => {
-    const tokenContract = getTokenFactory(signerOrProvider);
-    //TODO: listen transfer event not just in token component, but also all over the app _app file
-    tokenContract.on('Transfer', async (from, to) => {
-      if (
-        from?.toLowerCase() == ethers.constants.AddressZero &&
-        to?.toLowerCase() == address?.toLowerCase()
-      ) {
-        try {
-          await addNewDevice(address, { isWeb3User: true })
-          await finishTx();
-
-        } catch (error: any) {
-          setShowToast(error.message);
-          setToastVariant('error');
-        }
-      }
-    });
-  };
-
-
-  useEffect(() => {
-    setActiveTknClaimHash(
-      !!window.localStorage.getItem(localStorageKeys.claimingTxHash)
-    );
-  }, []);
-
-  const setCloseCurrentTx = () => {
-    window.localStorage.removeItem(localStorageKeys.claimingTxHash);
-  };
-
-  const finishTx = async () => {
-    setCloseCurrentTx();
-    router.push(`/${navbarElements.profile.label}`);
-    await new Promise((r) => setTimeout(r, 2000));
-    window.location.reload();
-  };
-
-  const getEths = (URL: string) => () => {
-    URL && window.open(URL, '_tab');
-  };
-
-  const getTokensAction = async () => {
-    if (!signer) return;
-    try {
-      const ERC20TokenContract = getTokenFactory(signer);
-      let tx = await ERC20TokenContract.claim(ERC1155ContractAdd);
-      window.localStorage.setItem(localStorageKeys.claimingTxHash, tx.hash);
-      setActiveTknClaimHash(tx.hash);
-      await tx.wait();
-    } catch (error: any) {
-      setCloseCurrentTx();
-      setShowToast(error.reason?.replace('execution reverted:', ''));
-      setToastVariant('error');
-    }
-  };
 
   return isConnected != null ? (
     <>
       {isConnected && <>
-        {NFTBalance > 0 && <div className={styles['content']}>
-          {!activeTknClaimHash && !activeNFTHash ? (
-            <>
-              <span className={styles['title']}>{tokenPageLabel.title}</span>
-              <p
-                className={styles['description']}
-                dangerouslySetInnerHTML={{
-                  __html: tokenPageLabel.description(ctx && ctx.tokenSymbol),
-                }}
-              />
-              <div className={styles['button']}>
-                {ethUserBalance > 0 && (
-                  <ButtonComponent
-                    className={styles['button__content']}
-                    onClick={getTokensAction}
-                  >
-                    {tokenPageLabel.buttonLabel}
-                  </ButtonComponent>
-                )}
-                {ethUserBalance <= 0.005 && isConnected && (
-                  <ButtonComponent
-                    className={styles['get-eth']}
-                    buttonType='tertiary'
-                    onClick={getEths(getEth.URL)}
-                  >
-                    {getEth.buttonLabel}
-                  </ButtonComponent>
-                )}
-              </div>
-            </>
-          ) : (
-            <LoadingComponent
-              title={
-                activeTknClaimHash ? tokenModal.claiming : NFTPage.transferringNFT
-              }
-              description={tokenModal.description}
-              fullHeight
+        {NFTBalance > 0 &&
+          <>
+            <ClaimTokens
+              setShowToast={setShowToast}
+              isConnected={isConnected}
             />
-          )}
-        </div>}
+          </>
+        }
         {NFTBalance == 0 && <MintUserNFT />}
       </>}
 
-
+      {/*TODO: if user has already claimed nft its erc20 tokens display dao component */}
       {!isConnected && < div className={styles['connect-btn']}>
         <span className={styles['title']}>{tokenMainPage.title}</span>
         <p dangerouslySetInnerHTML={{
@@ -192,7 +89,7 @@ const TokensComponent = () => {
         <ConnectButton showBalance={false} />
       </div>}
       <ToastComponent
-        variant={toastVariant || ''}
+        variant={'error'}
         show={showToast}
         setShow={setShowToast}
       >

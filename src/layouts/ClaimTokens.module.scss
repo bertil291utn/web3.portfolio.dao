@@ -1,0 +1,45 @@
+@import 'src/css/variables.scss';
+
+.content {
+  width: 80%;
+
+  @media screen and (max-width: $md) {
+    width: unset;
+  }
+
+  margin: 0 auto;
+  text-align: center;
+
+  
+
+  .description {
+    margin: 3rem 0;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+
+  .button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &__content {
+      margin-top: 3rem;
+      width: 60%;
+    }
+  }
+
+  b {
+    color: $primary;
+  }
+}
+
+.get-eth {
+  margin: 1.5rem 0;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+}

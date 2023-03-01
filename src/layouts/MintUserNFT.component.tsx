@@ -222,7 +222,7 @@ const MintUserNFT = () => {
           title={generateLabels.title}
           subtitle={generateLabels.subtitle}
         >
-          {/* TODO: make more friendly aiting message 
+          {/* TODO: make more friendly waiting message 
            it'd be great to add gif or somethind while is loading the generative image.
           and after lest say 30 seconds the image doens t work just reload the page */}
           {loading ? (
@@ -321,6 +321,7 @@ const MintUserNFT = () => {
             </> : <>
               <LoadingComponent
                 title={`Minting...`}
+                description={`Transaction has just started. Wait until wallet pops up`}
               />
             </>}
           </SectionPanel>
