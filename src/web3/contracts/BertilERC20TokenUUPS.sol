@@ -47,7 +47,7 @@ contract BertilERC20TokensUUPS is
 
     function claim(IERC1155 nftaddress) public {
         require(!_claimed[msg.sender], "ALREADY CLAIMED");
-        uint256 balance = nftaddress.balanceOf(msg.sender);
+        uint256 balance = nftaddress.balanceOfByOwner(msg.sender);
         require(balance > 0, "NO OWNED TOKENS");
 
         uint256 tokensToMint = balance * TOKENS_PER_NFT;
@@ -83,3 +83,4 @@ contract BertilERC20TokensUUPS is
         require(success, "withdraw failed to send");
     }
 }
+//goerli 0xbF8d6064DF0ADe6b52b08B75b1D0CaBaf29F8F07

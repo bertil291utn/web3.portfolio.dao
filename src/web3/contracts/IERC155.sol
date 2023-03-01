@@ -41,12 +41,12 @@ interface IERC1155 {
         bytes calldata _data
     ) external;
 
-    function balanceOf(address _owner, uint256 _id)
+    function balanceOfByOwner(address _owner)
         external
         view
         returns (uint256);
 
-    function balanceOf(address _owner)
+    function balanceOf(address _owner, uint256 _id)
         external
         view
         returns (uint256);

@@ -17,6 +17,7 @@ import {
 import ToastComponent from '@components/common/Toast.component';
 import {
   getClaimableFactory,
+  getNFT1155Factory,
   getTokenFactory,
 } from '@utils/web3';
 import { localStorageKeys } from '@keys/localStorage';
@@ -28,7 +29,7 @@ import { ethers } from 'ethers';
 import LoadingComponent from '@components/common/Loading.component';
 import NFTContent from '@layouts/NFTContent.component';
 import { addNewDevice } from '@utils/firebaseFunctions';
-import { Contract } from '@interfaces/provider'
+import { Contract, signerOrProvider } from '@interfaces/provider'
 import MintUserNFT from '@layouts/MintUserNFT.component';
 import { variantType } from '@interfaces/toast';
 import { useTokenProfileContext } from '@context/TokenProfileProvider';
@@ -56,17 +57,21 @@ const TokensComponent = () => {
     setEthUserBalance(+_balance);
   };
 
-  const _setNFTBalance = async (ownerAddress: string) => {
-    const NFTs = await getAllNFTs(ownerAddress, [ERC1155ContractAdd!]);
-    NFTs!.ownedNfts.length > 0 && setNFTBalance(NFTs!.ownedNfts[0].balance)
+  const _setNFTBalance = async (ownerAddress: string, provider: signerOrProvider) => {
+    const NFT1155Contract = getNFT1155Factory(provider);
+    const balance = await NFT1155Contract.balanceOfByOwner(ownerAddress);
+    Number(balance) != 0 && setNFTBalance(Number(balance))
   }
 
   useEffect(() => {
     address && getBalance({ signerOrProvider: provider, address });
     address && isFinishedTransferTx({ signerOrProvider: provider, address });
-    address && _setNFTBalance(address);
-    return () => { setNFTBalance(0) }
   }, [address]);
+
+  useEffect(() => {
+    address && provider && _setNFTBalance(address, provider);
+    return () => { setNFTBalance(0) }
+  }, [address, provider]);
 
   useEffect(() => {
     setIsConnected(_isConnected);
@@ -138,7 +143,6 @@ const TokensComponent = () => {
           {!activeTknClaimHash && !activeNFTHash ? (
             <>
               <span className={styles['title']}>{tokenPageLabel.title}</span>
-              {/* //todo: update and description and update smart contract */}
               <p
                 className={styles['description']}
                 dangerouslySetInnerHTML={{

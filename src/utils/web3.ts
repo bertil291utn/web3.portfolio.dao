@@ -23,6 +23,7 @@ import StakingABI from '@web3/ABI/StakingToken.json';
 import ERC1155ABI from '@web3/ABI/ERC1155.json';
 import BATL1155DAOTokenABI from '@web3/ABI/BATL1155DAOToken.json';
 import ERC1155ClaimableABI from '@web3/ABI/ERC1155Claimable.json';
+import ERC20TokenUUPSABI from '@web3/ABI/BertilERC20TokenUUPS.json';
 import { signerOrProvider } from '@interfaces/provider';
 
 
@@ -39,7 +40,7 @@ export const getContractFactory = ({ address, ABI, signerOrProvider }: ContractF
 export const getTokenFactory = (signerOrProvider: signerOrProvider) => {
   return getContractFactory({
     address: ERC20TokenContractAdd!,
-    ABI: erc20ABI,
+    ABI: ERC20TokenUUPSABI,
     signerOrProvider,
   });
 };

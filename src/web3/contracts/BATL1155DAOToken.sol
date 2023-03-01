@@ -64,7 +64,7 @@ contract BatlDaoTokens is
         _tokenURIs[tokenId] = _uri;
     }
 
-   function balanceOf(address owner) public view returns (uint256) {
+   function balanceOfByOwner(address owner) public view returns (uint256) {
         uint256 totalBalance = 0;
         for (uint256 i = 1; i <= _tokenIdCounter.current(); i++) {
             totalBalance += balanceOf(owner, i);
