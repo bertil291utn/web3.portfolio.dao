@@ -4,12 +4,13 @@ interface Props {
   fullHeight?: boolean
   title: string
   description?: string
+  className?: string
 }
 
-const LoadingComponent = ({ fullHeight, title, description }: Props) => {
+const LoadingComponent = ({ fullHeight, title, description, className }: Props) => {
   return (
     <div
-      className={`${styles['container']} ${fullHeight ? styles['full-height'] : ''
+      className={`${className || ''} ${styles['container']} ${fullHeight ? styles['full-height'] : ''
         }`}
     >
       <p className={styles['title']}>{title}</p>

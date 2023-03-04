@@ -72,7 +72,7 @@ const MintUserNFT = () => {
       const prediction = await getPrediction(NFTDescription)
       setPrediction(prediction)
       const _generatedImage = prediction.output[prediction.output.length - 1]
-      
+
       if (!_generatedImage) return;
 
       setGeneratedImage(_generatedImage);
@@ -236,7 +236,7 @@ const MintUserNFT = () => {
            it'd be great to add gif or somethind while is loading the generative image.
           and after lest say 30 seconds the image doens t work just reload the page */}
           {loading ? (
-            <LoadingComponent title='Generating image...' description='This could take few seconds. Just wait' />
+            <LoadingComponent className={styles['loading']} title='Generating image...' description='This could take few seconds. Just wait' />
           ) : generatedImage &&
           <div className={styles['image-nft-container']}>
             <GeneratedImage src={generatedImage}
@@ -249,7 +249,7 @@ const MintUserNFT = () => {
           }
 
 
-          <div className={styles["text-area-container"]}>
+          {!loading && <div className={styles["text-area-container"]}>
 
             <TextArea
               className={styles['input-description']}
@@ -264,7 +264,7 @@ const MintUserNFT = () => {
             <p className={styles['info-text']}>
               Be as specific as you can and add plenty of clear details. Do not hold back on those details.
             </p>
-          </div>
+          </div>}
 
 
 

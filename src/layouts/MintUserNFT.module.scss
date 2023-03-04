@@ -149,3 +149,12 @@ $radius-image: 0.5rem;
   }
 
 }
+
+.loading {
+  height: 35vh;
+
+  @media only screen and (max-width:$sm) {
+    height: 45vh;
+
+  }
+}
