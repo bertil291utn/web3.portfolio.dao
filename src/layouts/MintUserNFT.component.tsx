@@ -21,8 +21,10 @@ import { localStorageKeys } from '@keys/localStorage';
 import { useRouter } from 'next/router';
 import { navbarElements } from '@placeholders/navbar.placeholders';
 import { pinIPFSImage } from '@utils/PinataSDK.utils';
-import styles from './MintUserNFT.module.scss'
 import GeneratedImage from '@components/GeneratedImage.component';
+import axios from 'axios';
+import { getPrediction } from '@utils/replicate-sdk';
+import styles from './MintUserNFT.module.scss'
 
 
 const MintUserNFT = () => {
@@ -39,6 +41,7 @@ const MintUserNFT = () => {
   const [activeMintNFTHash, setActiveMintNFTHash] = useState<boolean>(false);
   const [tokenPrice, setTokenPrice] = useState<string>('');
   const [NFTQuantity, setNFTQuantity] = useState<string>('1');
+  const [prediction, setPrediction] = useState(null);
   const { data: signer } = useSigner();
   const { openConnectModal } = useConnectModal();
   const router = useRouter();
@@ -66,11 +69,18 @@ const MintUserNFT = () => {
   const _generateImage = async () => {
 
     try {
-      const { contentType, dataBuffer } = await generateImage(NFTDescription);
-      const base64data = Buffer.from(dataBuffer).toString("base64");
-      contentType && setMimeType(contentType);
+      const prediction = await getPrediction(NFTDescription)
+      setPrediction(prediction)
+      const _generatedImage = prediction.output[prediction.output.length - 1]
+      
+      if (!_generatedImage) return;
+
+      setGeneratedImage(_generatedImage);
+      setMimeType('image/png');
+      const { data: dataBuffer } = await axios.get(_generatedImage, {
+        responseType: 'arraybuffer',
+      });
       dataBuffer && setDataBuffer(dataBuffer);
-      setGeneratedImage(`data:${contentType};base64,` + base64data);
 
     } catch (error) {
       setShowToastModal((error as Error).message);
