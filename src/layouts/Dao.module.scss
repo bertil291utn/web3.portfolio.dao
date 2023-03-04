@@ -1,0 +1,19 @@
+@import 'src/css/variables.scss';
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 45vh;
+
+
+  @media screen and (max-width: $md) {
+    height: 35vh;
+  }
+
+  .title {
+    margin-bottom: 1rem;
+    font-size: 3rem;
+    font-weight: bold;
+  }
+}

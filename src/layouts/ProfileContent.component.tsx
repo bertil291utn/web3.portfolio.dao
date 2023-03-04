@@ -140,7 +140,7 @@ const ProfileContent = () => {
         tokenId: Number(elem.tokenId),
         balance: elem.balance,
         name: elem.title,
-        image: `https://gateway.pinata.cloud/ipfs/${elem.rawMetadata?.image}`,
+        image: `https://alchemy.mypinata.cloud/ipfs/${elem.rawMetadata?.image}`,
         superRare: (elem.rawMetadata?.attributes!.find(elem => elem['trait_type'] == "Rarity")?.value || 0) >= 75,
         links: {
           opensea: `https://testnets.opensea.io/assets/goerli/${elem.contract.address}/${elem.tokenId}`,
