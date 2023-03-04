@@ -1,7 +1,7 @@
 import LoadingComponent from '@components/common/Loading.component';
 import NFTCard from '@components/common/NFTCard.component';
 import { defaultStakingAmount } from '@constants/common';
-import { useTokenContext } from '@context/TokenProfileProvider';
+import { useTokenProfileContext } from '@context/TokenProfileProvider';
 import { useWalletContext } from '@context/WalletProvider';
 import {
   getNFTEditionClaimableFactory,
@@ -39,7 +39,7 @@ const NFTContent = () => {
   const { address } = useAccount();
   const [NFTData, setNFTData] = useState<Array<TokenElem>>([]);
   const ctx = useWalletContext();
-  const tokenCtx = useTokenContext();
+  const tokenCtx = useTokenProfileContext();
   const provider = useProvider();
 
 
