@@ -95,5 +95,3 @@ const TokensComponent = () => {
 };
 
 export default TokensComponent;
-//TODO-WIP: leave as 1155 and remoive rarity all collection, and change each token quantity should has only 5
-//set fixed price added on 
