@@ -21,9 +21,9 @@ const TokensComponent = () => {
   const [showToast, setShowToast] = useState<boolean | string>(false);
   const provider = useProvider();
   const { address, isConnected: _isConnected } = useAccount();
-  const [isConnected, setIsConnected] = useState<boolean | null>(null);
-  const [NFTBalance, setNFTBalance] = useState<number>(0);
-  const [BatlERC20Tokens, setBatlERC20Tokens] = useState<number>(0);
+  const [isConnected, setIsConnected] = useState<boolean>();
+  const [NFTBalance, setNFTBalance] = useState<number>();
+  const [BatlERC20Tokens, setBatlERC20Tokens] = useState<number>();
 
 
 
@@ -31,14 +31,14 @@ const TokensComponent = () => {
     const NFT1155Contract = getNFT1155Factory(provider);
     let balance = await NFT1155Contract.balanceOfByOwner(ownerAddress);
     balance = Number(balance);
-    balance != 0 && setNFTBalance(balance)
+    setNFTBalance(balance)
   }
 
   const _setERC20Balance = async (ownerAddress: string, provider: signerOrProvider) => {
     const NFT20Contract = getTokenFactory(provider);
     let balance = await NFT20Contract.balanceOf(ownerAddress);
     balance = Number(balance);
-    balance != 0 && setBatlERC20Tokens(balance)
+    setBatlERC20Tokens(balance)
   }
 
 
@@ -47,8 +47,8 @@ const TokensComponent = () => {
     address && provider && _setNFTBalance(address, provider);
     address && provider && _setERC20Balance(address, provider);
     return () => {
-      setNFTBalance(0);
-      setBatlERC20Tokens(0);
+      setNFTBalance(undefined);
+      setBatlERC20Tokens(undefined);
     }
   }, [address, provider]);
 
@@ -57,7 +57,7 @@ const TokensComponent = () => {
   }, [_isConnected]);
 
 
-  return isConnected != null ? (
+  return isConnected != undefined ? (
     <>
       {/* homepage layout */}
       {!isConnected && < div className={styles['connect-btn']}>
@@ -71,9 +71,9 @@ const TokensComponent = () => {
       {/* connected wallet layouts */}
       {isConnected && <>
         {NFTBalance == 0 && <MintUserNFT />}
-        {NFTBalance > 0 &&
+        {NFTBalance! > 0 &&
           <>
-            {BatlERC20Tokens > 0 && <DAO />}
+            {BatlERC20Tokens! > 0 && <DAO />}
             {BatlERC20Tokens == 0 &&
               <ClaimTokens
                 setShowToast={setShowToast}
