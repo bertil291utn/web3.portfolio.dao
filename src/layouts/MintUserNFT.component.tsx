@@ -142,12 +142,12 @@ const MintUserNFT = () => {
 
   const _mintNFT = async (tokenUri: string, signer: signerOrProvider) => {
     try {
-      const NFT721Contract = getNFT1155Factory(signer);
-      let tx = await NFT721Contract.mint(
+      const NFT1155Contract = getNFT1155Factory(signer);
+      let tx = await NFT1155Contract.mint(
         Number(NFTQuantity),
         tokenUri,
-        { value: ethers.utils.parseEther((0.27 * Number(NFTQuantity)).toString()) }
-      );
+        { value: ethers.utils.parseEther((Number(ethers.utils.formatEther(tokenPrice)) * Number(NFTQuantity)).toString()) }
+      )
       window.localStorage.setItem(localStorageKeys.mintNFTTokenTxHash, tx.hash);
       setActiveMintNFTHash(tx.hash);
       await tx.wait();
