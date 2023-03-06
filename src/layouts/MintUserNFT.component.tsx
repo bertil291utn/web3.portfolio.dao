@@ -10,10 +10,9 @@ import { Contract, signerOrProvider } from '@interfaces/provider';
 import { generateLabels, mintLabels } from '@placeholders/home-mint.placeholders';
 import { mintPrompts } from '@placeholders/mint-prompts-examples.placeholders';
 import { capitalizeFirstWord, countNumberWords } from '@utils/common';
-import { generateImage } from '@utils/HuggingFace.utils';
 import { getNFT1155Factory } from '@utils/web3';
 import { ethers } from 'ethers';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { useAccount, useProvider, useSigner } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -24,6 +23,7 @@ import { pinIPFSImage } from '@utils/PinataSDK.utils';
 import GeneratedImage from '@components/GeneratedImage.component';
 import axios from 'axios';
 import { getPrediction } from '@utils/replicate-sdk';
+import Image from 'next/image';
 import styles from './MintUserNFT.module.scss'
 
 
@@ -75,12 +75,21 @@ const MintUserNFT = () => {
 
       if (!_generatedImage) return;
 
-      setGeneratedImage(_generatedImage);
-      setMimeType('image/png');
-      const { data: dataBuffer } = await axios.get(_generatedImage, {
-        responseType: 'arraybuffer',
-      });
-      dataBuffer && setDataBuffer(dataBuffer);
+      const racePromise = Promise.race<void>([
+        new Promise<void>((_, reject) => setTimeout(() => {
+          reject(new Error('Timeout exceeded, try again'));
+        }, 30000)),
+        new Promise<void>(async (resolve) => {
+          setGeneratedImage(_generatedImage);
+          setMimeType('image/png');
+          const { data: dataBuffer } = await axios.get(_generatedImage, {
+            responseType: 'arraybuffer',
+          });
+          dataBuffer && setDataBuffer(dataBuffer);
+          resolve();
+        }),
+      ]);
+      await racePromise;
 
     } catch (error) {
       setShowToastModal((error as Error).message);
@@ -232,11 +241,15 @@ const MintUserNFT = () => {
           title={generateLabels.title}
           subtitle={generateLabels.subtitle}
         >
-          {/* TODO: make more friendly waiting message 
-           it'd be great to add gif or somethind while is loading the generative image.
-          and after lest say 30 seconds the image doens t work just reload the page */}
           {loading ? (
-            <LoadingComponent className={styles['loading']} title='Generating image...' description='This could take few seconds. Just wait' />
+            <div className={styles["loading-image"]}>
+              <Image
+                src='/assets/braino-loading.gif'
+                height={500}
+                width={600}
+              />
+              <LoadingComponent className={styles['loading']} title='Generating image...' description='This could take few seconds. Just wait' />
+            </div>
           ) : generatedImage &&
           <div className={styles['image-nft-container']}>
             <GeneratedImage src={generatedImage}
